@@ -53,16 +53,16 @@ Do not blur these roles.
 
 ```text
 Project Phase:
-Documentation / Pre-Implementation
+Documentation Complete Enough for M1 Start
 
 Current Milestone:
-Pre-M0 / Documentation Finalization
+M1 — EEG Dataset / Loader / Epochs / CSP+LDA
 
 Current Module:
-None active
+1 — EEG Data Loader
 
 Current Task ID:
-None active
+M1-T01
 
 Task Status:
 NOT STARTED
@@ -101,7 +101,7 @@ FAIL
 
 Current state:
 
-> **The project is in documentation and pre-implementation preparation. Scientific architecture, methodology, evaluation, testing, validity, literature, workflow, Codex governance, results framework, and discussion framework have been specified. Verified scientific implementation has not yet begun.**
+> **The project has completed enough repository and documentation setup to begin the first authorized implementation task, M1-T01. Scientific architecture, methodology, evaluation, testing, validity, literature, workflow, Codex governance, results framework, and discussion framework have been specified. Verified scientific implementation has not yet begun.**
 
 Do not mark coding milestones complete until code has been:
 
@@ -222,7 +222,7 @@ M8 — Streamlit / Results Presentation / GitHub / Portfolio
 Current milestone:
 
 ```text
-Pre-M0 — documentation and repository-preparation stage
+M1 — EEG Dataset / Loader / Epochs / CSP+LDA
 ```
 
 ---
@@ -232,10 +232,10 @@ Pre-M0 — documentation and repository-preparation stage
 Current active coding task:
 
 ```text
-None yet
+M1-T01 — PhysioNet EEGBCI Data Loader
 ```
 
-The next approved candidate task is the M1 loader task unless a new `CURRENT_TASK.md` explicitly supersedes it.
+This is the current authorized task as defined by `CURRENT_TASK.md`.
 
 ---
 
@@ -243,7 +243,7 @@ The next approved candidate task is the M1 loader task unless a new `CURRENT_TAS
 
 > **Read `MASTER_PROJECT_SPEC.md` first. We are starting Milestone 1 only. Implement a clean MNE-Python data loader for the PhysioNet EEGBCI motor-imagery dataset. Initially support configurable subject IDs and runs 4, 8 and 12. Requirements: download through MNE utilities; cache locally; load EDF files; standardize channel names; attach the appropriate montage; print subject, channel count, sampling frequency, duration and annotations; add basic validation/error handling; write unit tests where practical; do not implement preprocessing or modelling yet. After coding, tell me: (1) files created/modified, (2) installation requirements, (3) exact command to run, (4) expected output, (5) what I should manually check. Do not continue beyond the loader.**
 
-This task should be placed into `CURRENT_TASK.md` before Codex begins implementation.
+This task is already recorded in `CURRENT_TASK.md` and is ready / not started.
 
 ---
 
