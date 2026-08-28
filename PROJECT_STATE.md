@@ -65,10 +65,10 @@ Current Task ID:
 M1-T01
 
 Task Status:
-NOT STARTED
+PASS
 
 Current Branch:
-TBD
+task/m1-eeg-loader
 
 Latest Verified Commit:
 None yet
@@ -280,7 +280,17 @@ This task is already recorded in `CURRENT_TASK.md` and is ready / not started.
 Current state:
 
 ```text
-None.
+EEG Data Loader:
+- src/eeg/loader.py implemented
+- tests/test_loader.py implemented
+- 10 loader tests passed
+- real EEGBCI subject 1 runs 4 / 8 / 12 loaded successfully
+- 64 channels verified
+- 160 Hz verified
+- T0 / T1 / T2 annotations observed
+- standard_1005 montage attached
+- local reusable MNE cache used
+- no preprocessing or modeling implemented
 ```
 
 No software component may be listed as verified until actual code has been executed and checked.
@@ -559,6 +569,9 @@ Persistent technical source of truth
 
 Codex repository instructions:
 AGENTS.md
+
+Loader montage:
+standard_1005
 ```
 
 ---
@@ -588,25 +601,25 @@ Current initial subject subset:
 UNRESOLVED / NOT YET SELECTED
 
 Local dataset cache:
-NOT VERIFIED
+VERIFIED
 
 Real EEG successfully loaded:
-NO
+YES
 
 Channel names standardized:
-NO
+YES
 
 Montage attached:
-NO
+YES
 
 Montage manually verified:
-NO
+YES
 
 Annotations inspected:
-NO
+YES
 
 T0/T1/T2 manually verified:
-NO
+YES
 ```
 
 Update only after actual execution.
@@ -617,16 +630,16 @@ Update only after actual execution.
 
 ```text
 Loader:
-NOT STARTED
+PASS
 
 Dataset caching:
-NOT STARTED
+PASS
 
 Channel standardization:
-NOT STARTED
+PASS
 
 Montage:
-NOT STARTED
+PASS
 
 Visualization:
 NOT STARTED
@@ -950,13 +963,13 @@ Testing framework:
 MANDATORY, exact package choice not yet frozen
 
 Unit tests:
-NOT STARTED
+PASS
 
 Integration tests:
 NOT STARTED
 
 Real-data smoke tests:
-NOT STARTED
+PASS
 
 Leakage tests:
 NOT STARTED
@@ -1000,7 +1013,7 @@ Only code-generated or experiment-generated artifacts belong here.
 
 | Artifact ID | Type | Path | Task / Experiment | Validity | Commit | Notes |
 |---|---|---|---|---|---|---|
-| — | — | — | — | — | — | No implementation artifacts yet |
+| M1-T01-LOADER | Source + test | `src/eeg/loader.py`; `tests/test_loader.py` | M1-T01 | VALID | — | Accepted loader implementation; real subject 1 runs 4/8/12 verified |
 
 Documentation files are not software result artifacts.
 
@@ -1053,17 +1066,17 @@ scientifically invalid likelihood
 First implementation-stage queue:
 
 ```text
-[ ] Load real PhysioNet EEG through MNE
-[ ] Verify configured subject
-[ ] Verify runs 4 / 8 / 12
-[ ] Verify 64 channels
-[ ] Verify 160 Hz
-[ ] Verify plausible duration
-[ ] Inspect annotations
-[ ] Verify T0 / T1 / T2 semantics
-[ ] Inspect standardized channel names
-[ ] Verify montage attachment
-[ ] Visually confirm montage plausibility
+[x] Load real PhysioNet EEG through MNE
+[x] Verify configured subject
+[x] Verify runs 4 / 8 / 12
+[x] Verify 64 channels
+[x] Verify 160 Hz
+[x] Verify plausible duration
+[x] Inspect annotations
+[x] Verify T0 / T1 / T2 semantics
+[x] Inspect standardized channel names
+[x] Verify montage attachment
+[x] Visually confirm montage plausibility
 ```
 
 Do not continue to preprocessing before the loader verification gate passes.
@@ -1090,7 +1103,7 @@ Do not continue to preprocessing before the loader verification gate passes.
 Current state:
 
 ```text
-None yet — implementation has not started.
+No material technical debt recorded for M1-T01.
 ```
 
 Only actual implementation debt belongs here.
@@ -1462,4 +1475,4 @@ Never use placeholders as real experiment entries.
 
 # 45. CURRENT PROJECT STATE SUMMARY
 
-At the time of this Codex-aligned rewrite, the project has a mature scientific and engineering specification but **no verified software implementation or empirical results yet**. The project architecture, Search & Rescue scenario, EEG dataset, neuroscience foundations, EEG/ML pipeline, calibration, Bayesian inference, uncertainty, adaptation boundaries, shared autonomy, planning, safety, implementation blueprint, repository architecture, experiments, metrics, testing, ethics/validity, literature foundation, AI-assisted development workflow, results framework, and discussion framework have been documented. The implementation workflow is now explicitly **ChatGPT + Project Owner + Codex + Git/GitHub**, with `AGENTS.md` serving as Codex's repository-level instruction authority. The correct first coding task remains the MNE-Python PhysioNet EEGBCI loader for configurable subjects and runs 4, 8, and 12. Several scientific decisions intentionally remain unresolved and must block downstream implementation rather than being guessed.
+The project's first accepted software component is M1-T01, the PhysioNet EEGBCI data loader. `src/eeg/loader.py` and `tests/test_loader.py` are implemented, 10 loader tests have passed, and real EEGBCI subject 1 runs 4, 8, and 12 were loaded successfully through MNE using a local reusable cache. Verification confirmed 64 channels, 160 Hz sampling frequency, T0/T1/T2 annotations, EEGBCI channel-name standardization, and successful `standard_1005` montage attachment. No preprocessing, epoching, machine-learning modeling, calibration, Bayesian inference, shared autonomy, planning, or safety implementation has been accepted yet, and downstream scientific decisions remain unresolved until explicitly approved.
