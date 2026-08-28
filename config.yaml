@@ -1,0 +1,27 @@
+project:
+  name: neurocognitive-shared-autonomy
+
+dataset:
+  name: eegbci
+  runs: [4, 8, 12]
+
+eeg:
+  sampling_frequency: 160
+
+preprocessing:
+  bandpass: null
+  reference: null
+  epoch_interval: null
+
+calibration:
+  method: null
+
+bayesian:
+  commitment_rule: null
+
+shared_autonomy:
+  thresholds: null
+
+planner:
+  algorithm: astar
+  risk_lambda: null
