@@ -85,7 +85,7 @@ neurocognitive-shared-autonomy/
 ├── EXPERIMENT_LOG.md
 ├── TODO.md
 │
-├── <CODEX_INSTRUCTION_FILE_TBD>
+├── AGENTS.md
 │
 ├── config.yaml
 ├── requirements.txt
@@ -165,7 +165,7 @@ Small implementation-driven refinements are allowed if they do not alter scienti
 
 ---
 
-# 3. CODEX INSTRUCTION FILE — STILL UNRESOLVED
+# 3. CODEX INSTRUCTION FILE
 
 Earlier project material used:
 
@@ -181,21 +181,18 @@ The workflow has since changed to:
 ChatGPT + Project Owner + Codex
 ```
 
-The final permanent Codex instruction filename is **not yet approved**.
-
-Therefore this repository specification deliberately uses:
+The approved permanent Codex repository instruction filename is:
 
 ```text
-<CODEX_INSTRUCTION_FILE_TBD>
+AGENTS.md
 ```
 
-Do not silently create:
+This file is the repository-level instruction authority for Codex.
 
-- `AGENTS.md`;
-- `CODEX.md`;
-- `CLAUDE.md`;
+Do not silently substitute a different permanent authority filename such as:
 
-as the permanent authority file until the project owner standardizes the filename.
+- `CODEX.md`
+- `CLAUDE.md`
 
 ---
 

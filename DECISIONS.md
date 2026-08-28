@@ -436,6 +436,43 @@ Only valid experiments may support these claims.
 
 ---
 
+## D-030 — EEGBCI Loader Montage
+
+**Status:** APPROVED
+
+For the PhysioNet EEGBCI loader/data pipeline, use:
+
+```text
+MNE EEGBCI channel-name standardization:
+mne.datasets.eegbci.standardize(raw)
+
+Montage:
+standard_1005
+```
+
+Basis:
+
+- the MNE EEGBCI workflow standardizes EEGBCI channel names with `eegbci.standardize(raw)`;
+- `standard_1005` was successfully attached to an actual EEGBCI recording during M1-T01 verification;
+- all 64 EEG channels received plausible channel-position metadata;
+- real subject 1 runs 4, 8, and 12 loaded successfully under this workflow.
+
+Scope limitation:
+
+This decision applies to the EEGBCI loader/data pipeline montage choice only.
+
+It does not approve or freeze unrelated preprocessing choices such as:
+
+- filtering;
+- EEG reference;
+- epoch interval;
+- baseline correction;
+- artifact handling;
+- resampling;
+- T0 policy.
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
