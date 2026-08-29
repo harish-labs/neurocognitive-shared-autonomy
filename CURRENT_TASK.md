@@ -26,18 +26,27 @@ M1-T01 — PhysioNet EEGBCI Data Loader
 M1-T02 — EEG Visualization / Inspection
 ```
 
-Latest verified canonical commit:
+Latest canonical governance commit:
+
+```text
+37554d65554f4e473fa42316c7e0801ffcdee2af
+Record approved M1-T03 preprocessing decisions (#4)
+```
+
+Latest verified software commit:
 
 ```text
 9b241681dfc986f53f5f8c0fcf40a3e3cea496e7
 M1-T02: Add EEG visualization and inspection (#2)
 ```
 
-The next implementation task is pending scientific review and explicit Project Owner approval.
+Scientific preprocessing decisions U-001 through U-009 are now approved and recorded as D-031 through D-039 in `DECISIONS.md`.
 
-Do not begin M1-T03 preprocessing/epoching.
+This removes the scientific-parameter blocker for an M1-T03 preprocessing/epoching ticket, but it does **not** itself authorize implementation.
 
-Do not implement preprocessing, epoching, or any later module until a new `CURRENT_TASK.md` is approved.
+Do not begin M1-T03 preprocessing/epoching until a new implementation ticket is explicitly approved in this file.
+
+Do not implement preprocessing, epoching, or any later module until that authorization exists.
 
 ---
 
