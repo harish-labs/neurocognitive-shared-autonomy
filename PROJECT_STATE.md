@@ -53,7 +53,7 @@ Do not blur these roles.
 
 ```text
 Project Phase:
-M1 active — loader and visualization verified on canonical main
+M1 active — loader and visualization verified; preprocessing decisions approved
 
 Current Milestone:
 M1 — EEG Dataset / Loader / Epochs / CSP+LDA
@@ -70,17 +70,20 @@ PENDING APPROVAL
 Canonical Branch:
 main
 
-Latest Verified Commit:
+Latest Canonical Governance Commit:
+37554d65554f4e473fa42316c7e0801ffcdee2af
+
+Latest Verified Software Commit:
 9b241681dfc986f53f5f8c0fcf40a3e3cea496e7
 
 Latest Valid Experiment:
 None yet
 
 Last Updated:
-2026-08-29
+2026-08-30
 
 Updated By:
-Codex
+ChatGPT + Project Owner
 ```
 
 Allowed operational statuses:
@@ -101,7 +104,7 @@ FAIL
 
 Current state:
 
-> **M1-T01 and M1-T02 are completed, merged, and verified on canonical `main`. The repository now has a verified EEGBCI loader and a verified EEG visualization/inspection module. No preprocessing, epoching, CSP/LDA training, EEGNet training, calibration, Bayesian inference, autonomy, safety, or UI implementation is currently authorized or accepted beyond the loader and inspection scope.**
+> **M1-T01 and M1-T02 are completed, merged, and verified on canonical `main`. The repository has a verified EEGBCI loader and a verified EEG visualization/inspection module. Project Owner approvals resolving preprocessing decisions U-001 through U-009 are recorded as D-031 through D-039 in `DECISIONS.md`. No preprocessing or epoching code has been implemented or authorized yet. Before M1-T03 implementation is authorized, affected numbered scientific documents must be reconciled so they no longer present those decisions as unresolved.**
 
 Do not mark coding milestones complete until code has been:
 
@@ -187,13 +190,19 @@ MASTER_PROJECT_SPEC.md
 AGENTS.md
 ```
 
-## Generated ahead of sequence / now being replaced
+## Current decision-alignment status
+
+`DECISIONS.md` is authoritative and now resolves U-001 through U-009 as D-031 through D-039.
+
+The following numbered documents still contain pre-approval wording that describes some or all of those decisions as unresolved and therefore require a documentation-only reconciliation before M1-T03 implementation is authorized:
 
 ```text
-PROJECT_STATE.md
+docs/06_DATASET_AND_DATA_PIPELINE.md
+docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md
+docs/15_IMPLEMENTATION_BLUEPRINT.md
 ```
 
-This document is the corrected Codex-aligned version.
+Until that reconciliation is merged, `DECISIONS.md` takes precedence and Codex must not implement M1-T03.
 
 ## Next numbered scientific document
 
@@ -235,15 +244,15 @@ Current active coding task:
 None authorized
 ```
 
-`CURRENT_TASK.md` now records that the next implementation ticket is pending scientific review and Project Owner approval.
+`CURRENT_TASK.md` records that scientific preprocessing decisions are approved but no implementation ticket is active.
 
 ---
 
 # 7. NEXT CANDIDATE IMPLEMENTATION TASK
 
-> **No next implementation task is currently authorized. M1-T03 preprocessing/epoching work remains pending scientific review, explicit Project Owner approval, and a new `CURRENT_TASK.md`.**
+> **M1-T03 preprocessing/epoching is the next candidate implementation task, but it is not yet authorized. First reconcile the affected numbered documentation with D-031 through D-039, review and merge that documentation-only change, then obtain explicit Project Owner approval for a new `CURRENT_TASK.md` implementation ticket.**
 
-Do not begin preprocessing or epoching until that new task is approved.
+Do not begin preprocessing or epoching until those gates are satisfied.
 
 ---
 
@@ -254,7 +263,7 @@ Do not begin preprocessing or epoching until that new task is approved.
 | 0 | Config / Infrastructure | NOT STARTED | No | No | — | M0 pending |
 | 1 | EEG Data Loader | PASS | Yes | Yes | `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` | M1-T01 completed and merged |
 | 2 | EEG Visualization / Inspection | PASS | Yes | Yes | `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` | M1-T02 completed and merged |
-| 3 | EEG Preprocessing / Epochs | BLOCKED | No | No | — | Exact scientific parameters unresolved |
+| 3 | EEG Preprocessing / Epochs | BLOCKED | No | No | — | Scientific parameters approved; numbered-doc reconciliation + active ticket still required |
 | 4 | CSP + LDA | NOT STARTED | No | No | — | Depends on valid epochs/split |
 | 5 | EEGNet / Compact CNN | NOT STARTED | No | No | — | |
 | 6 | Unified Decoder Interface | NOT STARTED | No | No | — | |
@@ -339,17 +348,22 @@ The following decisions remain unresolved unless a later approved entry in `DECI
 
 ## EEG / preprocessing
 
+The initial M1 preprocessing decisions are resolved in D-031 through D-039:
+
 ```text
-- exact band-pass filter
-- EEG reference
-- exact epoch interval
-- baseline correction
-- artifact-handling policy
-- T0 policy
-- exact channel reduction policy, if any
-- resampling policy, if any
-- processed-data format
+band-pass: 7–30 Hz
+EEG reference: average EEG reference
+canonical epoch: -1.0 s to +4.0 s
+initial CSP crop: +1.0 s to +2.0 s
+baseline: None
+artifact policy: no ICA/interpolation; reject >150 µV peak-to-peak and log
+T0: exclude from binary training; preserve annotations/provenance
+channels: preserve all 64; no reduction
+resampling: none; preserve 160 Hz
+processed representation: MNE Epochs; persisted `*-epo.fif`
 ```
+
+These are no longer scientific blockers for M1-T03, but the affected numbered documents must be reconciled before implementation authorization.
 
 ## Evaluation
 
@@ -428,10 +442,22 @@ These unresolved items must remain visible.
 Current state:
 
 ```text
-None currently blocking bookkeeping state.
+Documentation/code-governance consistency blocker:
+- docs/06_DATASET_AND_DATA_PIPELINE.md still contains pre-approval unresolved wording for U-001–U-009
+- docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md still contains pre-approval unresolved wording for U-001–U-009
+- docs/15_IMPLEMENTATION_BLUEPRINT.md still lists several now-approved M1 preprocessing parameters as blockers
 ```
 
-Do not invent technical blockers before actual implementation.
+Required action:
+
+```text
+Reconcile those documents to D-031 through D-039
+→ review diff
+→ merge documentation-only PR
+→ then create/approve M1-T03 implementation ticket
+```
+
+Do not invent other technical blockers before actual implementation.
 
 ---
 
@@ -472,6 +498,52 @@ Left vs Right motor imagery
 
 EEG mode:
 Public prerecorded EEG only
+
+Loader montage:
+standard_1005
+```
+
+## Initial M1 preprocessing / epoching
+
+```text
+Band-pass:
+7–30 Hz
+
+EEG reference:
+average EEG reference
+
+Canonical epoch:
+-1.0 s to +4.0 s relative to cue onset
+
+Initial CSP training crop:
++1.0 s to +2.0 s relative to cue onset
+
+Baseline correction:
+None
+
+Artifact handling:
+no ICA
+no automatic bad-channel interpolation
+reject epoch if EEG peak-to-peak amplitude >150 µV
+log rejected epochs/reasons
+
+T0 handling:
+exclude from binary epoch/training dataset
+preserve raw annotations/provenance
+
+Channels:
+all 64 validated EEG channels
+no reduction in M1-T03
+
+Resampling:
+none
+preserve native 160 Hz
+
+Canonical processed representation:
+MNE Epochs
+
+Persisted processed epochs:
+MNE FIF `*-epo.fif`
 ```
 
 ## Dataset semantics
@@ -582,9 +654,6 @@ Persistent technical source of truth
 
 Codex repository instructions:
 AGENTS.md
-
-Loader montage:
-standard_1005
 ```
 
 ---
@@ -661,16 +730,25 @@ Visualization:
 PASS
 
 Preprocessing:
-BLOCKED
+BLOCKED — approved parameters recorded, documentation reconciliation and active ticket still required
 
 Event extraction:
 NOT STARTED
 
 Epoching:
-BLOCKED
+BLOCKED — approved parameters recorded, documentation reconciliation and active ticket still required
 
 T0 handling:
-UNRESOLVED
+APPROVED — exclude from binary training; preserve annotations/provenance
+
+Channel policy:
+APPROVED — all 64 channels; no reduction
+
+Sampling policy:
+APPROVED — no resampling; preserve 160 Hz
+
+Processed representation:
+APPROVED — MNE Epochs; persisted `*-epo.fif`
 
 Train/validation/test split:
 UNRESOLVED
@@ -1080,7 +1158,7 @@ scientifically invalid likelihood
 
 # 28. CURRENT MANUAL VERIFICATION QUEUE
 
-First implementation-stage queue:
+Completed loader/inspection verification:
 
 ```text
 [x] Load real PhysioNet EEG through MNE
@@ -1100,7 +1178,13 @@ First implementation-stage queue:
 [x] Generate annotation-overview inspection output
 ```
 
-Do not continue to preprocessing before the loader verification gate passes.
+Next governance gate:
+
+```text
+[ ] Reconcile docs/06, docs/08, and docs/15 with D-031 through D-039
+[ ] Review and merge documentation-only reconciliation
+[ ] Approve a new M1-T03 CURRENT_TASK.md implementation ticket
+```
 
 ---
 
@@ -1124,7 +1208,8 @@ Do not continue to preprocessing before the loader verification gate passes.
 Current state:
 
 ```text
-No material technical debt recorded for merged M1-T01 / M1-T02.
+No material software technical debt recorded for merged M1-T01 / M1-T02.
+Documentation alignment for D-031 through D-039 is an active governance blocker, not software debt.
 ```
 
 Only actual implementation debt belongs here.
@@ -1150,7 +1235,6 @@ Use this section only for methodology that has been intentionally deferred but m
 Current scientific-decision backlog:
 
 ```text
-- preprocessing freeze
 - split protocol freeze
 - calibration method freeze
 - goal-selection protocol
@@ -1162,7 +1246,7 @@ Current scientific-decision backlog:
 - final statistics plan
 ```
 
-These remain explicit blockers, not hidden defaults.
+Initial M1 preprocessing parameters are no longer in the scientific-decision backlog; they are approved as D-031 through D-039.
 
 ---
 
@@ -1183,8 +1267,11 @@ AGENTS.md
 24_DISCUSSION_AND_FINDINGS.md
     Pre-results scientific discussion framework
 
+DECISIONS.md
+    D-031 through D-039 record the approved initial M1 preprocessing/epoching parameters
+
 PROJECT_STATE.md
-    This Codex-aligned live project-state record
+    Live state reconciled to those approvals while preserving the implementation gate
 ```
 
 These are documentation milestones, not software milestones.
@@ -1213,6 +1300,7 @@ Currently authorized:
 - project architecture is designed
 - scientific methodology is specified
 - dataset and core algorithms are selected
+- initial M1 preprocessing parameters are approved
 - evaluation framework is defined
 - Codex governance is defined
 ```
@@ -1272,7 +1360,7 @@ After each accepted Codex task:
 11. update next candidate task;
 12. update `Last Updated`.
 
-Do not rewrite unrelated historical sections unnecessarily.
+Also update this file after an approved scientific decision or major governance change, without rewriting unrelated historical sections unnecessarily.
 
 ---
 
@@ -1324,7 +1412,7 @@ Use:
 BLOCKED
 ```
 
-when scientific or technical progress cannot continue validly.
+when scientific, governance, or technical progress cannot continue validly.
 
 Example:
 
@@ -1415,6 +1503,8 @@ Only write this after it really happens.
 
 # 42. SCIENTIFIC-BLOCK UPDATE EXAMPLE
 
+Historical example of how to represent an unresolved preprocessing gate:
+
 ```text
 Current Module:
 3 — EEG Preprocessing / Epochs
@@ -1434,6 +1524,8 @@ No scientific preprocessing performed.
 Next required action:
 ChatGPT scientific review + Project Owner approval + DECISIONS.md update.
 ```
+
+For the current state, those example preprocessing decisions are resolved as D-031 through D-039; the remaining M1-T03 gate is documentation reconciliation plus explicit implementation authorization.
 
 ---
 
@@ -1496,4 +1588,4 @@ Never use placeholders as real experiment entries.
 
 # 45. CURRENT PROJECT STATE SUMMARY
 
-The project currently has two accepted and merged M1 software components on canonical `main`: M1-T01, the PhysioNet EEGBCI data loader, and M1-T02, the EEG visualization/inspection module. `src/eeg/loader.py`, `tests/test_loader.py`, `src/eeg/visualization.py`, and `tests/test_visualization.py` are implemented. The current verified canonical commit is `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` (`M1-T02: Add EEG visualization and inspection (#2)`). Verification confirmed 16 passed automated tests across loader and visualization, successful real-data inspection for subject 1 runs 4, 8, and 12, 64 channels, 160 Hz sampling frequency, visible T0/T1/T2 annotations, EEGBCI channel-name standardization, and preserved `standard_1005` montage attachment. Generated inspection outputs include raw traces, PSD, sensor/montage layout, and annotation overview. No preprocessing, epoching, machine-learning modeling, calibration, Bayesian inference, shared autonomy, planning, or safety implementation has been accepted yet, and the project remains an offline prerecorded EEG system rather than live EEG.
+The project currently has two accepted and merged M1 software components on canonical `main`: M1-T01, the PhysioNet EEGBCI data loader, and M1-T02, the EEG visualization/inspection module. `src/eeg/loader.py`, `tests/test_loader.py`, `src/eeg/visualization.py`, and `tests/test_visualization.py` are implemented. The latest verified software commit remains `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` (`M1-T02: Add EEG visualization and inspection (#2)`). Verification confirmed 16 passed automated tests across loader and visualization, successful real-data inspection for subject 1 runs 4, 8, and 12, 64 channels, 160 Hz sampling frequency, visible T0/T1/T2 annotations, EEGBCI channel-name standardization, and preserved `standard_1005` montage attachment. Generated inspection outputs include raw traces, PSD, sensor/montage layout, and annotation overview. The Project Owner has now approved the initial M1 preprocessing/epoching decisions U-001 through U-009, and those approvals are recorded as D-031 through D-039 in canonical `DECISIONS.md` at governance commit `37554d65554f4e473fa42316c7e0801ffcdee2af`. No preprocessing or epoching code has been accepted or authorized yet. Before M1-T03 can be activated, the affected numbered documents (`docs/06_DATASET_AND_DATA_PIPELINE.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, and `docs/15_IMPLEMENTATION_BLUEPRINT.md`) must be reconciled with D-031 through D-039 and the Project Owner must explicitly approve a new implementation ticket. The project remains an offline prerecorded EEG system rather than live EEG.
