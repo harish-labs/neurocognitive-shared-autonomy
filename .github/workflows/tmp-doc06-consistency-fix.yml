@@ -1,0 +1,48 @@
+name: Temporary docs06 consistency fix
+
+on:
+  push:
+    branches:
+      - docs/m1-t03-methodology-reconciliation-v2
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: docs/m1-t03-methodology-reconciliation-v2
+          fetch-depth: 0
+      - name: Apply exact consistency fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('docs/06_DATASET_AND_DATA_PIPELINE.md')
+          s = p.read_text()
+          old1 = 'Therefore those example settings must be independently justified before adoption.'
+          new1 = 'Reference examples remain non-authoritative by themselves. The current 7–30 Hz band and approved epoch/CSP timing are authoritative because they were explicitly approved and recorded in `DECISIONS.md`.'
+          old2 = '- MNE Epochs or equivalent;'
+          new2 = '- canonical MNE Epochs;'
+          if s.count(old1) != 1 or s.count(old2) != 1:
+              raise SystemExit('expected exact text not found uniquely')
+          s = s.replace(old1, new1).replace(old2, new2)
+          p.write_text(s)
+          PY
+          git diff --check
+          grep -Fq 'Reference examples remain non-authoritative by themselves.' docs/06_DATASET_AND_DATA_PIPELINE.md
+          grep -Fq -- '- canonical MNE Epochs;' docs/06_DATASET_AND_DATA_PIPELINE.md
+      - name: Commit and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/tmp-doc06-consistency-fix.yml
+          git add docs/06_DATASET_AND_DATA_PIPELINE.md
+          git commit -m 'Tighten dataset methodology consistency'
+          git push origin HEAD:docs/m1-t03-methodology-reconciliation-v2
