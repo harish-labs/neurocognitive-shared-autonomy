@@ -26,7 +26,7 @@ M1-T01 — PhysioNet EEGBCI Data Loader
 M1-T02 — EEG Visualization / Inspection
 ```
 
-Latest canonical governance commit:
+Latest prerequisite methodology reconciliation commit:
 
 ```text
 d71292387d4476b8ab40841d4ed1544cba3d81b6

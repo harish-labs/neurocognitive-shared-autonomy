@@ -70,7 +70,7 @@ PENDING APPROVAL
 Canonical Branch:
 main
 
-Latest Canonical Governance Commit:
+Latest Prerequisite Methodology Reconciliation Commit:
 d71292387d4476b8ab40841d4ed1544cba3d81b6
 
 Latest Verified Software Commit:
