@@ -53,34 +53,34 @@ Do not blur these roles.
 
 ```text
 Project Phase:
-Documentation Complete Enough for M1 Start
+M1 active — loader and visualization verified on canonical main
 
 Current Milestone:
 M1 — EEG Dataset / Loader / Epochs / CSP+LDA
 
 Current Module:
-1 — EEG Data Loader
+No active coding task authorized
 
 Current Task ID:
-M1-T01
+NONE AUTHORIZED
 
 Task Status:
-PASS
+PENDING APPROVAL
 
-Current Branch:
-task/m1-eeg-loader
+Canonical Branch:
+main
 
 Latest Verified Commit:
-None yet
+9b241681dfc986f53f5f8c0fcf40a3e3cea496e7
 
 Latest Valid Experiment:
 None yet
 
 Last Updated:
-TBD
+2026-08-29
 
 Updated By:
-TBD
+Codex
 ```
 
 Allowed operational statuses:
@@ -101,7 +101,7 @@ FAIL
 
 Current state:
 
-> **The project has completed enough repository and documentation setup to begin the first authorized implementation task, M1-T01. Scientific architecture, methodology, evaluation, testing, validity, literature, workflow, Codex governance, results framework, and discussion framework have been specified. Verified scientific implementation has not yet begun.**
+> **M1-T01 and M1-T02 are completed, merged, and verified on canonical `main`. The repository now has a verified EEGBCI loader and a verified EEG visualization/inspection module. No preprocessing, epoching, CSP/LDA training, EEGNet training, calibration, Bayesian inference, autonomy, safety, or UI implementation is currently authorized or accepted beyond the loader and inspection scope.**
 
 Do not mark coding milestones complete until code has been:
 
@@ -232,18 +232,18 @@ M1 — EEG Dataset / Loader / Epochs / CSP+LDA
 Current active coding task:
 
 ```text
-M1-T01 — PhysioNet EEGBCI Data Loader
+None authorized
 ```
 
-This is the current authorized task as defined by `CURRENT_TASK.md`.
+`CURRENT_TASK.md` now records that the next implementation ticket is pending scientific review and Project Owner approval.
 
 ---
 
 # 7. NEXT CANDIDATE IMPLEMENTATION TASK
 
-> **Read `MASTER_PROJECT_SPEC.md` first. We are starting Milestone 1 only. Implement a clean MNE-Python data loader for the PhysioNet EEGBCI motor-imagery dataset. Initially support configurable subject IDs and runs 4, 8 and 12. Requirements: download through MNE utilities; cache locally; load EDF files; standardize channel names; attach the appropriate montage; print subject, channel count, sampling frequency, duration and annotations; add basic validation/error handling; write unit tests where practical; do not implement preprocessing or modelling yet. After coding, tell me: (1) files created/modified, (2) installation requirements, (3) exact command to run, (4) expected output, (5) what I should manually check. Do not continue beyond the loader.**
+> **No next implementation task is currently authorized. M1-T03 preprocessing/epoching work remains pending scientific review, explicit Project Owner approval, and a new `CURRENT_TASK.md`.**
 
-This task is already recorded in `CURRENT_TASK.md` and is ready / not started.
+Do not begin preprocessing or epoching until that new task is approved.
 
 ---
 
@@ -252,8 +252,8 @@ This task is already recorded in `CURRENT_TASK.md` and is ready / not started.
 | Module | Component | Status | Automated Tests | Manual Verification | Latest Artifact / Commit | Notes |
 |---|---|---|---|---|---|---|
 | 0 | Config / Infrastructure | NOT STARTED | No | No | — | M0 pending |
-| 1 | EEG Data Loader | NOT STARTED | No | No | — | First implementation task |
-| 2 | EEG Visualization / Inspection | NOT STARTED | No | No | — | After loader verification |
+| 1 | EEG Data Loader | PASS | Yes | Yes | `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` | M1-T01 completed and merged |
+| 2 | EEG Visualization / Inspection | PASS | Yes | Yes | `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` | M1-T02 completed and merged |
 | 3 | EEG Preprocessing / Epochs | BLOCKED | No | No | — | Exact scientific parameters unresolved |
 | 4 | CSP + LDA | NOT STARTED | No | No | — | Depends on valid epochs/split |
 | 5 | EEGNet / Compact CNN | NOT STARTED | No | No | — | |
@@ -291,6 +291,19 @@ EEG Data Loader:
 - standard_1005 montage attached
 - local reusable MNE cache used
 - no preprocessing or modeling implemented
+
+EEG Visualization / Inspection:
+- src/eeg/visualization.py implemented
+- tests/test_visualization.py implemented
+- 16 total loader + visualization tests passed
+- real EEGBCI subject 1 runs 4 / 8 / 12 inspected successfully
+- raw traces, PSD, sensor layout, and annotation overview generated
+- 64 channels verified
+- 160 Hz verified
+- T0 / T1 / T2 present
+- standard_1005 montage preserved
+- no preprocessing or modeling implemented
+- offline prerecorded EEG inspection only
 ```
 
 No software component may be listed as verified until actual code has been executed and checked.
@@ -415,7 +428,7 @@ These unresolved items must remain visible.
 Current state:
 
 ```text
-None observed yet because coding has not started.
+None currently blocking bookkeeping state.
 ```
 
 Do not invent technical blockers before actual implementation.
@@ -598,7 +611,7 @@ Current initial runs:
 4, 8, 12
 
 Current initial subject subset:
-UNRESOLVED / NOT YET SELECTED
+subject 1 verified for loader and inspection smoke checks
 
 Local dataset cache:
 VERIFIED
@@ -619,6 +632,9 @@ Annotations inspected:
 YES
 
 T0/T1/T2 manually verified:
+YES
+
+Real EEG inspection successfully generated:
 YES
 ```
 
@@ -642,7 +658,7 @@ Montage:
 PASS
 
 Visualization:
-NOT STARTED
+PASS
 
 Preprocessing:
 BLOCKED
@@ -1013,7 +1029,8 @@ Only code-generated or experiment-generated artifacts belong here.
 
 | Artifact ID | Type | Path | Task / Experiment | Validity | Commit | Notes |
 |---|---|---|---|---|---|---|
-| M1-T01-LOADER | Source + test | `src/eeg/loader.py`; `tests/test_loader.py` | M1-T01 | VALID | — | Accepted loader implementation; real subject 1 runs 4/8/12 verified |
+| M1-T01-LOADER | Source + test | `src/eeg/loader.py`; `tests/test_loader.py` | M1-T01 | VALID | `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` | Accepted loader implementation; real subject 1 runs 4/8/12 verified |
+| M1-T02-VISUALIZATION | Source + test + figures | `src/eeg/visualization.py`; `tests/test_visualization.py`; `results/figures/m1_t02_subject1/` | M1-T02 | VALID | `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` | Accepted inspection implementation; subject 1 runs 4/8/12 verified with traces, PSD, sensors, and annotations |
 
 Documentation files are not software result artifacts.
 
@@ -1077,6 +1094,10 @@ First implementation-stage queue:
 [x] Inspect standardized channel names
 [x] Verify montage attachment
 [x] Visually confirm montage plausibility
+[x] Generate raw-trace inspection output
+[x] Generate PSD inspection output
+[x] Generate sensor/montage inspection output
+[x] Generate annotation-overview inspection output
 ```
 
 Do not continue to preprocessing before the loader verification gate passes.
@@ -1103,7 +1124,7 @@ Do not continue to preprocessing before the loader verification gate passes.
 Current state:
 
 ```text
-No material technical debt recorded for M1-T01.
+No material technical debt recorded for merged M1-T01 / M1-T02.
 ```
 
 Only actual implementation debt belongs here.
@@ -1475,4 +1496,4 @@ Never use placeholders as real experiment entries.
 
 # 45. CURRENT PROJECT STATE SUMMARY
 
-The project's first accepted software component is M1-T01, the PhysioNet EEGBCI data loader. `src/eeg/loader.py` and `tests/test_loader.py` are implemented, 10 loader tests have passed, and real EEGBCI subject 1 runs 4, 8, and 12 were loaded successfully through MNE using a local reusable cache. Verification confirmed 64 channels, 160 Hz sampling frequency, T0/T1/T2 annotations, EEGBCI channel-name standardization, and successful `standard_1005` montage attachment. No preprocessing, epoching, machine-learning modeling, calibration, Bayesian inference, shared autonomy, planning, or safety implementation has been accepted yet, and downstream scientific decisions remain unresolved until explicitly approved.
+The project currently has two accepted and merged M1 software components on canonical `main`: M1-T01, the PhysioNet EEGBCI data loader, and M1-T02, the EEG visualization/inspection module. `src/eeg/loader.py`, `tests/test_loader.py`, `src/eeg/visualization.py`, and `tests/test_visualization.py` are implemented. The current verified canonical commit is `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` (`M1-T02: Add EEG visualization and inspection (#2)`). Verification confirmed 16 passed automated tests across loader and visualization, successful real-data inspection for subject 1 runs 4, 8, and 12, 64 channels, 160 Hz sampling frequency, visible T0/T1/T2 annotations, EEGBCI channel-name standardization, and preserved `standard_1005` montage attachment. Generated inspection outputs include raw traces, PSD, sensor/montage layout, and annotation overview. No preprocessing, epoching, machine-learning modeling, calibration, Bayesian inference, shared autonomy, planning, or safety implementation has been accepted yet, and the project remains an offline prerecorded EEG system rather than live EEG.
