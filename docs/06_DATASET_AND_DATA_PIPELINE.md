@@ -1899,7 +1899,7 @@ vs
 Right-hand imagery
 ```
 
-Therefore those example settings must be independently justified before adoption.
+Reference examples remain non-authoritative by themselves. The current 7–30 Hz band and approved epoch/CSP timing are authoritative because they were explicitly approved and recorded in `DECISIONS.md`.
 
 ---
 
@@ -1918,7 +1918,7 @@ The complete data layer should eventually produce:
 
 - cleaned/filtered Raw or equivalent;
 - event table;
-- MNE Epochs or equivalent;
+- canonical MNE Epochs;
 - trial metadata.
 
 ## Model-level outputs
