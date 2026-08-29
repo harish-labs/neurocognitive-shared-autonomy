@@ -331,21 +331,18 @@ The following must not be silently solved during implementation:
 2. Exact mapping from `P(class | EEG)` to Bayesian likelihood `P(E | G)`.
 3. Exact calibration method.
 4. Calibration fitting partition.
-5. Exact EEG filter band.
-6. EEG reference.
-7. Epoch timing.
-8. Baseline correction.
-9. Artifact policy.
-10. Final cross-subject protocol.
-11. Confidence thresholds.
-12. Bayesian stopping/commitment rule.
-13. Adaptation mechanism.
-14. Hazard-risk scale.
-15. Risk weight \(\lambda\).
-16. Prohibited-hazard threshold.
-17. Final A/B/C/D experimental semantics.
+5. Final cross-subject protocol.
+6. Confidence thresholds.
+7. Bayesian stopping/commitment rule.
+8. Adaptation mechanism.
+9. Hazard-risk scale.
+10. Risk weight \(\lambda\).
+11. Prohibited-hazard threshold.
+12. Final A/B/C/D experimental semantics.
 
-When implementation reaches one of these boundaries, Codex must stop unless an approved decision already exists in `DECISIONS.md`.
+Initial M1 preprocessing decisions that were previously on this blocker list are now resolved by D-031 through D-039: filter band, EEG reference, epoch timing/CSP crop, baseline correction, artifact policy, T0 handling, channel policy, resampling policy, and processed-data representation.
+
+When implementation reaches any still-unresolved boundary, Codex must stop unless an approved decision already exists in `DECISIONS.md`.
 
 ---
 
@@ -557,17 +554,22 @@ src/eeg/preprocessing.py
 src/eeg/epochs.py
 ```
 
-## Blockers before final implementation
+## Scientific parameters approved for M1-T03
 
-Must approve:
+D-031 through D-039 approve:
 
-- band-pass;
-- reference;
-- epoch interval;
-- T0 handling;
-- baseline correction;
-- artifact policy;
-- resampling if any.
+- 7–30 Hz band-pass;
+- average EEG reference;
+- canonical epoch -1.0 s to +4.0 s relative to cue onset;
+- initial CSP training crop +1.0 s to +2.0 s;
+- T0 excluded from binary epoch/training data while raw annotations/provenance are preserved;
+- `baseline=None`;
+- no ICA or automatic bad-channel interpolation; reject epochs above 150 µV peak-to-peak and log rejections;
+- preserve all 64 validated EEG channels;
+- no resampling; preserve 160 Hz;
+- canonical processed representation MNE Epochs, with persisted epochs saved as `*-epo.fif`.
+
+These approvals remove the scientific-parameter blocker, but Module 3 may begin only when `CURRENT_TASK.md` explicitly authorizes M1-T03.
 
 ## Inputs
 
@@ -576,8 +578,15 @@ Must approve:
 
 ## Outputs
 
+Canonical output:
+
 ```text
-X
+MNE Epochs
+```
+
+with preserved/derivable metadata including:
+
+```text
 y
 subject_ids
 run_ids
@@ -585,6 +594,8 @@ trial_ids
 channel_names
 sampling_frequency
 ```
+
+If persisted, epochs use MNE FIF `*-epo.fif`. Model-specific arrays may be derived later without replacing the canonical representation.
 
 ## Required behavior
 
@@ -1677,7 +1688,7 @@ Create a clean repository foundation.
 ```text
 M1.1 Loader
 M1.2 Inspection
-M1.3 Approve preprocessing parameters
+M1.3 Record/verify approved preprocessing parameters
 M1.4 Preprocessing
 M1.5 Events / epochs
 M1.6 Split
