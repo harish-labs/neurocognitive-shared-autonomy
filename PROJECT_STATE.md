@@ -71,7 +71,7 @@ Canonical Branch:
 main
 
 Latest Canonical Governance Commit:
-37554d65554f4e473fa42316c7e0801ffcdee2af
+d71292387d4476b8ab40841d4ed1544cba3d81b6
 
 Latest Verified Software Commit:
 9b241681dfc986f53f5f8c0fcf40a3e3cea496e7
@@ -104,7 +104,7 @@ FAIL
 
 Current state:
 
-> **M1-T01 and M1-T02 are completed, merged, and verified on canonical `main`. The repository has a verified EEGBCI loader and a verified EEG visualization/inspection module. Project Owner approvals resolving preprocessing decisions U-001 through U-009 are recorded as D-031 through D-039 in `DECISIONS.md`. No preprocessing or epoching code has been implemented or authorized yet. Before M1-T03 implementation is authorized, affected numbered scientific documents must be reconciled so they no longer present those decisions as unresolved.**
+> **M1-T01 and M1-T02 are completed, merged, and verified on canonical `main`. The repository has a verified EEGBCI loader and a verified EEG visualization/inspection module. Project Owner approvals resolving preprocessing decisions U-001 through U-009 are recorded as D-031 through D-039 in `DECISIONS.md`, and the affected numbered methodology documents are reconciled to those decisions. No preprocessing or epoching code has been implemented or authorized yet. M1-T03 is ready for a separate explicit implementation ticket.**
 
 Do not mark coding milestones complete until code has been:
 
@@ -192,9 +192,7 @@ AGENTS.md
 
 ## Current decision-alignment status
 
-`DECISIONS.md` is authoritative and now resolves U-001 through U-009 as D-031 through D-039.
-
-The following numbered documents still contain pre-approval wording that describes some or all of those decisions as unresolved and therefore require a documentation-only reconciliation before M1-T03 implementation is authorized:
+`DECISIONS.md` resolves U-001 through U-009 as D-031 through D-039. The affected numbered methodology documents are aligned on canonical `main`:
 
 ```text
 docs/06_DATASET_AND_DATA_PIPELINE.md
@@ -202,7 +200,7 @@ docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md
 docs/15_IMPLEMENTATION_BLUEPRINT.md
 ```
 
-Until that reconciliation is merged, `DECISIONS.md` takes precedence and Codex must not implement M1-T03.
+No scientific/documentation alignment blocker remains for drafting M1-T03. Implementation remains unauthorized until `CURRENT_TASK.md` contains an explicitly approved active ticket.
 
 ## Next numbered scientific document
 
@@ -250,9 +248,9 @@ None authorized
 
 # 7. NEXT CANDIDATE IMPLEMENTATION TASK
 
-> **M1-T03 preprocessing/epoching is the next candidate implementation task, but it is not yet authorized. First reconcile the affected numbered documentation with D-031 through D-039, review and merge that documentation-only change, then obtain explicit Project Owner approval for a new `CURRENT_TASK.md` implementation ticket.**
+> **M1-T03 preprocessing/epoching is the next candidate implementation task and its scientific/documentation prerequisites are satisfied, but it is not yet authorized. A new `CURRENT_TASK.md` implementation ticket must be explicitly approved before coding begins.**
 
-Do not begin preprocessing or epoching until those gates are satisfied.
+Do not begin preprocessing or epoching until that authorization exists.
 
 ---
 
@@ -263,7 +261,7 @@ Do not begin preprocessing or epoching until those gates are satisfied.
 | 0 | Config / Infrastructure | NOT STARTED | No | No | — | M0 pending |
 | 1 | EEG Data Loader | PASS | Yes | Yes | `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` | M1-T01 completed and merged |
 | 2 | EEG Visualization / Inspection | PASS | Yes | Yes | `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` | M1-T02 completed and merged |
-| 3 | EEG Preprocessing / Epochs | BLOCKED | No | No | — | Scientific parameters approved; numbered-doc reconciliation + active ticket still required |
+| 3 | EEG Preprocessing / Epochs | BLOCKED | No | No | — | Scientific/docs prerequisites satisfied; active implementation ticket still required |
 | 4 | CSP + LDA | NOT STARTED | No | No | — | Depends on valid epochs/split |
 | 5 | EEGNet / Compact CNN | NOT STARTED | No | No | — | |
 | 6 | Unified Decoder Interface | NOT STARTED | No | No | — | |
@@ -442,22 +440,10 @@ These unresolved items must remain visible.
 Current state:
 
 ```text
-Documentation/code-governance consistency blocker:
-- docs/06_DATASET_AND_DATA_PIPELINE.md still contains pre-approval unresolved wording for U-001–U-009
-- docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md still contains pre-approval unresolved wording for U-001–U-009
-- docs/15_IMPLEMENTATION_BLUEPRINT.md still lists several now-approved M1 preprocessing parameters as blockers
+None currently blocking repository consistency for M1-T03 preparation.
 ```
 
-Required action:
-
-```text
-Reconcile those documents to D-031 through D-039
-→ review diff
-→ merge documentation-only PR
-→ then create/approve M1-T03 implementation ticket
-```
-
-Do not invent other technical blockers before actual implementation.
+M1-T03 remains blocked from implementation only because no active `CURRENT_TASK.md` ticket has been explicitly approved. Do not invent technical blockers before actual implementation.
 
 ---
 

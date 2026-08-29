@@ -388,32 +388,40 @@ The project must remain focused.
 
 If the active task requires any unresolved item below and no explicit decision exists, stop.
 
+Resolved for the initial M1 preprocessing/epoching pipeline by D-031 through D-039:
+
+```text
+7–30 Hz band-pass
+average EEG reference
+canonical epoch -1.0 s to +4.0 s
+initial CSP crop +1.0 s to +2.0 s
+baseline=None
+no ICA / no automatic interpolation; reject >150 µV peak-to-peak and log
+exclude T0 from binary training; preserve annotations/provenance
+preserve all 64 validated EEG channels
+no resampling; preserve 160 Hz
+canonical MNE Epochs; persisted *-epo.fif
+```
+
 Currently unresolved or change-controlled items include:
 
-1. exact EEG filter band;
-2. EEG reference;
-3. epoch interval;
-4. baseline correction;
-5. artifact-handling policy;
-6. T0 policy;
-7. processed-data format;
-8. final train/validation/test protocol;
-9. final cross-subject protocol;
-10. final CSP settings;
-11. final EEGNet architecture/hyperparameters;
-12. calibration method;
-13. calibration fitting partition;
-14. calibration binning;
-15. Bayesian goal-evidence likelihood construction;
-16. binary EEG-to-multiple-goal interaction protocol;
-17. Bayesian stopping/commitment rule;
-18. confidence thresholds;
-19. exact adaptation mechanism;
-20. environmental risk scale;
-21. risk weight \(\lambda\);
-22. prohibited-hazard threshold;
-23. final A/B/C/D component matrix;
-24. final statistical-analysis policy.
+1. final train/validation/test protocol;
+2. final cross-subject protocol;
+3. final CSP settings;
+4. final EEGNet architecture/hyperparameters;
+5. calibration method;
+6. calibration fitting partition;
+7. calibration binning;
+8. Bayesian goal-evidence likelihood construction;
+9. binary EEG-to-multiple-goal interaction protocol;
+10. Bayesian stopping/commitment rule;
+11. confidence thresholds;
+12. exact adaptation mechanism;
+13. environmental risk scale;
+14. risk weight \(\lambda\);
+15. prohibited-hazard threshold;
+16. final A/B/C/D component matrix;
+17. final statistical-analysis policy.
 
 If required:
 
