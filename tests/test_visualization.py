@@ -119,8 +119,10 @@ def test_inspect_recording_saves_three_figures_and_does_not_mutate_raw(tmp_path:
 
     artifacts = inspect_recording(recording, output_dir=tmp_path, trace_duration_seconds=1.0, trace_channels=2)
 
-    assert len(artifacts.saved_paths) == 3
+    assert artifacts.annotation_figure.axes
+    assert len(artifacts.saved_paths) == 4
     assert all(path.exists() for path in artifacts.saved_paths)
+    assert any(path.name.endswith("_annotations.png") for path in artifacts.saved_paths)
     np.testing.assert_allclose(raw.get_data(), original_data)
     assert raw.ch_names == original_channels
     assert raw.annotations.description.tolist() == original_annotation_descriptions

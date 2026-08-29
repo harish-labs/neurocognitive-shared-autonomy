@@ -66,6 +66,7 @@ class InspectionArtifacts:
     raw_trace_figure: Figure
     psd_figure: Figure
     sensor_figure: Figure
+    annotation_figure: Figure
     saved_paths: tuple[Path, ...]
 
 
@@ -260,6 +261,7 @@ def inspect_recording(
         max_channels=trace_channels,
     )
     sensor_figure = plot_sensor_layout(recording)
+    annotation_figure = plot_annotation_overview(recording)
     saved_paths: list[Path] = []
     if output_dir is not None:
         output_root = Path(output_dir).expanduser().resolve()
@@ -268,12 +270,19 @@ def inspect_recording(
         saved_paths.append(save_figure(raw_trace_figure, output_root / f"subject_{subject_part}_run_{run_part}_traces.png"))
         saved_paths.append(save_figure(psd_figure, output_root / f"subject_{subject_part}_run_{run_part}_psd.png"))
         saved_paths.append(save_figure(sensor_figure, output_root / f"subject_{subject_part}_run_{run_part}_sensors.png"))
+        saved_paths.append(
+            save_figure(
+                annotation_figure,
+                output_root / f"subject_{subject_part}_run_{run_part}_annotations.png",
+            )
+        )
     return InspectionArtifacts(
         metadata=metadata,
         annotation_overview=annotation_overview,
         raw_trace_figure=raw_trace_figure,
         psd_figure=psd_figure,
         sensor_figure=sensor_figure,
+        annotation_figure=annotation_figure,
         saved_paths=tuple(saved_paths),
     )
 
@@ -335,6 +344,7 @@ def main() -> int:
             plt.close(artifacts.raw_trace_figure)
             plt.close(artifacts.psd_figure)
             plt.close(artifacts.sensor_figure)
+            plt.close(artifacts.annotation_figure)
     except (VisualizationValidationError, OSError, RuntimeError) as exc:
         parser.exit(status=1, message=f"Visualization error: {exc}\n")
 
