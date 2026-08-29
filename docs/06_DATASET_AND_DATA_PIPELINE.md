@@ -6,7 +6,7 @@
 **Document ID:** D-01  
 **Document class:** Data & Neuroscience / Dataset Specification  
 **Authority level:** Subordinate to the Master Authority Documents, Search & Rescue Scenario Specification, System Architecture, and Technology Stack  
-**Status:** Authoritative dataset baseline; unresolved preprocessing and evaluation choices are explicitly preserved  
+**Status:** Authoritative dataset baseline; approved initial M1 preprocessing choices and remaining unresolved evaluation choices are explicitly preserved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---
@@ -300,7 +300,7 @@ The event mapping must therefore be tied to the selected run type.
 
 ---
 
-# 8. REST / T0 STATUS — NOT YET FULLY FROZEN
+# 8. REST / T0 STATUS — APPROVED FOR INITIAL BINARY PIPELINE
 
 The current project's primary classification problem is binary:
 
@@ -312,14 +312,14 @@ Right motor imagery
 
 Therefore T0 is **not one of the two intended target classes**.
 
-However, the exact operational treatment of T0 has not yet been explicitly frozen in the authority documents.
+The approved initial M1 policy is:
 
-Possible uses include:
+- exclude T0 from the primary binary epoch/training dataset;
+- use T1 (imagined left fist) and T2 (imagined right fist) as the target classes;
+- preserve original T0 annotations in raw data and inspection/provenance information;
+- do not create a third classifier class.
 
-- excluding T0 from the binary training labels;
-- retaining rest intervals only as contextual data;
-- using rest periods for EEG inspection;
-- using T0 in a later expanded experiment.
+A later exploratory use of T0 would require separate approval.
 
 ## Important rule
 
@@ -331,9 +331,7 @@ Rest / Left / Right
 
 classification problem.
 
-The exact T0 handling should be frozen when the preprocessing/epoching protocol is approved.
-
-For the initial binary classifier, treating T1 and T2 as the target classes is consistent with the locked project objective, but the final preprocessing implementation should document precisely how T0 segments are handled.
+The initial T0 handling is frozen by D-036 in `DECISIONS.md`. The preprocessing implementation must document and preserve this policy exactly.
 
 ---
 
@@ -345,7 +343,7 @@ The recordings follow an international scalp-electrode placement scheme document
 
 The core project should initially preserve the full available EEG channel set unless a later scientifically justified channel-selection experiment is approved.
 
-The project has **not yet locked a reduced channel subset**.
+The approved M1-T03 policy is to preserve all **64 validated EEG channels with no channel reduction**.
 
 Therefore:
 
@@ -735,40 +733,36 @@ The purpose is to catch:
 
 The approved architecture requires EEG preprocessing.
 
-However, the exact preprocessing parameters are **not yet locked**.
+For the initial M1 preprocessing/epoching pipeline, D-031 through D-039 now freeze the relevant parameters:
 
-Potential operations include:
-
-- band-pass filtering;
-- channel selection if later justified;
-- referencing;
-- artifact handling;
-- epoch-specific baseline policy;
-- optional normalization.
+- band-pass: 7–30 Hz;
+- EEG reference: average EEG reference;
+- canonical epoch: -1.0 s to +4.0 s relative to cue onset;
+- initial CSP training crop: +1.0 s to +2.0 s;
+- baseline correction: none (`baseline=None`);
+- artifact policy: no ICA, no automatic bad-channel interpolation, reject epochs above 150 µV peak-to-peak and log rejections;
+- T0: exclude from the binary epoch/training dataset while preserving raw annotations/provenance;
+- channels: preserve all 64 validated EEG channels;
+- resampling: none, preserve 160 Hz;
+- canonical processed representation: MNE Epochs, with persisted epochs saved as `*-epo.fif`.
 
 ## Critical rule
 
-The preprocessing document must later freeze these choices based on neuroscience/BCI reasoning.
-
-Codex must not silently choose arbitrary defaults and make them project assumptions.
+Codex must implement only these approved choices when M1-T03 is separately authorized. It must not silently add, remove, or alter scientifically meaningful preprocessing operations.
 
 ---
 
-# 26. BAND-PASS FILTER — UNRESOLVED PROJECT PARAMETER
+# 26. BAND-PASS FILTER — APPROVED INITIAL PARAMETER
 
 Motor-imagery EEG commonly focuses on sensorimotor frequency ranges, and official MNE CSP examples use a band-pass configuration for their demonstration.
 
-However:
-
-> **The project's final band-pass limits are not yet locked.**
-
-Therefore a value such as:
+For the initial M1 motor-imagery pipeline, the approved band-pass is:
 
 ```text
 7–30 Hz
 ```
 
-must be treated only as a **reference/example from an official MNE motor-imagery demonstration**, not as the final project setting unless explicitly approved.
+This value is authoritative because it was explicitly approved and recorded as D-031 in `DECISIONS.md`, not merely because it appears in a reference example.
 
 The final choice should be documented in:
 
@@ -779,51 +773,34 @@ The final choice should be documented in:
 
 ---
 
-# 27. EEG REFERENCING — UNRESOLVED PROJECT PARAMETER
+# 27. EEG REFERENCING — APPROVED INITIAL PARAMETER
 
-The final EEG reference strategy has not been explicitly frozen.
+The initial M1 EEG reference strategy is **average EEG reference**, approved as D-032 in `DECISIONS.md`.
 
-Possible MNE workflows may use an average reference or another justified reference.
+The method must:
 
-No referencing strategy should become permanent merely because it appears in an example notebook.
-
-The final method must:
-
-- be scientifically justified;
-- be applied consistently;
-- be recorded;
+- be applied consistently across the preserved validated EEG channels;
+- be recorded in preprocessing configuration/provenance;
 - and not leak evaluation information.
+
+A different reference requires a superseding approved decision.
 
 ---
 
-# 28. ARTIFACT HANDLING — UNRESOLVED
+# 28. ARTIFACT HANDLING — APPROVED INITIAL POLICY
 
-The project has not locked a complex artifact-removal pipeline.
+The approved initial M1 artifact policy is deliberately simple and auditable:
 
-Possible artifact issues include:
+```text
+No ICA
+No automatic bad-channel interpolation
+Reject an epoch when EEG peak-to-peak amplitude exceeds 150 µV
+Record every rejected epoch and its rejection reason/threshold
+```
 
-- eye movement;
-- muscle activity;
-- bad channels;
-- transient noise.
+Potential artifacts still include eye movement, muscle activity, bad channels, transient noise, and electrical interference. More complex artifact-removal methods are not part of the initial pipeline and require separate approval.
 
-However, adding ICA or aggressive artifact rejection without need could create:
-
-- implementation complexity;
-- data loss;
-- leakage risk;
-- additional hyperparameters.
-
-Therefore:
-
-> **No complex artifact-removal method is currently mandatory.**
-
-The later preprocessing methodology must state exactly:
-
-- what artifact handling is performed;
-- why;
-- whether bad channels/trials are excluded;
-- and how exclusion is logged.
+The implementation must state exactly what was rejected and preserve rejection accounting by trial/subject/class where applicable.
 
 ---
 
@@ -874,37 +851,32 @@ y: binary task labels
 
 plus metadata.
 
-The exact epoch time window is **not yet locked**.
+The approved canonical task epoch is **-1.0 s to +4.0 s relative to cue onset**.
 
 ---
 
-# 31. EPOCH WINDOW — UNRESOLVED PROJECT PARAMETER
+# 31. EPOCH WINDOW — APPROVED INITIAL PARAMETER
 
-Official MNE CSP examples use a specific broader epoch interval and then crop a training interval for their demonstration.
+The initial M1 timing is approved as:
 
-That example is useful as a methodological reference.
+```text
+canonical epoch: -1.0 s to +4.0 s relative to cue onset
+initial CSP training crop: +1.0 s to +2.0 s relative to cue onset
+```
 
-It is **not automatically the project's final epoch timing**.
-
-The final project must explicitly define:
-
-- epoch start relative to cue;
-- epoch end;
-- whether an initial post-cue delay is excluded;
-- whether baseline correction is used;
-- whether the same window is used for CSP and EEGNet.
-
-The values must be scientifically justified and recorded.
+The +1.0-to-+2.0-second crop belongs to the later CSP baseline stage and must not replace the canonical stored epoch. The values must be recorded with provenance. EEGNet timing remains governed by its later authorized implementation/model decisions.
 
 ---
 
-# 32. BASELINE CORRECTION — UNRESOLVED
+# 32. BASELINE CORRECTION — APPROVED INITIAL POLICY
 
-The final baseline-correction policy is not currently locked.
+The approved initial baseline-correction policy is:
 
-Do not silently enable or disable baseline correction based only on library defaults.
+```text
+baseline = None
+```
 
-The chosen setting must be explicit.
+Do not silently enable baseline correction through a library default or alter this setting without a superseding decision.
 
 ---
 
@@ -1242,18 +1214,20 @@ eeg:
   runs: [4, 8, 12]
 
 preprocessing:
-  l_freq: TBD
-  h_freq: TBD
-  reference: TBD
-  epoch_tmin: TBD
-  epoch_tmax: TBD
-  baseline: TBD
-  artifact_policy: TBD
+  l_freq: 7.0
+  h_freq: 30.0
+  reference: average
+  epoch_tmin: -1.0
+  epoch_tmax: 4.0
+  baseline: null
+  artifact_policy:
+    ica: false
+    automatic_bad_channel_interpolation: false
+    eeg_peak_to_peak_reject_uv: 150
+  resample_hz: null
 ```
 
-`TBD` here is intentional.
-
-The project must not pretend unresolved methodological parameters have already been decided.
+These preprocessing values reflect approved decisions D-031 through D-039. Remaining unresolved evaluation/model parameters must stay explicit rather than receiving silent defaults.
 
 ---
 
@@ -1361,24 +1335,15 @@ Deleting/recreating processed data should be possible from raw data + code + con
 
 # 48. SAVING PROCESSED DATA
 
-The exact processed-data serialization format is **not locked**.
+The canonical in-memory processed representation is **MNE Epochs**, approved as D-039.
 
-Possible approaches may include:
+When processed epochs are persisted, save them as MNE FIF epoch files using the:
 
-- MNE Epochs files;
-- NumPy arrays with metadata;
-- another transparent documented format.
+```text
+*-epo.fif
+```
 
-Selection criteria:
-
-- preserves channel order;
-- preserves sampling rate;
-- preserves trial metadata;
-- easy to reproduce;
-- compatible with both CSP+LDA and EEGNet;
-- does not create unnecessary duplication.
-
-Do not choose a complex database.
+naming convention. This preserves channel order, sampling rate, events, timing, and metadata/provenance. Derived NumPy or PyTorch arrays may later be created for model input, but they do not replace the canonical MNE Epochs/FIF representation.
 
 ---
 
@@ -1828,9 +1793,7 @@ EEGNet and CSP inputs must be traceable.
 
 ## Do not silently change sampling rate
 
-If resampling is later approved, the original and new sampling frequencies must be recorded.
-
-No resampling is currently locked.
+The approved M1-T03 policy is **no resampling**: preserve the native validated 160 Hz sampling rate. If a later superseding decision introduces resampling, the original and new sampling frequencies must both be recorded.
 
 ---
 
@@ -1840,9 +1803,9 @@ Reference examples are starting evidence, not project decisions.
 
 ---
 
-# 63. OPEN DATA / PREPROCESSING DECISIONS
+# 63. DATA / PREPROCESSING DECISION STATUS
 
-The following remain unresolved.
+Initial preprocessing decisions U-001 through U-009 are resolved as D-031 through D-039. Later data/evaluation decisions remain unresolved as identified below.
 
 ## 63.1 Final subject protocol
 
@@ -1853,57 +1816,57 @@ The following remain unresolved.
 
 ---
 
-## 63.2 T0/rest handling
+## 63.2 T0/rest handling — RESOLVED
 
-Exact treatment in preprocessing.
-
----
-
-## 63.3 Band-pass filter
-
-Exact lower/upper cutoffs.
+D-036: exclude T0 from the primary binary epoch/training dataset while preserving raw annotations/provenance.
 
 ---
 
-## 63.4 EEG reference
+## 63.3 Band-pass filter — RESOLVED
 
-Exact referencing strategy.
-
----
-
-## 63.5 Epoch interval
-
-Exact cue-relative timing.
+D-031: 7–30 Hz.
 
 ---
 
-## 63.6 Baseline correction
+## 63.4 EEG reference — RESOLVED
 
-Exact policy.
-
----
-
-## 63.7 Artifact rejection
-
-Exact method and thresholds.
+D-032: average EEG reference.
 
 ---
 
-## 63.8 Channel subset
+## 63.5 Epoch interval — RESOLVED
 
-Current default direction is to preserve available EEG channels, but no reduced-channel experiment is locked.
-
----
-
-## 63.9 Resampling
-
-Not currently required or locked.
+D-033: canonical -1.0 s to +4.0 s; initial CSP crop +1.0 s to +2.0 s.
 
 ---
 
-## 63.10 Processed data file format
+## 63.6 Baseline correction — RESOLVED
 
-Not locked.
+D-034: `baseline=None`.
+
+---
+
+## 63.7 Artifact rejection — RESOLVED
+
+D-035: no ICA/interpolation; reject epochs above 150 µV peak-to-peak and log rejections.
+
+---
+
+## 63.8 Channel subset — RESOLVED FOR M1-T03
+
+D-037: preserve all 64 validated channels; no channel reduction in M1-T03. A later reduced-channel experiment requires separate approval.
+
+---
+
+## 63.9 Resampling — RESOLVED FOR M1-T03
+
+D-038: no resampling; preserve native 160 Hz.
+
+---
+
+## 63.10 Processed data file format — RESOLVED
+
+D-039: canonical MNE Epochs; persisted epochs use MNE FIF `*-epo.fif`.
 
 ---
 
@@ -1936,7 +1899,7 @@ vs
 Right-hand imagery
 ```
 
-Therefore those example settings must be independently justified before adoption.
+Reference examples remain non-authoritative by themselves. The current 7–30 Hz band and approved epoch/CSP timing are authoritative because they were explicitly approved and recorded in `DECISIONS.md`.
 
 ---
 
@@ -1955,7 +1918,7 @@ The complete data layer should eventually produce:
 
 - cleaned/filtered Raw or equivalent;
 - event table;
-- MNE Epochs or equivalent;
+- canonical MNE Epochs;
 - trial metadata.
 
 ## Model-level outputs
@@ -2160,7 +2123,7 @@ The dataset/data-pipeline implementation is valid when:
 
 # 72. CURRENT DATASET SUMMARY
 
-The project uses the **PhysioNet EEG Motor Movement/Imagery Dataset / EEGBCI** as its approved prerecorded neural-data source. The dataset contains 64-channel EEG from 109 subjects across 14 runs per subject, recorded with BCI2000 and distributed in EDF+ format at 160 Hz. The project's initial task is limited to **runs 4, 8, and 12**, which correspond to **motor imagery of the left fist versus the right fist**. In these runs, T1 represents the left-fist imagery condition and T2 the right-fist imagery condition, while T0 represents rest. MNE-Python is used to download/cache the data, load EDF recordings, standardize channels, attach an appropriate montage, extract annotations/events, and later construct epochs. The data pipeline must preserve subject/run/trial provenance and enforce strict leakage boundaries for CSP, neural models, calibration, normalization, and cross-subject evaluation. The exact filter band, reference, epoch timing, T0 policy, artifact handling, final subject split, calibration partition, and processed-data serialization remain unresolved and must be explicitly approved before they become permanent methodology.
+The project uses the **PhysioNet EEG Motor Movement/Imagery Dataset / EEGBCI** as its approved prerecorded neural-data source. The dataset contains 64-channel EEG from 109 subjects across 14 runs per subject, recorded with BCI2000 and distributed in EDF+ format at 160 Hz. The project's initial task is limited to **runs 4, 8, and 12**, which correspond to **motor imagery of the left fist versus the right fist**. In these runs, T1 represents the left-fist imagery condition and T2 the right-fist imagery condition, while T0 represents rest. MNE-Python is used to download/cache the data, load EDF recordings, standardize channels, attach the approved `standard_1005` montage, extract annotations/events, and later construct epochs. D-031 through D-039 now fix the initial M1 preprocessing/epoching policy: 7–30 Hz band-pass, average EEG reference, canonical -1.0-to-+4.0-second epochs, +1.0-to-+2.0-second CSP crop, `baseline=None`, the approved 150 µV peak-to-peak rejection policy without ICA/interpolation, exclusion of T0 from binary training while preserving provenance, all 64 channels, no resampling, and MNE Epochs/FIF persistence. The data pipeline must preserve subject/run/trial provenance and enforce strict leakage boundaries for CSP, neural models, calibration, normalization, and cross-subject evaluation. Final subject-split and calibration-partition choices remain unresolved and must be approved separately.
 
 ---
 

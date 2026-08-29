@@ -6,7 +6,7 @@
 **Document ID:** E-01  
 **Document class:** Machine Learning / EEG Methodology Specification  
 **Authority level:** Subordinate to the Master Authority Documents, Scenario Specification, System Architecture, Technology Stack, Dataset/Data Pipeline Specification, and Neuroscience/BCI Foundations  
-**Status:** Authoritative methodology baseline with all unresolved signal-processing and evaluation choices explicitly preserved  
+**Status:** Authoritative methodology baseline with approved initial M1 preprocessing choices and remaining unresolved model/evaluation choices explicitly preserved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---
@@ -261,11 +261,9 @@ Therefore a motor-related band-pass is scientifically reasonable.
 
 However:
 
-> **The exact final filter limits are still unresolved.**
+> **The approved initial M1 filter is 7–30 Hz.**
 
-An official MNE motor-imagery CSP example uses a 7–30 Hz band for its example.
-
-That value may be evaluated as a starting candidate, but it must not be considered project-approved merely because it appears in a reference example.
+An official MNE motor-imagery CSP example also uses a 7–30 Hz band, but the project setting is authoritative because the Project Owner explicitly approved it and it is recorded as D-031 in `DECISIONS.md`.
 
 ## Final selection rule
 
@@ -310,17 +308,13 @@ Therefore:
 
 EEG is a differential measurement.
 
-The final reference strategy remains unresolved.
+The approved initial M1 reference strategy is **average EEG reference** (D-032).
 
-Potential approaches may include:
-
-- existing dataset reference;
-- average reference;
-- another scientifically justified strategy.
+A different reference requires a superseding approved decision.
 
 ## Requirement
 
-The final reference choice must be:
+The approved reference choice must be:
 
 - explicit;
 - applied consistently;
@@ -336,9 +330,9 @@ Do not rely on a library default without documenting it.
 
 The source EEG sampling frequency is 160 Hz.
 
-No resampling is currently required or locked.
+The approved M1-T03 policy is **no resampling**; preserve the native validated 160 Hz sampling rate (D-038).
 
-If resampling is later introduced, document:
+If a later superseding decision introduces resampling, document:
 
 ```text
 original sampling rate
@@ -364,18 +358,16 @@ Potential EEG artifacts include:
 - poor electrode contact;
 - electrical interference.
 
-Possible responses include:
+## Approved initial rule
 
-- simple epoch rejection;
-- bad-channel handling;
-- no additional removal beyond filtering;
-- or a more sophisticated method if justified.
+```text
+No ICA
+No automatic bad-channel interpolation
+Reject an epoch when EEG peak-to-peak amplitude exceeds 150 µV
+Record every rejected epoch and rejection reason/threshold
+```
 
-## Current rule
-
-ICA or another advanced artifact-removal method is **not mandatory**.
-
-No artifact method may be introduced solely for sophistication.
+This is D-035. More sophisticated artifact handling requires separate approval.
 
 ---
 
@@ -419,7 +411,7 @@ The event-extraction stage must verify:
 
 The locked classification target is binary Left vs Right.
 
-T0 represents rest but its exact operational treatment remains unresolved.
+T0 represents rest. For the initial M1 binary pipeline, its operational treatment is approved as D-036.
 
 The implementation must not silently convert the model into:
 
@@ -429,14 +421,13 @@ Rest vs Left vs Right
 
 unless a future scope decision approves that change.
 
-Likely valid uses of T0 include:
+Approved policy:
 
-- inspection;
-- reference/context;
-- exclusion from the binary target classes;
-- later exploratory analysis.
+- exclude T0 from the primary binary epoch/training dataset;
+- retain T0 annotations in raw data and inspection/provenance information;
+- do not create a third classifier class.
 
-The exact policy must be frozen before final model training.
+A later exploratory use of T0 requires separate approval.
 
 ---
 
@@ -467,13 +458,15 @@ y \in \{0,1\}^{N}
 
 for the current binary task.
 
-The exact epoch interval remains unresolved.
+The canonical processed object is **MNE Epochs**. When persisted, processed epochs use MNE FIF `*-epo.fif` (D-039). Model-specific arrays may be derived later without replacing this canonical representation or its metadata/provenance.
+
+The approved canonical M1 task epoch is **-1.0 s to +4.0 s relative to cue onset** (D-033).
 
 ---
 
 # 16. EPOCH TIMING
 
-The final cue-relative epoch window must be selected before final experiments.
+The approved cue-relative canonical epoch window is -1.0 s to +4.0 s. The initial CSP training crop is +1.0 s to +2.0 s relative to cue onset; that crop belongs to the CSP stage and does not replace the canonical stored epoch.
 
 Important considerations:
 
@@ -482,7 +475,7 @@ Important considerations:
 - overly long intervals may add unrelated activity;
 - different windows can materially alter model performance.
 
-The final values must be documented as:
+The approved values must be documented as:
 
 ```text
 tmin
@@ -500,17 +493,13 @@ crop_tmax
 
 # 17. BASELINE CORRECTION
 
-The exact baseline-correction setting is unresolved.
-
-The implementation must explicitly state:
+The approved initial M1 baseline policy is D-034:
 
 ```text
 baseline = None
 ```
 
-or the chosen interval/strategy once approved.
-
-Do not leave baseline behavior ambiguous.
+Do not leave baseline behavior ambiguous or silently enable a library default.
 
 ---
 
@@ -518,9 +507,9 @@ Do not leave baseline behavior ambiguous.
 
 The source dataset contains 64 EEG channels.
 
-The current baseline direction is to preserve all available validated EEG channels.
+The approved M1-T03 policy is to preserve all 64 validated EEG channels with no channel reduction (D-037).
 
-A reduced sensorimotor subset may later be studied.
+A reduced sensorimotor subset may later be studied only as a separately approved experiment.
 
 If channel reduction is introduced, it must be classified as one of:
 
@@ -2465,7 +2454,7 @@ The EEG/ML subsystem is correctly implemented when:
 
 # 115. CURRENT METHODOLOGY SUMMARY
 
-The EEG subsystem begins with real prerecorded PhysioNet EEGBCI data from runs 4, 8, and 12 and performs a leakage-safe Left-vs-Right motor-imagery decoding task. After validated channel handling, signal preprocessing, event extraction, and epoch construction, the same underlying trial definitions should support two mandatory model paths: a classical **CSP + LDA** baseline and an **EEGNet / approved compact CNN** neural decoder. CSP must be fitted only on training data, and EEGNet must be trained and selected through non-test partitions. Both models must expose explicit normalized class-probability vectors through a common decoder interface. The project evaluates accuracy, balanced accuracy, precision, recall, F1, confusion matrices, subject-level performance, and later cross-subject generalization. Raw decoder probabilities are saved for the separate calibration stage because downstream shared autonomy depends on the reliability of probability magnitudes, not only class labels. Exact filter limits, reference, epoch interval, artifact policy, channel reduction, CSP settings, EEGNet hyperparameters, final split protocol, and calibration strategy remain unresolved until explicitly approved. The EEG subsystem ends at probabilistic Left/Right neural evidence and must not embed Search & Rescue goal semantics.
+The EEG subsystem begins with real prerecorded PhysioNet EEGBCI data from runs 4, 8, and 12 and performs a leakage-safe Left-vs-Right motor-imagery decoding task. After validated channel handling, signal preprocessing, event extraction, and epoch construction, the same underlying trial definitions should support two mandatory model paths: a classical **CSP + LDA** baseline and an **EEGNet / approved compact CNN** neural decoder. The initial M1 preprocessing/epoching policy is fixed by D-031 through D-039: 7–30 Hz band-pass, average EEG reference, canonical -1.0-to-+4.0-second epochs, +1.0-to-+2.0-second initial CSP crop, `baseline=None`, the approved 150 µV peak-to-peak rejection policy without ICA/interpolation, T0 excluded from binary training while provenance is preserved, all 64 channels, no resampling, and MNE Epochs/FIF as the canonical processed representation/persistence format. CSP must be fitted only on training data, and EEGNet must be trained and selected through non-test partitions. Both models must expose explicit normalized class-probability vectors through a common decoder interface. CSP settings, EEGNet hyperparameters, the final split protocol, and calibration strategy remain unresolved until explicitly approved. The EEG subsystem ends at probabilistic Left/Right neural evidence and must not embed Search & Rescue goal semantics.
 
 ---
 
