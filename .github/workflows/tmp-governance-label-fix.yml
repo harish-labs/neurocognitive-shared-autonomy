@@ -1,0 +1,49 @@
+name: Temporary governance label fix
+
+on:
+  push:
+    branches:
+      - state/m1-t03-governance-label-fix
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: state/m1-t03-governance-label-fix
+          fetch-depth: 0
+      - name: Correct non-self-referential labels
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          replacements = {
+              'CURRENT_TASK.md': ('Latest canonical governance commit:', 'Latest prerequisite methodology reconciliation commit:'),
+              'PROJECT_STATE.md': ('Latest Canonical Governance Commit:', 'Latest Prerequisite Methodology Reconciliation Commit:'),
+          }
+          for path, (old, new) in replacements.items():
+              p = Path(path)
+              s = p.read_text()
+              if s.count(old) != 1:
+                  raise SystemExit(f'{path}: expected one {old!r}')
+              p.write_text(s.replace(old, new))
+          PY
+          git diff --check
+          grep -Fq 'NO ACTIVE TASK / PENDING APPROVAL' CURRENT_TASK.md
+          grep -Fq 'Latest prerequisite methodology reconciliation commit:' CURRENT_TASK.md
+          grep -Fq 'Latest Prerequisite Methodology Reconciliation Commit:' PROJECT_STATE.md
+      - name: Commit and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/tmp-governance-label-fix.yml
+          git add CURRENT_TASK.md PROJECT_STATE.md
+          git commit -m 'Clarify governance commit labels'
+          git push origin HEAD:state/m1-t03-governance-label-fix
