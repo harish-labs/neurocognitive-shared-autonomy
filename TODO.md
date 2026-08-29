@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** M1 loader and visualization completed; no active task authorized  
+**Current stage:** M1 loader and visualization completed; preprocessing decisions approved; no active task authorized  
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -46,13 +46,14 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] Add EXPERIMENT_LOG.md
 [x] Add TODO.md
 [x] Establish Git history
+[x] Record approved M1-T03 preprocessing decisions U-001 through U-009
 ```
 
 ## Current authorization
 
 ```text
 [ ] Wait for next approved CURRENT_TASK.md
-[ ] Do not begin preprocessing or epoching without approval
+[ ] Do not begin preprocessing or epoching without an active implementation ticket
 ```
 
 ---
@@ -82,9 +83,10 @@ Completed:
 [x] Inspect PSD / basic signal properties
 [x] Inspect sensor layout
 [x] Inspect annotation overview
+[x] Approve M1 preprocessing parameters
 ```
 
-Then, only after scientific preprocessing decisions are approved:
+Scientific preprocessing decisions are approved. The following remain pending explicit task authorization and implementation:
 
 ```text
 [ ] Implement preprocessing
@@ -100,19 +102,21 @@ Then, only after scientific preprocessing decisions are approved:
 
 # 4. BLOCKED — SCIENTIFIC DECISIONS
 
-## EEG
+## EEG — resolved for initial M1 preprocessing
 
 ```text
-[ ] Decide exact filter band
-[ ] Decide EEG reference
-[ ] Decide epoch interval
-[ ] Decide baseline correction
-[ ] Decide artifact handling
-[ ] Decide T0 handling
-[ ] Decide channel reduction, if any
-[ ] Decide resampling, if any
-[ ] Decide processed-data format
+[x] Decide exact filter band — 7–30 Hz
+[x] Decide EEG reference — average EEG reference
+[x] Decide epoch interval — -1.0 to +4.0 s; CSP crop +1.0 to +2.0 s
+[x] Decide baseline correction — baseline=None
+[x] Decide artifact handling — no ICA/interpolation; reject >150 µV peak-to-peak and log
+[x] Decide T0 handling — exclude from binary training; preserve annotations/provenance
+[x] Decide channel reduction, if any — retain all 64; no reduction
+[x] Decide resampling, if any — none; retain 160 Hz
+[x] Decide processed-data format — MNE Epochs; persisted `*-epo.fif`
 ```
+
+These choices are recorded as D-031 through D-039 in `DECISIONS.md`.
 
 ## Evaluation
 
@@ -199,6 +203,7 @@ Then, only after scientific preprocessing decisions are approved:
 ```text
 [x] Loader
 [x] Visualization
+[x] Preprocessing parameters approved
 [ ] Preprocessing
 [ ] Event extraction
 [ ] Epoching
@@ -494,6 +499,7 @@ Potential research directions:
 [x] RESEARCH_LOG.md
 [x] EXPERIMENT_LOG.md
 [x] TODO.md
+[x] M1-T03 preprocessing decisions D-031 through D-039 recorded
 ```
 
 ---
