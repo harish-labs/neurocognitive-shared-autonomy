@@ -47,6 +47,7 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] Add TODO.md
 [x] Establish Git history
 [x] Record approved M1-T03 preprocessing decisions U-001 through U-009
+[x] Reconcile docs/06, docs/08, and docs/15 to D-031 through D-039
 ```
 
 ## Current authorization

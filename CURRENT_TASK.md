@@ -29,8 +29,8 @@ M1-T02 — EEG Visualization / Inspection
 Latest canonical governance commit:
 
 ```text
-37554d65554f4e473fa42316c7e0801ffcdee2af
-Record approved M1-T03 preprocessing decisions (#4)
+d71292387d4476b8ab40841d4ed1544cba3d81b6
+Reconcile numbered methodology for M1-T03 (#6)
 ```
 
 Latest verified software commit:
@@ -40,9 +40,9 @@ Latest verified software commit:
 M1-T02: Add EEG visualization and inspection (#2)
 ```
 
-Scientific preprocessing decisions U-001 through U-009 are now approved and recorded as D-031 through D-039 in `DECISIONS.md`.
+Scientific preprocessing decisions U-001 through U-009 are approved and recorded as D-031 through D-039 in `DECISIONS.md`. The affected numbered methodology documents (`docs/06`, `docs/08`, and `docs/15`) are reconciled to those decisions on canonical `main`.
 
-This removes the scientific-parameter blocker for an M1-T03 preprocessing/epoching ticket, but it does **not** itself authorize implementation.
+The scientific and documentation prerequisites for drafting an M1-T03 preprocessing/epoching ticket are satisfied, but this does **not** itself authorize implementation.
 
 Do not begin M1-T03 preprocessing/epoching until a new implementation ticket is explicitly approved in this file.
 
