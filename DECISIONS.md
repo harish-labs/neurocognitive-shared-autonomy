@@ -473,23 +473,262 @@ It does not approve or freeze unrelated preprocessing choices such as:
 
 ---
 
+## D-031 — M1 EEG Band-Pass Filter
+
+**Status:** APPROVED
+
+**Date:** 2026-08-30  
+**Resolves:** U-001
+
+**Decision:**
+
+```text
+Band-pass filter: 7–30 Hz
+```
+
+**Context:** M1-T03 requires an explicit motor-imagery filter range before preprocessing may be implemented.
+
+**Alternatives considered:** a different motor-related band; leaving the range unresolved.
+
+**Rationale:** 7–30 Hz is an established motor-imagery CSP starting range covering sensorimotor mu/beta activity and was explicitly approved by the Project Owner for the initial pipeline.
+
+**Affected documents/modules:** `docs/06_DATASET_AND_DATA_PIPELINE.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, `docs/15_IMPLEMENTATION_BLUEPRINT.md`, `src/eeg/preprocessing.py` when separately authorized.
+
+**Implementation consequence:** M1-T03 may use 7–30 Hz once an implementation ticket is separately authorized. This decision alone does not authorize coding.
+
+**Approved by:** Project Owner
+
+---
+
+## D-032 — M1 EEG Reference
+
+**Status:** APPROVED
+
+**Date:** 2026-08-30  
+**Resolves:** U-002
+
+**Decision:**
+
+```text
+EEG reference: average EEG reference
+```
+
+**Context:** The preprocessing pipeline requires an explicit reference strategy rather than a library default.
+
+**Alternatives considered:** retain the dataset reference; another justified reference strategy.
+
+**Rationale:** A common average EEG reference is appropriate for the full 64-channel initial scalp EEG configuration and was explicitly approved for M1 preprocessing.
+
+**Affected documents/modules:** `docs/06_DATASET_AND_DATA_PIPELINE.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, `src/eeg/preprocessing.py` when separately authorized.
+
+**Implementation consequence:** M1-T03 may apply average EEG referencing consistently once separately authorized. Exact code must not introduce an unapproved alternative reference.
+
+**Approved by:** Project Owner
+
+---
+
+## D-033 — M1 Epoch Interval and CSP Training Crop
+
+**Status:** APPROVED
+
+**Date:** 2026-08-30  
+**Resolves:** U-003
+
+**Decision:**
+
+```text
+Canonical task epoch: -1.0 s to +4.0 s relative to cue onset
+Initial CSP training crop: +1.0 s to +2.0 s relative to cue onset
+```
+
+**Context:** Event-to-epoch timing must be explicit before epoch construction and the initial CSP baseline.
+
+**Alternatives considered:** a shorter task epoch; a different post-cue CSP analysis window.
+
+**Rationale:** The approved scheme preserves a broader cue-relative epoch while defining a later post-cue CSP analysis window that avoids using the immediate cue-onset response as the initial CSP training segment.
+
+**Affected documents/modules:** `docs/06_DATASET_AND_DATA_PIPELINE.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, `src/eeg/epochs.py` for canonical epochs, and `src/models/csp_lda.py` for the later CSP crop when each task is authorized.
+
+**Implementation consequence:** M1-T03 may construct -1.0-to-4.0-second epochs. The +1.0-to-2.0-second crop is reserved for the CSP baseline stage and must not silently replace the canonical stored epoch.
+
+**Approved by:** Project Owner
+
+---
+
+## D-034 — M1 Baseline Correction
+
+**Status:** APPROVED
+
+**Date:** 2026-08-30  
+**Resolves:** U-004
+
+**Decision:**
+
+```text
+baseline = None
+```
+
+**Context:** Baseline behavior must be explicit because it changes epoch values and downstream covariance structure.
+
+**Alternatives considered:** pre-cue baseline correction; another explicit baseline interval.
+
+**Rationale:** The initial CSP-oriented motor-imagery pipeline will not apply baseline subtraction; the choice is explicit rather than inherited from an MNE default.
+
+**Affected documents/modules:** `docs/06_DATASET_AND_DATA_PIPELINE.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, `src/eeg/epochs.py` when separately authorized.
+
+**Implementation consequence:** M1-T03 epoch construction must explicitly use no baseline correction.
+
+**Approved by:** Project Owner
+
+---
+
+## D-035 — M1 Artifact-Handling Policy
+
+**Status:** APPROVED
+
+**Date:** 2026-08-30  
+**Resolves:** U-005
+
+**Decision:**
+
+```text
+No ICA.
+No automatic bad-channel interpolation.
+Reject epochs with EEG peak-to-peak amplitude greater than 150 µV.
+Record rejected epochs and the rejection reason/threshold.
+```
+
+**Context:** M1-T03 needs a simple, auditable artifact policy without silently introducing a complex cleaning pipeline.
+
+**Alternatives considered:** ICA-based cleaning; automatic interpolation; no amplitude-based rejection; a different fixed threshold.
+
+**Rationale:** A fixed epoch-level amplitude rule is transparent and reproducible while avoiding unapproved, higher-complexity artifact-removal methods.
+
+**Affected documents/modules:** `docs/06_DATASET_AND_DATA_PIPELINE.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, `src/eeg/epochs.py` and/or `src/eeg/preprocessing.py` when separately authorized.
+
+**Implementation consequence:** The initial pipeline may reject epochs only under the approved 150 µV peak-to-peak rule; rejection accounting must be retained. ICA and automatic interpolation remain out of scope unless later approved.
+
+**Approved by:** Project Owner
+
+---
+
+## D-036 — M1 T0 / Rest Handling
+
+**Status:** APPROVED
+
+**Date:** 2026-08-30  
+**Resolves:** U-006
+
+**Decision:**
+
+```text
+Exclude T0 from the primary binary epoch/training dataset.
+Use T1 = imagined left fist and T2 = imagined right fist as the two target classes.
+Preserve original T0 annotations in raw data and inspection/provenance information.
+Do not create a third classifier class.
+```
+
+**Context:** The initial project task is binary Left-vs-Right motor imagery, but T0 rest annotations are present in EEGBCI recordings.
+
+**Alternatives considered:** three-class Rest/Left/Right; creating separate T0 training epochs; using T0 only in a later exploratory experiment.
+
+**Rationale:** Excluding T0 from the primary classifier preserves the approved binary task while retaining the source annotation semantics for provenance and later analysis.
+
+**Affected documents/modules:** `docs/06_DATASET_AND_DATA_PIPELINE.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, `src/eeg/epochs.py` when separately authorized.
+
+**Implementation consequence:** M1-T03 must map only T1/T2 into binary model epochs and must not delete or reinterpret T0 annotations in the underlying raw recording.
+
+**Approved by:** Project Owner
+
+---
+
+## D-037 — M1 Channel Policy
+
+**Status:** APPROVED
+
+**Date:** 2026-08-30  
+**Resolves:** U-007
+
+**Decision:**
+
+```text
+Preserve all 64 validated EEG channels.
+No channel reduction in M1-T03.
+```
+
+**Context:** A reduced motor-cortex subset had not been approved, and silent channel selection would add a scientific assumption.
+
+**Alternatives considered:** a fixed C3/Cz/C4-style subset; another fixed subset; training-only channel selection.
+
+**Rationale:** Keeping all validated channels makes the initial preprocessing stage neutral and preserves information for later controlled channel-ablation/selection studies.
+
+**Affected documents/modules:** `docs/06_DATASET_AND_DATA_PIPELINE.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, `src/eeg/preprocessing.py`, `src/eeg/epochs.py` when separately authorized.
+
+**Implementation consequence:** M1-T03 must preserve the loader's validated 64-channel order and must not silently reduce channels.
+
+**Approved by:** Project Owner
+
+---
+
+## D-038 — M1 Sampling-Rate Policy
+
+**Status:** APPROVED
+
+**Date:** 2026-08-30  
+**Resolves:** U-008
+
+**Decision:**
+
+```text
+No resampling in M1-T03.
+Preserve the native validated EEGBCI sampling rate of 160 Hz.
+```
+
+**Context:** Resampling was optional and no computational or methodological need had been established for the initial preprocessing stage.
+
+**Alternatives considered:** downsampling to another rate; another explicitly justified resampling strategy.
+
+**Rationale:** Native 160 Hz sampling adequately represents the approved 7–30 Hz band and avoids an unnecessary transformation in the initial pipeline.
+
+**Affected documents/modules:** `docs/06_DATASET_AND_DATA_PIPELINE.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, `src/eeg/preprocessing.py` when separately authorized.
+
+**Implementation consequence:** M1-T03 must retain validated 160 Hz sampling and must not call a resampling operation unless this decision is superseded.
+
+**Approved by:** Project Owner
+
+---
+
+## D-039 — M1 Processed EEG Representation and Persistence
+
+**Status:** APPROVED
+
+**Date:** 2026-08-30  
+**Resolves:** U-009
+
+**Decision:**
+
+```text
+Canonical in-memory processed representation: MNE Epochs.
+When processed epochs are persisted, save them as MNE FIF epoch files using the *-epo.fif naming convention.
+```
+
+**Context:** The processed-data representation must preserve channel order/names, sampling rate, events, timing, and provenance rather than relying on bare arrays with implicit metadata.
+
+**Alternatives considered:** NumPy arrays plus separate metadata; another transparent structured format; no persistence contract.
+
+**Rationale:** MNE Epochs/FIF is native to the approved EEG stack and preserves the metadata needed to audit preprocessing and downstream model inputs.
+
+**Affected documents/modules:** `docs/06_DATASET_AND_DATA_PIPELINE.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, `src/eeg/epochs.py` when separately authorized.
+
+**Implementation consequence:** M1-T03 APIs should expose MNE Epochs as the canonical processed object. Any persisted processed epoch artifact must use FIF; model-specific NumPy/PyTorch arrays may be derived later without replacing the canonical representation.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
-
-## EEG / Signal Processing
-
-```text
-U-001 — Exact band-pass filter
-U-002 — EEG reference
-U-003 — Epoch interval
-U-004 — Baseline correction
-U-005 — Artifact-handling policy
-U-006 — T0 handling
-U-007 — Channel reduction, if any
-U-008 — Resampling, if any
-U-009 — Processed-data format
-```
 
 ## Data Split / Validation
 
