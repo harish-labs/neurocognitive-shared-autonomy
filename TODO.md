@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** Pre-implementation  
+**Current stage:** M1 loader and visualization completed; no active task authorized  
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -36,48 +36,52 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 ## Repository / Live State
 
 ```text
-[ ] Create / initialize project repository
-[ ] Add MASTER_PROJECT_SPEC.md
-[ ] Add AGENTS.md
-[ ] Add PROJECT_STATE.md
-[ ] Add CURRENT_TASK.md
-[ ] Add DECISIONS.md
-[ ] Add RESEARCH_LOG.md
-[ ] Add EXPERIMENT_LOG.md
-[ ] Add TODO.md
-[ ] Establish Git history
+[x] Create / initialize project repository
+[x] Add MASTER_PROJECT_SPEC.md
+[x] Add AGENTS.md
+[x] Add PROJECT_STATE.md
+[x] Add CURRENT_TASK.md
+[x] Add DECISIONS.md
+[x] Add RESEARCH_LOG.md
+[x] Add EXPERIMENT_LOG.md
+[x] Add TODO.md
+[x] Establish Git history
 ```
 
-## First implementation task
+## Current authorization
 
 ```text
-[ ] Implement PhysioNet EEGBCI loader
-[ ] Support configurable subject IDs
-[ ] Support runs 4 / 8 / 12
-[ ] Use MNE download/cache utilities
-[ ] Load EDF
-[ ] Standardize channel names
-[ ] Attach appropriate montage
-[ ] Print metadata / annotations
-[ ] Add validation/error handling
-[ ] Add tests where practical
-[ ] Run tests
-[ ] Manually verify real EEG metadata
-[ ] Commit accepted loader
+[ ] Wait for next approved CURRENT_TASK.md
+[ ] Do not begin preprocessing or epoching without approval
 ```
 
 ---
 
 # 3. NEXT
 
-After the loader passes:
+Completed:
 
 ```text
-[ ] EEG visualization / inspection
-[ ] Verify annotations visually
-[ ] Verify montage
-[ ] Inspect raw EEG
-[ ] Inspect PSD / basic signal properties
+[x] Implement PhysioNet EEGBCI loader
+[x] Support configurable subject IDs
+[x] Support runs 4 / 8 / 12
+[x] Use MNE download/cache utilities
+[x] Load EDF
+[x] Standardize channel names
+[x] Attach appropriate montage
+[x] Print metadata / annotations
+[x] Add validation/error handling
+[x] Add tests where practical
+[x] Run tests
+[x] Manually verify real EEG metadata
+[x] Commit accepted loader
+[x] EEG visualization / inspection
+[x] Verify annotations visually
+[x] Verify montage
+[x] Inspect raw EEG
+[x] Inspect PSD / basic signal properties
+[x] Inspect sensor layout
+[x] Inspect annotation overview
 ```
 
 Then, only after scientific preprocessing decisions are approved:
@@ -193,8 +197,8 @@ Then, only after scientific preprocessing decisions are approved:
 # 6. MILESTONE M1 — EEG + CSP/LDA
 
 ```text
-[ ] Loader
-[ ] Visualization
+[x] Loader
+[x] Visualization
 [ ] Preprocessing
 [ ] Event extraction
 [ ] Epoching
