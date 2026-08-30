@@ -403,25 +403,33 @@ no resampling; preserve 160 Hz
 canonical MNE Epochs; persisted *-epo.fif
 ```
 
+Resolved for EEG split/evaluation by D-040 through D-042:
+
+```text
+within-subject: deterministic class-stratified 60/20/20 at original-trial level
+primary cross-subject: fixed subject-held-out 70/15/15
+held-out assignment: seed 42 and versioned frozen subject manifest
+full eligible 109-subject cohort: 76 train / 16 validation / 17 final test
+no subject, original-trial, or derived-window leakage across protected partitions
+```
+
 Currently unresolved or change-controlled items include:
 
-1. final train/validation/test protocol;
-2. final cross-subject protocol;
-3. final CSP settings;
-4. final EEGNet architecture/hyperparameters;
-5. calibration method;
-6. calibration fitting partition;
-7. calibration binning;
-8. Bayesian goal-evidence likelihood construction;
-9. binary EEG-to-multiple-goal interaction protocol;
-10. Bayesian stopping/commitment rule;
-11. confidence thresholds;
-12. exact adaptation mechanism;
-13. environmental risk scale;
-14. risk weight \(\lambda\);
-15. prohibited-hazard threshold;
-16. final A/B/C/D component matrix;
-17. final statistical-analysis policy.
+1. final CSP settings;
+2. final EEGNet architecture/hyperparameters;
+3. calibration method;
+4. calibration fitting partition;
+5. calibration binning;
+6. Bayesian goal-evidence likelihood construction;
+7. binary EEG-to-multiple-goal interaction protocol;
+8. Bayesian stopping/commitment rule;
+9. confidence thresholds;
+10. exact adaptation mechanism;
+11. environmental risk scale;
+12. risk weight \(\lambda\);
+13. prohibited-hazard threshold;
+14. final A/B/C/D component matrix;
+15. final statistical-analysis policy.
 
 If required:
 

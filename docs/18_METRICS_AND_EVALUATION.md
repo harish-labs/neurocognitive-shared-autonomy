@@ -1250,7 +1250,11 @@ Recommended:
 
 # 66. M8 — CROSS-SUBJECT AGGREGATION
 
-Cross-subject results must preserve individual-subject performance.
+Under D-041 and D-042, the primary cross-subject evaluation uses a fixed 70/15/15 subject-held-out train/validation/final-test split with a seed-42 frozen subject manifest before model fitting. For a full eligible 109-subject cohort this corresponds to 76 train, 16 validation, and 17 final-test subjects.
+
+Cross-subject results must preserve individual-subject performance. Final-test subject results must not be used to fit or select models, calibration, thresholds, or adaptation parameters.
+
+Within-subject and cross-subject results must be reported separately.
 
 Recommended outputs:
 

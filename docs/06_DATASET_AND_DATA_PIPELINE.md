@@ -979,18 +979,57 @@ Subject and trial metadata must remain aligned with array order.
 
 Dataset splitting is one of the most important scientific parts of the project.
 
-The exact final cross-subject protocol remains unresolved.
+The primary split protocol is approved by D-040 through D-042.
 
-Therefore this document defines **rules**, not the final split.
+## Within-subject evaluation
 
-Possible research modes include:
+Use a deterministic, class-stratified split at the original-trial level:
 
-- within-subject evaluation;
-- subject-wise cross-validation;
-- held-out-subject evaluation;
-- another approved subject-level protocol.
+```text
+60% train
+20% validation
+20% test
+```
 
-The Experimental Design document will freeze the final protocol.
+No original trial, or any derived window from that trial, may cross partitions.
+
+If retained class counts for a subject cannot support the approved class-stratified split, report the condition rather than silently substituting another split rule.
+
+## Cross-subject evaluation
+
+The primary cross-subject protocol is a fixed subject-held-out split:
+
+```text
+70% train subjects
+15% validation subjects
+15% final test subjects
+```
+
+A subject belongs to exactly one partition. No trial from a validation or final-test subject may appear in training.
+
+## Held-out subject strategy
+
+After the approved preprocessing/QC boundary:
+
+```text
+form the eligible subject list
+shuffle once with fixed seed 42
+freeze subject IDs in a versioned split manifest before model fitting
+```
+
+For a full eligible 109-subject EEGBCI cohort, the frozen counts are:
+
+```text
+76 train subjects
+16 validation subjects
+17 final test subjects
+```
+
+Final-test subjects must not be used for CSP fitting, EEGNet training, hyperparameter selection, calibration fitting, threshold tuning, or learned adaptation.
+
+If preprocessing/QC produces an eligible cohort size other than 109, do not silently invent another count-allocation rule. Report the eligible count for reviewer decision before freezing the final subject manifest.
+
+Within-subject and cross-subject results answer different scientific questions and must be reported separately.
 
 ---
 
