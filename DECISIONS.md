@@ -726,17 +726,117 @@ When processed epochs are persisted, save them as MNE FIF epoch files using the 
 
 ---
 
+## D-040 — EEG Train / Validation / Test Evaluation Tracks
+
+**Status:** APPROVED
+
+**Date:** 2026-08-30  
+**Resolves:** U-010
+
+**Decision:**
+
+```text
+Use two explicitly separated EEG evaluation tracks.
+
+Within-subject evaluation:
+- deterministic, class-stratified 60% train / 20% validation / 20% test split;
+- grouping unit is the original trial;
+- no trial or derived window may cross partitions.
+
+Cross-subject evaluation:
+- subject-level 70% train / 15% validation / 15% test split;
+- governed further by D-041 and D-042.
+
+Within-subject and cross-subject results must be reported separately and must not be mixed into one unlabeled average.
+```
+
+**Context:** Decoder development needs a frozen train/validation/test boundary while preserving the scientific distinction between personalized within-subject decoding and unseen-subject generalization.
+
+**Alternatives considered:** one undifferentiated split for all questions; cross-validation only; no fixed final test partition.
+
+**Rationale:** Separate evaluation tracks answer different scientific questions while retaining a protected test set and explicit leakage boundaries.
+
+**Affected documents/modules:** `docs/06_DATASET_AND_DATA_PIPELINE.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, split-manifest utilities, CSP/LDA and EEGNet evaluation when separately authorized.
+
+**Implementation consequence:** A later split-manifest ticket may implement these partition contracts. If a subject does not contain enough retained class trials to satisfy the approved class-stratified within-subject split, implementation must report the condition rather than silently substitute another scientific split rule.
+
+**Approved by:** Project Owner
+
+---
+
+## D-041 — Primary Cross-Subject Evaluation Protocol
+
+**Status:** APPROVED
+
+**Date:** 2026-08-30  
+**Resolves:** U-011
+
+**Decision:**
+
+```text
+Primary cross-subject protocol:
+fixed subject-held-out 70% train / 15% validation / 15% test split.
+
+A subject must belong to exactly one partition.
+No trial from a validation/test subject may appear in training.
+
+Leave-one-subject-out or grouped subject K-fold may be added later only as explicitly authorized secondary analyses; they are not the primary protocol.
+```
+
+**Context:** Cross-subject evaluation must measure generalization to people not represented in model fitting while remaining computationally practical for the full EEGBCI cohort and both decoder families.
+
+**Alternatives considered:** leave-one-subject-out as the primary protocol; grouped subject K-fold as the primary protocol; trial-level random splitting across subjects.
+
+**Rationale:** A fixed held-out subject split gives a genuinely unseen final test cohort, preserves a validation cohort for model development, and avoids repeated full-cohort retraining as the primary experiment.
+
+**Affected documents/modules:** `docs/06_DATASET_AND_DATA_PIPELINE.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, split-manifest utilities, model evaluation code when separately authorized.
+
+**Implementation consequence:** Cross-subject split code must enforce disjoint subject IDs across train, validation, and test and preserve subject-wise reporting.
+
+**Approved by:** Project Owner
+
+---
+
+## D-042 — Fixed Held-Out Subject Strategy
+
+**Status:** APPROVED
+
+**Date:** 2026-08-30  
+**Resolves:** U-012
+
+**Decision:**
+
+```text
+After the approved preprocessing/QC boundary, form the eligible subject list.
+Use one deterministic shuffle with fixed seed 42.
+Freeze the resulting subject IDs in a versioned split manifest before model fitting.
+
+For the full 109-subject eligible EEGBCI cohort, freeze:
+- 76 train subjects
+- 16 validation subjects
+- 17 final test subjects
+
+Every trial from a subject remains in that subject's partition.
+Final test subjects must not be used for CSP fitting, EEGNet training, hyperparameter selection, calibration fitting, threshold tuning, or learned adaptation.
+```
+
+**Context:** The held-out-subject strategy must be reproducible and frozen before model development to prevent subject-selection leakage and test-set tuning.
+
+**Alternatives considered:** hand-picking subjects; reshuffling per run/seed; exposing test subjects during model selection.
+
+**Rationale:** A single seeded subject assignment gives a reproducible protected final test cohort while preserving the approved 70/15/15 cross-subject structure.
+
+**Affected documents/modules:** `docs/06_DATASET_AND_DATA_PIPELINE.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, split-manifest utilities, experiment configuration and evaluation code when separately authorized.
+
+**Implementation consequence:** The manifest must record the seed, eligible subject IDs, partition subject IDs, counts, and provenance. If preprocessing/QC produces an eligible cohort size other than 109, do not silently invent a different count-allocation rule; report the eligible count for reviewer decision before freezing a final subject manifest.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
-
-## Data Split / Validation
-
-```text
-U-010 — Final train/validation/test protocol
-U-011 — Final cross-subject protocol
-U-012 — Final held-out subject strategy
-```
 
 ## Models
 
