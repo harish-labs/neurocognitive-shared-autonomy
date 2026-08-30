@@ -10,11 +10,14 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.eeg.epochs import (
+    BASELINE,
     EPOCH_TMAX,
     EPOCH_TMIN,
+    REJECT_THRESHOLD_UV,
     REJECT_THRESHOLD_V,
     create_motor_imagery_epochs,
     extract_eegbci_events,
+    extract_events_from_raw,
     save_epochs,
 )
 from src.eeg.loader import LoadedRecording, RecordingSummary
@@ -66,6 +69,12 @@ def test_extract_eegbci_events_preserves_t0_t1_t2() -> None:
     assert event_id == {"T0": 1, "T1": 2, "T2": 3}
 
 
+def test_extract_events_from_raw_supports_diagnostic_raw_usage() -> None:
+    events, event_id = extract_events_from_raw(make_recording().raw)
+    assert len(events) == 3
+    assert event_id == {"T0": 1, "T1": 2, "T2": 3}
+
+
 def test_create_motor_imagery_epochs_excludes_t0_and_preserves_metadata() -> None:
     result = create_motor_imagery_epochs(preprocess_recording(make_recording()))
 
@@ -79,6 +88,13 @@ def test_create_motor_imagery_epochs_excludes_t0_and_preserves_metadata() -> Non
     assert tuple(result.epochs.metadata["subject_id"]) == (1, 1)
     assert tuple(result.epochs.metadata["run_id"]) == (4, 4)
     assert all(value is False for value in result.epochs.metadata["baseline_applied"])
+    assert result.epochs.tmin == EPOCH_TMIN
+    assert result.epochs.tmax == EPOCH_TMAX
+    assert result.epochs.baseline == BASELINE
+    assert result.epochs.get_data().shape[1] == 64
+    assert tuple(result.epochs.ch_names) == tuple(make_recording().raw.ch_names)
+    assert float(result.epochs.info["sfreq"]) == 160.0
+    assert np.isfinite(result.epochs.get_data()).all()
 
 
 def test_create_motor_imagery_epochs_rejects_large_peak_to_peak_epochs() -> None:
@@ -103,6 +119,12 @@ def test_create_motor_imagery_epochs_rejects_large_peak_to_peak_epochs() -> None
     assert len(result.rejection_log) == 1
     assert result.rejection_log[0].event_code == "T2"
     assert result.rejection_log[0].reason
+    assert result.rejection_log[0].reject_threshold_uv == REJECT_THRESHOLD_UV
+
+
+def test_create_motor_imagery_epochs_rejects_arbitrary_raw_input() -> None:
+    with pytest.raises(Exception, match="LoadedRecording or PreprocessedRecording"):
+        create_motor_imagery_epochs(make_recording().raw)
 
 
 def test_save_epochs_requires_epo_fif_suffix(tmp_path: Path) -> None:

@@ -6,7 +6,6 @@ from pathlib import Path
 import mne
 import numpy as np
 import pandas as pd
-from mne.io import BaseRaw
 
 from src.eeg.loader import LoadedRecording
 from src.eeg.preprocessing import PreprocessedRecording, preprocess_recording
@@ -35,6 +34,7 @@ class RejectedEpoch:
     event_sample: int
     event_time_seconds: float
     reason: str
+    reject_threshold_uv: float
 
 
 @dataclass(frozen=True)
@@ -49,8 +49,8 @@ class EpochExtractionResult:
 
 
 def _coerce_preprocessed_recording(
-    recording: LoadedRecording | PreprocessedRecording | BaseRaw,
-) -> tuple[BaseRaw, int | None, int | None, Path | None]:
+    recording: LoadedRecording | PreprocessedRecording,
+) -> tuple[mne.io.BaseRaw, int | None, int | None, Path | None]:
     if isinstance(recording, PreprocessedRecording):
         return (
             recording.raw,
@@ -66,17 +66,23 @@ def _coerce_preprocessed_recording(
             preprocessed.summary.run_id,
             preprocessed.summary.source_file,
         )
-    if isinstance(recording, BaseRaw):
-        return recording, None, None, None
     raise EpochingValidationError(
-        f"Expected a LoadedRecording, PreprocessedRecording, or MNE Raw object. Got {type(recording)!r}."
+        f"Expected a LoadedRecording or PreprocessedRecording. Got {type(recording)!r}."
     )
 
 
 def extract_eegbci_events(
-    recording: LoadedRecording | PreprocessedRecording | BaseRaw,
+    recording: LoadedRecording | PreprocessedRecording,
 ) -> tuple[np.ndarray, dict[str, int]]:
     raw, _, _, _ = _coerce_preprocessed_recording(recording)
+    events, event_id = mne.events_from_annotations(raw, event_id=EVENT_CODE_MAP, verbose="ERROR")
+    missing = [name for name in EVENT_CODE_MAP if name not in event_id]
+    if missing:
+        raise EpochingValidationError(f"Missing expected EEGBCI annotations: {', '.join(missing)}.")
+    return events, event_id
+
+
+def extract_events_from_raw(raw: mne.io.BaseRaw) -> tuple[np.ndarray, dict[str, int]]:
     events, event_id = mne.events_from_annotations(raw, event_id=EVENT_CODE_MAP, verbose="ERROR")
     missing = [name for name in EVENT_CODE_MAP if name not in event_id]
     if missing:
@@ -119,7 +125,7 @@ def _build_metadata(
 
 
 def create_motor_imagery_epochs(
-    recording: LoadedRecording | PreprocessedRecording | BaseRaw,
+    recording: LoadedRecording | PreprocessedRecording,
     *,
     reject_threshold_uv: float = REJECT_THRESHOLD_UV,
 ) -> EpochExtractionResult:
@@ -129,7 +135,7 @@ def create_motor_imagery_epochs(
         )
 
     raw, subject_id, run_id, source_file = _coerce_preprocessed_recording(recording)
-    events, event_id = extract_eegbci_events(raw)
+    events, _ = extract_events_from_raw(raw)
     sfreq = float(raw.info["sfreq"])
     metadata = _build_metadata(
         events=events,
@@ -181,6 +187,7 @@ def create_motor_imagery_epochs(
                 event_sample=int(event[0]),
                 event_time_seconds=float(row["event_time_seconds"]),
                 reason="; ".join(drop_reasons),
+                reject_threshold_uv=REJECT_THRESHOLD_UV,
             )
         )
 
