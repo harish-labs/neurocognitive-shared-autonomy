@@ -1,0 +1,31 @@
+name: Finalize split state
+on:
+  push:
+    branches: [docs/split-protocol-reconciliation]
+permissions:
+  contents: write
+jobs:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: docs/split-protocol-reconciliation
+          fetch-depth: 0
+      - name: Apply final state cleanup
+        run: |
+          python .github/scripts/finalize_split_state.py
+          git diff --check
+          grep -q "Split / validation protocol" PROJECT_STATE.md
+          grep -q "EEG Preprocessing / Epochs:" PROJECT_STATE.md
+          grep -q "PROTOCOL APPROVED / IMPLEMENTATION NOT STARTED" PROJECT_STATE.md
+      - name: Commit and remove temporary automation
+        run: |
+          rm .github/workflows/finalize_split_state.yml
+          rm .github/scripts/finalize_split_state.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Finalize project state after split decisions"
+          git push origin HEAD:docs/split-protocol-reconciliation
