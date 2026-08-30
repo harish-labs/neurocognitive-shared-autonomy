@@ -852,53 +852,61 @@ Only actual results may be plotted.
 
 # 49. E8 — CROSS-SUBJECT EVALUATION
 
-Cross-subject evaluation is an important approved research direction.
+Cross-subject evaluation is an approved research direction and its primary protocol is frozen by D-041 and D-042.
 
 Purpose:
 
 > Test whether EEG decoding/confidence behavior generalizes to subjects not used in model fitting.
 
-The exact protocol remains unresolved.
-
 ---
 
 # 50. CROSS-SUBJECT RULE
 
-If subject \(u\) is in the test set:
+The primary protocol is a fixed subject-held-out split:
+
+```text
+70% train subjects
+15% validation subjects
+15% final test subjects
+```
+
+If subject \(u\) is in validation or final test:
 
 ```text
 no trials from subject u
 ```
 
-may appear in training.
-
-This is non-negotiable for a true held-out-subject experiment.
+may appear in training. Subject IDs must be disjoint across all three partitions.
 
 ---
 
-# 51. POSSIBLE CROSS-SUBJECT PROTOCOLS
+# 51. PRIMARY CROSS-SUBJECT PROTOCOL
 
-Candidates include:
+After the approved preprocessing/QC boundary:
 
-## Leave-one-subject-out
+```text
+1. form the eligible subject list
+2. apply one deterministic shuffle with seed 42
+3. freeze the subject IDs in a versioned split manifest before model fitting
+```
 
-Train on all but one subject, test on the held-out subject.
+For a full eligible cohort of 109 EEGBCI subjects:
 
-## Grouped K-fold by subject
+```text
+76 train
+16 validation
+17 final test
+```
 
-Split subjects into folds.
+Leave-one-subject-out or grouped subject K-fold may be added later only as explicitly authorized secondary analyses; they are not the primary cross-subject protocol.
 
-## Fixed train/validation/test subject groups
-
-Hold out a final subject group.
-
-No final protocol is locked.
+If preprocessing/QC yields an eligible cohort size other than 109, the final subject-count allocation returns to reviewer decision rather than being silently redefined in code.
 
 ---
 
 # 52. CROSS-SUBJECT CALIBRATION
 
-Calibration must also respect subject boundaries where the scientific question concerns unseen subjects.
+Calibration must respect frozen subject boundaries where the scientific question concerns unseen subjects.
 
 Do not:
 
@@ -910,7 +918,7 @@ test subject labels
 
 unless the experiment explicitly studies post-calibration personalization rather than zero-shot generalization.
 
----
+The exact calibration method and fitting partition remain governed by U-016 and U-017.
 
 # 53. WITHIN-SUBJECT VS CROSS-SUBJECT
 
