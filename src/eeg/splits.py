@@ -212,7 +212,12 @@ def build_cross_subject_split_manifest(
     *,
     split_seed: int = APPROVED_SPLIT_SEED,
 ) -> CrossSubjectSplitManifest:
-    frozen_subject_ids = tuple(dict.fromkeys(int(subject_id) for subject_id in eligible_subject_ids))
+    if split_seed != APPROVED_SPLIT_SEED:
+        raise SplitManifestError(
+            f"Canonical cross-subject manifests must use the approved fixed seed {APPROVED_SPLIT_SEED}."
+        )
+
+    frozen_subject_ids = tuple(sorted({int(subject_id) for subject_id in eligible_subject_ids}))
     if len(frozen_subject_ids) != FULL_ELIGIBLE_SUBJECT_COUNT:
         raise SplitManifestError(
             "Approved cross-subject manifest requires exactly 109 eligible subjects. "
@@ -242,7 +247,7 @@ def build_cross_subject_split_manifest(
         version=CROSS_SUBJECT_SPLIT_VERSION,
         split_seed=split_seed,
         split_strategy="cross_subject_fixed_subject_held_out_70_15_15",
-        eligible_subject_ids=tuple(sorted(frozen_subject_ids)),
+        eligible_subject_ids=frozen_subject_ids,
         train_subject_ids=train_subject_ids,
         validation_subject_ids=validation_subject_ids,
         final_test_subject_ids=final_test_subject_ids,

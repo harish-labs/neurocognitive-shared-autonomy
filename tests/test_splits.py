@@ -129,6 +129,7 @@ def test_build_cross_subject_split_manifest_uses_approved_109_subject_counts() -
     assert len(set(manifest.train_subject_ids) & set(manifest.final_test_subject_ids)) == 0
     assert len(set(manifest.validation_subject_ids) & set(manifest.final_test_subject_ids)) == 0
     assert manifest.protected_final_test_subject_ids == manifest.final_test_subject_ids
+    assert manifest.eligible_subject_ids == tuple(range(1, FULL_ELIGIBLE_SUBJECT_COUNT + 1))
 
 
 def test_assign_cross_subject_partitions_preserves_subject_integrity_and_protects_final_test() -> None:
@@ -159,8 +160,23 @@ def test_build_cross_subject_split_manifest_stops_for_non_109_cohort() -> None:
         build_cross_subject_split_manifest(list(range(1, 109)))
 
 
-def test_cross_subject_manifest_is_deterministic() -> None:
+def test_cross_subject_manifest_is_deterministic_across_input_orderings() -> None:
     manifest_a = build_cross_subject_split_manifest(list(range(1, FULL_ELIGIBLE_SUBJECT_COUNT + 1)))
-    manifest_b = build_cross_subject_split_manifest(list(range(1, FULL_ELIGIBLE_SUBJECT_COUNT + 1)))
+    manifest_b = build_cross_subject_split_manifest(
+        list(range(FULL_ELIGIBLE_SUBJECT_COUNT, 0, -1))
+    )
+    manifest_c = build_cross_subject_split_manifest(
+        [12, 5, 88, 1, 109, 54, 3, 77, 8, 91]
+        + [subject_id for subject_id in range(1, FULL_ELIGIBLE_SUBJECT_COUNT + 1) if subject_id not in {12, 5, 88, 1, 109, 54, 3, 77, 8, 91}]
+    )
 
     assert manifest_a == manifest_b
+    assert manifest_a == manifest_c
+
+
+def test_build_cross_subject_split_manifest_rejects_non_approved_seed() -> None:
+    with pytest.raises(SplitManifestError, match="approved fixed seed 42"):
+        build_cross_subject_split_manifest(
+            list(range(1, FULL_ELIGIBLE_SUBJECT_COUNT + 1)),
+            split_seed=7,
+        )
