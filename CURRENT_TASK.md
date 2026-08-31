@@ -1,26 +1,36 @@
 # CURRENT_TASK.md
 
 ## NeuroCognitive Shared Autonomy for Search & Rescue
-### No Active Codex Implementation Ticket
+### Active Codex Implementation Ticket
 
-**Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no task is currently authorized  
-**Current status:** NO ACTIVE TASK  
-**Current milestone:** M1 — EEG Dataset / Loader / Epochs / CSP+LDA  
-**Task ID:** NONE AUTHORIZED  
-**Task title:** Awaiting next approved implementation ticket  
+**Purpose:** Hold exactly one active implementation task for Codex  
+**Current status:** ACTIVE  
+**Current milestone:** M1 — EEG Dataset / Loader / Epochs / EEGNet  
+**Task ID:** M1-T06  
+**Task title:** EEGNet / Compact CNN  
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
 **Repository instructions:** `AGENTS.md`  
-**Last updated:** 2026-08-31
+**Canonical branch verified:** `main`  
+**Canonical main commit verified:** `792843762b82c030dbdce568f7b4c93ceeebac7d`  
+**Task branch:** `task/m1-t06-eegnet-compact-cnn`  
+**Authorization basis:** Project Owner explicit approval of M1-T06 implementation after D-045, D-046, and D-047  
+**Authorized on:** 2026-08-31
 
 ---
 
-# 1. CURRENT AUTHORIZATION STATE
+# 1. TASK AUTHORIZATION
 
-There is currently no active implementation task authorized for Codex.
+This file authorizes exactly one active Codex implementation ticket:
 
-Completed, scientifically reviewed, accepted, and merged on canonical `main`:
+```text
+M1-T06 — EEGNet / Compact CNN
+```
+
+This authorization is limited strictly to the approved EEGNet / compact CNN model, training, inference, targeted tests, and a bounded real-data smoke verification using the already accepted M1-T03 epochs and M1-T04 split semantics.
+
+Completed, scientifically reviewed, accepted, and merged on canonical `main` before this ticket:
 
 ```text
 M1-T01 — PhysioNet EEGBCI Data Loader
@@ -30,96 +40,23 @@ M1-T04 — EEG Split Manifest
 M1-T05 — CSP+LDA Baseline
 ```
 
-M1-T05 acceptance and merge record:
+Verified before activation:
 
-```text
-Accepted rebased task-branch commit:
-e1f35e0dd8dd3296b6f85e32ac4ed5a6fd6e2d50
-
-Pull request:
-not created / not verifiable from this environment
-
-Squash-merge commit:
-d7597efb8db7c8d77aecbd87f9cf2366dd02b484
-```
-
-M1-T05 implements the approved CSP+LDA baseline under D-033 and D-040 through D-044 with train-only fitting, validation-only component selection by balanced accuracy across the full approved `{2,4,6,8}` set, deterministic tie-breaking, protected test/final-test isolation, and probability output.
-
-Do not begin EEGNet or any later implementation module without a new explicitly approved `CURRENT_TASK.md` ticket.
-
-U-014 and later unresolved decisions remain unresolved. This closeout does not resolve or reinterpret them.
+- `MASTER_PROJECT_SPEC.md`
+- `CURRENT_TASK.md`
+- `PROJECT_STATE.md`
+- `DECISIONS.md`
+- `AGENTS.md`
+- `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`
+- `docs/17_EXPERIMENTAL_DESIGN.md`
+- `docs/18_METRICS_AND_EVALUATION.md`
+- accepted M1-T03 through M1-T05 source/tests on canonical `main`
 
 ---
 
-# 2. CLOSED TASK RECORD — M1-T05
+# 2. READ FIRST
 
-```text
-Task ID:
-M1-T05
-
-Task title:
-CSP+LDA Baseline
-
-Final status:
-PASS / ACCEPTED / MERGED
-
-Task branch:
-task/m1-t05-csp-lda-baseline
-
-Accepted rebased branch commit:
-e1f35e0dd8dd3296b6f85e32ac4ed5a6fd6e2d50
-
-Merged through:
-approved squash merge on canonical main
-
-Canonical software merge commit:
-d7597efb8db7c8d77aecbd87f9cf2366dd02b484
-```
-
-Accepted scope:
-
-```text
-- single CSP+LDA baseline module
-- CSP crop +1.0 s to +2.0 s applied only inside the CSP path
-- all 64 channels preserved
-- CSP candidates evaluated over the full approved set {2,4,6,8}
-- validation balanced accuracy used for candidate selection
-- deterministic tie-break to 4 when tied, otherwise smallest tied candidate
-- train-only fitting and protected test/final-test isolation
-- stable predict / predict_proba behavior and class-order coverage
-- targeted automated tests
-```
-
-No EEGNet, calibration, Bayesian, shared-autonomy, planning, safety, replay, or later experiment implementation was authorized or merged in M1-T05.
-
----
-
-# 3. NEXT GOVERNANCE GATE
-
-Before any further implementation:
-
-```text
-1. Resolve any scientific decision required by the proposed task.
-2. Record the approved decision in DECISIONS.md when applicable.
-3. Draft one narrow implementation ticket.
-4. Obtain explicit Project Owner approval.
-5. Record that ticket here before Codex begins implementation.
-```
-
-For EEGNet and later modules, unresolved decisions remain and must not be silently decided.
-
-Until a new ticket is approved:
-
-```text
-STOP
-STATUS = NO ACTIVE TASK
-```
-
----
-
-# 4. READ FIRST FOR THE NEXT TASK
-
-Before activating or implementing any future ticket, read in this order:
+Codex must read, in this order:
 
 ```text
 1. MASTER_PROJECT_SPEC.md
@@ -127,8 +64,13 @@ Before activating or implementing any future ticket, read in this order:
 3. PROJECT_STATE.md
 4. DECISIONS.md
 5. AGENTS.md
-6. numbered methodology documents referenced by the new ticket
-7. relevant accepted source code and tests
+6. docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md
+7. docs/17_EXPERIMENTAL_DESIGN.md
+8. docs/18_METRICS_AND_EVALUATION.md
+9. src/eeg/epochs.py
+10. src/eeg/splits.py
+11. src/models/csp_lda.py
+12. accepted M1-T03/M1-T04/M1-T05 tests
 ```
 
 If any required file conflicts with `MASTER_PROJECT_SPEC.md` or an approved Project Owner decision:
@@ -137,4 +79,217 @@ If any required file conflicts with `MASTER_PROJECT_SPEC.md` or an approved Proj
 STOP
 STATUS = BLOCKED
 REPORT THE CONFLICT
+```
+
+---
+
+# 3. MODULE
+
+```text
+Module 5 — EEGNet / Compact CNN
+```
+
+Primary objective:
+
+> Implement the smallest leakage-safe EEGNet / compact CNN model, training, and inference module that consumes approved epochs plus accepted partition assignments and exposes stable class probabilities without using protected test data for fitting, tuning, or checkpoint selection.
+
+---
+
+# 4. GOVERNING DECISIONS
+
+This task is governed by:
+
+```text
+D-040 — separate within-subject and cross-subject evaluation tracks
+D-041 — primary cross-subject protocol is subject-held-out
+D-042 — fixed seed-42 protected final-test subject strategy
+D-045 — final EEGNet architecture
+D-046 — final EEGNet training hyperparameters
+D-047 — EEGNet pooling and depthwise max-norm supplement
+```
+
+Approved EEGNet architecture and training for this task:
+
+```text
+- input batch × 1 × 64 × time
+- all 64 channels
+- native 160 Hz
+- full canonical -1.0 s to +4.0 s epoch
+- no CSP-only +1.0 s to +2.0 s crop
+- F1 = 8
+- temporal kernel length 64 with same padding
+- no bias before BatchNorm
+- depthwise spatial convolution across all 64 channels
+- depth multiplier D = 2
+- max-norm depthwise constraint where supported
+- BatchNorm + ELU + average pooling
+- separable convolution with F2 = 16 and temporal kernel 16
+- BatchNorm + ELU + average pooling
+- dropout 0.5
+- flatten + dense 2 logits
+- explicit class order ("left", "right")
+- softmax probability output
+- two-class cross-entropy
+- Adam, lr 1e-3, weight_decay 0
+- batch size 32
+- maximum 200 epochs
+- early stopping patience 20
+- checkpoint selection by validation balanced accuracy
+- earliest checkpoint wins exact validation balanced-accuracy ties
+- random seed 42
+- shuffle training partition only
+- no class weighting or learning-rate scheduler
+- no extra normalization, augmentation, channel selection, resampling, or filtering
+- test/final-test never influence fitting, tuning, selection, or early stopping
+```
+
+---
+
+# 5. ALLOWED FILES
+
+Codex may modify or create only the smallest set of files required for this task, expected to be limited to:
+
+```text
+src/models/eegnet.py
+tests/test_eegnet.py
+CURRENT_TASK.md
+requirements.txt
+```
+
+If a minimal supporting edit is truly required in another file to complete this task validly:
+
+```text
+STOP
+→ explain why
+→ propose the smallest additional file change
+→ wait for approval
+```
+
+---
+
+# 6. FORBIDDEN SCOPE
+
+Do not implement or modify:
+
+```text
+src/models/calibration.py
+src/models/inference.py
+src/cognition/*
+src/autonomy/*
+src/app/*
+src/eeg/preprocessing.py
+src/eeg/epochs.py
+src/eeg/splits.py
+src/models/csp_lda.py
+PROJECT_STATE.md
+DECISIONS.md
+MASTER_PROJECT_SPEC.md
+```
+
+Do not implement any of the following in M1-T06:
+
+```text
+probability calibration
+Bayesian goal inference
+goal mapping
+shared autonomy
+safety controller
+A* planner
+adaptation
+end-to-end replay integration
+later experiment modules
+```
+
+Do not use CSP crop logic in EEGNet.
+Do not use test or final-test data for model selection.
+Do not merge branches in this task.
+
+---
+
+# 7. REQUIRED BEHAVIOR
+
+Required behavior:
+
+```text
+1. Consume canonical M1-T03 binary left/right epochs.
+2. Operate on accepted M1-T04 partition assignments.
+3. Keep within-subject and cross-subject evaluation paths separate.
+4. Preserve full canonical -1.0 s to +4.0 s EEGNet input epochs.
+5. Preserve all 64 channels and native 160 Hz.
+6. Fit EEGNet only on the training partition.
+7. Use validation only for early stopping and checkpoint selection.
+8. Select the checkpoint by validation balanced accuracy, earliest on exact ties.
+9. Keep protected test/final-test partitions isolated from fitting and selection.
+10. Expose deterministic predict and softmax probability output with stable class order.
+11. Use the same fixed architecture and training hyperparameters for both evaluation tracks.
+```
+
+---
+
+# 8. TESTS
+
+Codex must add targeted automated tests where practical.
+
+Required coverage includes:
+
+```text
+- tensor/input shape contract
+- full canonical epoch usage without CSP crop
+- training-only fitting
+- validation-only checkpoint selection
+- earliest-checkpoint tie behavior
+- protected test/final-test isolation
+- explicit class order and softmax probability output
+- compatibility with accepted within-subject and cross-subject partition assignments
+```
+
+Testing rule:
+
+```text
+run targeted EEGNet tests
++
+run relevant M1-T03/M1-T04 regressions
+```
+
+---
+
+# 9. MANUAL / SCIENTIFIC CHECKS
+
+If feasible, Codex should smoke-check the implemented EEGNet path on real cached subject 1 runs 4, 8, and 12 using the accepted within-subject split manifest.
+
+Manual/scientific checks should include:
+
+```text
+- full canonical epoch length is preserved
+- training uses only the train partition
+- validation-only checkpoint selection runs
+- test partition is evaluated only after checkpoint freeze
+- probabilities are well-formed and class order is explicit
+```
+
+If cross-subject real-data smoke verification is not justified within this task, report that honestly.
+
+---
+
+# 10. ACCEPTANCE CRITERIA
+
+M1-T06 may be reported as implementation-complete only if all of the following are true:
+
+```text
+- the EEGNet / compact CNN baseline is implemented within scope
+- no later module was implemented
+- targeted tests were added
+- targeted tests were executed
+- relevant M1-T03/M1-T04 regressions were executed
+- real-data smoke verification is reported accurately
+- branch is committed and pushed
+- work stops for scientific/code review
+```
+
+After meeting the criteria:
+
+```text
+STOP
+WAIT FOR SCIENTIFIC / REVIEWER ACCEPTANCE
+DO NOT MERGE
 ```
