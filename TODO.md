@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** EEG decoding, calibration, binary Bayesian goal inference, and uncertainty/shared-autonomy policy through M1-T09 accepted and merged; no active task authorized  
+**Current stage:** EEG decoding, calibration, Bayesian inference, uncertainty/shared-autonomy policy, and prior personalization through M1-T10 accepted and merged; no active task authorized  
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -49,7 +49,9 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] Complete, accept, and merge M1-T08 Bayesian Goal Inference
 [x] Record D-055 through D-057 uncertainty/shared-autonomy decisions
 [x] Complete, accept, and merge M1-T09 Uncertainty & Shared-Autonomy Policy
-[x] Reconcile M1-T09 governance close with no active task
+[x] Record D-058 through D-060 adaptation decisions
+[x] Complete, accept, and merge M1-T10 Adaptation / Prior Personalization
+[x] Reconcile M1-T10 governance close with no active task
 ```
 
 ## Current authorization
@@ -62,7 +64,7 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 
 ---
 
-# 3. COMPLETED EEG / CALIBRATION / BAYES / SHARED-AUTONOMY IMPLEMENTATION
+# 3. COMPLETED CORE IMPLEMENTATION
 
 ```text
 [x] PhysioNet EEGBCI loader
@@ -89,7 +91,6 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] Brier Score utility
 [x] fixed class order ("left", "right") through decoder/calibration paths
 [x] binary calibrated evidence -> candidate A/B adapter
-[x] fixed Bayesian prior [0.5, 0.5]
 [x] sequential Bayesian posterior update
 [x] >=0.90 commitment threshold
 [x] maximum 5 accepted evidence updates
@@ -102,9 +103,17 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] explicit human-confirmation requirement
 [x] DEFER hold-position / human-input request representation
 [x] PAUSE / STOP / OVERRIDE policy precedence hooks
-[x] M1-T09 analytical tests
-[x] M1-T09 regression bundle reported: 100 passed, 1 warning
-[x] M1-T09 bounded synthetic Bayesian -> entropy -> shared-autonomy smoke
+[x] subject/pair-specific prior personalization
+[x] alpha 1/1 pseudo-count initialization
+[x] 3-event warm-up
+[x] bounded [0.25,0.75] personalized prior
+[x] adaptation ON/OFF behavior
+[x] explicit personalization reset
+[x] traceable explicit-feedback update records
+[x] fresh Bayesian episode custom initial-prior interface
+[x] mid-sequence custom-prior injection rejection
+[x] M1-T10 regression bundle reported: 124 passed, 1 warning
+[x] M1-T10 corrected bounded adaptation -> Bayes smoke
 ```
 
 Synthetic smoke evidence is integration-only and supports no efficacy claim.
@@ -117,9 +126,11 @@ Potential next work must be scientifically narrowed and explicitly approved befo
 
 ```text
 [ ] Decide the next single implementation task
-[ ] Resolve U-026 through U-028 before implementing adaptation/personalization behavior
-[ ] Do not implement reset/resume/corrected-goal behavior after override unless separately authorized by an approved task/decision where required
-[ ] Run reportable decoder/calibration/Bayesian/shared-autonomy evaluation only under approved experiment tasks/protocols
+[ ] Resolve U-029 through U-033 before freezing final planning/safety behavior where those decisions apply
+[ ] Build the 2D Search & Rescue environment only under an approved narrow ticket
+[ ] Build A* / risk-aware planning only under approved planning decisions and task scope
+[ ] Build explicit safety-controller behavior only under approved safety decisions and task scope
+[ ] Run reportable decoder/calibration/Bayesian/shared-autonomy/adaptation evaluation only under approved experiment tasks/protocols
 ```
 
 Do not infer authorization from this list.
@@ -148,9 +159,9 @@ Do not infer authorization from this list.
 ## Adaptation
 
 ```text
-[ ] U-026 — Select exact adaptation mechanism
-[ ] U-027 — Define update formula
-[ ] U-028 — Define bounds / warm-up / reset
+[x] U-026 — Adaptation mechanism resolved by D-058
+[x] U-027 — Update formula resolved by D-059
+[x] U-028 — Bounds / warm-up / reset resolved by D-060
 ```
 
 ## Planning / safety
@@ -200,51 +211,42 @@ Do not infer authorization from this list.
 [x] Verify PROCEED / WAITING / CONFIRM / DEFER boundaries
 [x] Verify PAUSE / STOP / OVERRIDE precedence hooks
 [x] Verify shared-autonomy policy has no planner/safety/environment-execution dependency
+[x] Verify adaptation feedback isolation, warm-up, bounds, reset, and traceability
+[x] Verify personalized prior initializes a fresh Bayesian episode only
+[x] Verify default [0.5,0.5] Bayes prior remains unchanged when no custom prior supplied
+[x] Verify custom prior does not alter Bayesian evidence-update mathematics
 [ ] Run reportable within-subject decoder evaluation
 [ ] Run reportable cross-subject decoder evaluation
 [ ] Run reportable calibration evaluation
 [ ] Run reportable Bayesian inference evaluation
 [ ] Run reportable shared-autonomy evaluation
+[ ] Run reportable adaptation evaluation
 [ ] Conduct failure analysis after reportable evaluation
 ```
 
 ---
 
-# 7. MILESTONE — UNCERTAINTY / SHARED AUTONOMY
+# 7. MILESTONE — ADAPTATION
 
-Core non-executing M1-T09 policy layer is accepted.
-
-```text
-[x] Shannon entropy of Bayesian goal posterior
-[x] Analytical entropy tests
-[x] confidence / uncertainty policy
-[x] PROCEED / WAITING / CONFIRM / DEFER behavior
-[x] prolonged-uncertainty fallback representation
-[x] PAUSE / STOP / OVERRIDE precedence hooks
-[ ] corrected-goal / reset / resume state-transition behavior if later approved
-[ ] full shared-autonomy execution state machine with planner/safety integration
-[ ] end-to-end policy logging in replay
-```
-
-D-055 through D-057 are operationalized by M1-T09. This does not authorize later execution-layer work.
-
----
-
-# 8. MILESTONE — ADAPTATION
-
-Blocked by U-026 through U-028.
+Core M1-T10 prior-personalization implementation is accepted.
 
 ```text
-[ ] adaptation mechanism
-[ ] update formula
-[ ] bounds / warm-up / reset
-[ ] adaptation tests
+[x] subject-specific candidate-pair adaptation state
+[x] explicit-feedback-only updates
+[x] update formula
+[x] warm-up / bounds / reset
+[x] adaptation ON/OFF
+[x] traceable update records
+[x] fresh-Bayesian-episode prior handoff
+[x] analytical / integration tests
 [ ] adaptation experiment if later authorized
 ```
 
+D-058 through D-060 are operationalized by M1-T10. This does not establish that adaptation improves performance.
+
 ---
 
-# 9. MILESTONE — SAR / A* / SAFETY
+# 8. MILESTONE — SAR / A* / SAFETY
 
 ```text
 [ ] 2D Gymnasium environment
@@ -263,7 +265,7 @@ Risk-aware planning and prohibited-hazard behavior remain blocked where U-029 th
 
 ---
 
-# 10. MILESTONE — END-TO-END OFFLINE EEG REPLAY
+# 9. MILESTONE — END-TO-END OFFLINE EEG REPLAY
 
 ```text
 [ ] Offline EEG replay
@@ -272,6 +274,7 @@ Risk-aware planning and prohibited-hazard behavior remain blocked where U-029 th
 [ ] Goal-evidence adapter integration
 [ ] Bayes integration
 [x] Entropy/shared-autonomy core policy modules available
+[x] Adaptation prior-personalization module available
 [ ] Planner integration
 [ ] Safety integration
 [ ] Full mission replay
@@ -283,7 +286,7 @@ This must remain labeled offline EEG replay / simulated real-time BCI unless har
 
 ---
 
-# 11. MILESTONE — EXPERIMENTS
+# 10. MILESTONE — EXPERIMENTS
 
 ```text
 [ ] E1 EEG decoding
@@ -294,7 +297,7 @@ This must remain labeled offline EEG replay / simulated real-time BCI unless har
 [ ] E6 A/B/C/D comparison
 [ ] E7 ablations / robustness
 [ ] E8 cross-subject
-[ ] E9 adaptation if implemented
+[ ] E9 adaptation
 [ ] Statistical analysis
 [ ] Failure taxonomy
 [ ] Result traceability
@@ -304,7 +307,7 @@ Negative or mixed results are valid. Do not tune protected test data to improve 
 
 ---
 
-# 12. PRESENTATION / DOCUMENTATION
+# 11. PRESENTATION / DOCUMENTATION
 
 ```text
 [ ] Streamlit dashboard
@@ -323,7 +326,7 @@ Negative or mixed results are valid. Do not tune protected test data to improve 
 
 ---
 
-# 13. OPTIONAL / FUTURE — ONLY AFTER CORE
+# 12. OPTIONAL / FUTURE — ONLY AFTER CORE
 
 ```text
 [ ] Live EEG
@@ -344,7 +347,7 @@ These are not current requirements or authorization.
 
 ---
 
-# 14. DONE — GOVERNANCE / IMPLEMENTATION CLOSES
+# 13. DONE — GOVERNANCE / IMPLEMENTATION CLOSES
 
 ```text
 [x] MASTER_PROJECT_SPEC.md and governance framework established
@@ -361,12 +364,14 @@ These are not current requirements or authorization.
 [x] M1-T08 Bayesian Goal Inference accepted and merged
 [x] D-055 through D-057 shared-autonomy / uncertainty decisions recorded
 [x] M1-T09 Uncertainty & Shared-Autonomy Policy accepted and merged
-[x] M1-T09 governance close recorded with no active implementation task
+[x] D-058 through D-060 adaptation decisions recorded
+[x] M1-T10 Adaptation / Prior Personalization accepted and merged
+[x] M1-T10 governance close recorded with no active implementation task
 ```
 
 ---
 
-# 15. TODO DISCIPLINE
+# 14. TODO DISCIPLINE
 
 ```text
 backlog item -> TODO.md
