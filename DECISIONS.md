@@ -1336,6 +1336,105 @@ do not carry the uncertain posterior into a new episode
 
 ---
 
+## D-058 — Adaptation Mechanism / Prior Personalization
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31
+**Resolves:** U-026
+
+**Decision:**
+
+```text
+use subject-specific, candidate-pair-specific Bayesian prior personalization
+maintain counts only from explicit human-approved final choices
+CONFIRM followed by explicit human acceptance may contribute the approved goal
+OVERRIDE may contribute only the explicitly corrected/approved goal
+PAUSE, STOP, unresolved DEFER, or autonomous PROCEED without explicit feedback do not update adaptation
+never use EEG ground-truth labels, hidden test truth, task success, planner cost, or safety state as adaptation feedback
+adaptation changes only the initial prior of future episodes for that same anonymous dataset subject and candidate pair
+decoder, calibration, D-052 likelihood construction, Bayesian update equation, and D-055 through D-057 policy remain unchanged
+adaptation OFF continues to use [0.5,0.5]
+```
+
+**Context:** The project required a narrowly bounded personalization mechanism that learns only from explicit human authority, rather than from hidden evaluation information, autonomous outcomes, or downstream planning and safety signals.
+
+**Rationale:** Subject- and candidate-pair-specific initial-prior personalization can capture approved choice feedback while preserving the separation between decoder evidence, Bayesian likelihoods, shared-autonomy policy, and autonomous execution.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/10_BAYESIAN_GOAL_INFERENCE.md`, `docs/12_SHARED_AUTONOMY_AND_HUMAN_AI_INTERACTION.md`, and future adaptation implementation code only when separately authorized.
+
+**Implementation consequence:** This decision freezes adaptation methodology only. It does not authorize implementation. A separate explicit `CURRENT_TASK.md` ticket is required before coding.
+
+**Approved by:** Project Owner
+
+---
+
+## D-059 — Adaptation Update Formula
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31
+**Resolves:** U-027
+
+**Decision:**
+
+```text
+initialize each candidate pair with alpha_A = 1, alpha_B = 1
+valid approved A feedback -> alpha_A += 1
+valid approved B feedback -> alpha_B += 1
+raw adaptive prior:
+P0(A) = alpha_A / (alpha_A + alpha_B)
+P0(B) = alpha_B / (alpha_A + alpha_B)
+adaptation state updates only between decision episodes, never during an active Bayesian evidence sequence
+adaptation ON uses the approved personalized prior
+adaptation OFF continues to use D-053 [0.5,0.5]
+```
+
+**Context:** The approved adaptation mechanism needed a deterministic and auditable update rule for converting valid explicit human feedback into a future initial prior.
+
+**Rationale:** Symmetric pseudo-count initialization yields a transparent normalized prior, and restricting updates to episode boundaries prevents adaptation from altering an active Bayesian evidence sequence.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/10_BAYESIAN_GOAL_INFERENCE.md`, and future adaptation implementation code only when separately authorized.
+
+**Implementation consequence:** This decision freezes adaptation methodology only. It does not authorize implementation. A separate explicit `CURRENT_TASK.md` ticket is required before coding.
+
+**Approved by:** Project Owner
+
+---
+
+## D-060 — Adaptation Bounds / Warm-Up / Reset
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31
+**Resolves:** U-028
+
+**Decision:**
+
+```text
+require 3 valid explicit feedback events for that subject/candidate pair before applying a non-uniform adaptive prior
+during warm-up use [0.5,0.5]
+after warm-up bound each candidate prior to [0.25,0.75] while preserving normalization
+no decay/forgetting in the primary implementation
+explicit reset sets alpha_A=1, alpha_B=1, update_count=0, yielding [0.5,0.5]
+adaptation_enabled=False always bypasses personalization and returns [0.5,0.5]
+state is keyed by anonymous dataset subject_id and candidate pair, not by global A/B slot position
+every adaptation update must be traceable to the explicit feedback observation that caused it
+no model retraining, threshold adaptation, evidence weighting, or raw-EEG modification
+```
+
+**Context:** Prior personalization needed explicit safeguards against premature personalization, extreme priors, cross-subject leakage, untraceable updates, and scope expansion into decoder or policy adaptation.
+
+**Rationale:** A three-event warm-up, bounded normalized priors, symmetric reset, and anonymous subject/candidate-pair isolation make the primary implementation auditable and prevent feedback from silently changing scientific components outside the approved prior.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/10_BAYESIAN_GOAL_INFERENCE.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, and future adaptation implementation code only when separately authorized.
+
+**Implementation consequence:** D-058 through D-060 freeze adaptation methodology only and do not authorize implementation. A separate explicit `CURRENT_TASK.md` implementation ticket is required before coding.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
@@ -1367,9 +1466,7 @@ None currently unresolved.
 ## Adaptation
 
 ```text
-U-026 — Exact adaptation mechanism
-U-027 — Update formula
-U-028 — Bounds / warm-up / reset
+None currently unresolved.
 ```
 
 ## Planning / Safety
