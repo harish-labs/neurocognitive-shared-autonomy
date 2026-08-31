@@ -1,123 +1,82 @@
 # CURRENT_TASK.md
 
 ## NeuroCognitive Shared Autonomy for Search & Rescue
-### No Active Codex Implementation Ticket
+### Active Codex Implementation Ticket
 
-**Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no task is currently authorized  
-**Current status:** NO ACTIVE TASK  
-**Current milestone:** M1 — EEG Dataset / Loader / Epochs / Decoders / Calibration  
-**Task ID:** NONE AUTHORIZED  
-**Task title:** Awaiting next approved implementation ticket  
-**Owner:** Project Owner  
-**Scientific reviewer:** ChatGPT  
-**Implementation engineer:** Codex  
-**Repository instructions:** `AGENTS.md`  
-**Canonical branch:** `main`  
+**Current status:** ACTIVE
+**Current milestone:** M1 — EEG Dataset / Loader / Epochs / Decoders / Calibration / Bayesian Goal Inference
+**Task ID:** M1-T08
+**Task title:** Bayesian Goal Inference
+**Owner:** Project Owner
+**Scientific reviewer:** ChatGPT
+**Implementation engineer:** Codex
+**Repository instructions:** `AGENTS.md`
+**Canonical branch:** `main` at `2cb9208a5f16d5f67fe5830caf1f0837f6ada6d8`
+**Task branch:** `task/m1-t08-bayesian-goal-inference`
 **Last updated:** 2026-08-31
 
 ---
 
-# 1. CURRENT AUTHORIZATION STATE
+# 1. AUTHORIZED SCOPE
 
-There is currently no active implementation task authorized for Codex.
+Implement only the approved M1-T08 Bayesian goal-inference core under D-051 through D-054.
 
-Completed, scientifically reviewed, accepted, and merged on canonical `main`:
+Allowed files:
 
 ```text
-M1-T01 — PhysioNet EEGBCI Data Loader
-M1-T02 — EEG Visualization / Inspection
-M1-T03 — EEG Preprocessing & Epochs
-M1-T04 — EEG Split Manifest
-M1-T05 — CSP+LDA Baseline
-M1-T06 — EEGNet / Compact CNN
-M1-T07 — Probability Calibration
+src/cognitive/bayes.py
+tests/test_bayes.py
+CURRENT_TASK.md
+src/cognitive/__init__.py only if necessary
 ```
 
-Do not begin another implementation module until a new narrow `CURRENT_TASK.md` ticket is explicitly approved by the Project Owner.
+Required behavior:
+
+```text
+- exactly two active candidates per binary decision episode: candidate A and candidate B
+- calibrated "left" evidence supports candidate A; calibrated "right" evidence supports candidate B
+- use calibrated binary probabilities directly as candidate likelihood weights
+- update posterior by previous posterior x evidence likelihood, then normalize
+- initialize and reset every episode to prior [0.5, 0.5]
+- commit candidate A or B when posterior is >= 0.90
+- accept at most 5 evidence updates per episode
+- after the fifth non-committing update, return UNCOMMITTED / DEFER
+- do not force-select a posterior argmax
+- preserve the binary protocol; multi-goal interaction is a sequence of separate binary episodes
+- validate evidence is finite, non-negative, and exactly binary
+- preserve the separation of intent inference from planner and safety concerns
+```
+
+Required verification:
+
+```text
+pytest tests/test_bayes.py tests/test_calibration.py tests/test_eegnet.py tests/test_csp_lda.py tests/test_splits.py tests/test_epochs.py tests/test_preprocessing.py tests/test_loader.py
+```
+
+A bounded synthetic calibrated-probability to Bayesian-episode smoke check is allowed as integration evidence only.
 
 ---
 
-# 2. CLOSED TASK RECORD — M1-T07
+# 2. EXPLICITLY OUT OF SCOPE
+
+Do not implement or modify:
 
 ```text
-Task ID:
-M1-T07
-
-Task title:
-Probability Calibration
-
-Final status:
-PASS / ACCEPTED / MERGED
-
-Task branch:
-task/m1-t07-probability-calibration
-
-Accepted task-branch head / canonical software commit:
-b6a2932372b3b8047f4629b52e5a1822ce4fd057
+DECISIONS.md
+MASTER_PROJECT_SPEC.md
+PROJECT_STATE.md
+TODO.md
+EXPERIMENT_LOG.md
+entropy thresholds
+shared-autonomy policy
+adaptation
+planner
+safety controller
+SAR environment
+replay
+Streamlit/UI
+reportable experiments
+U-023 or later decisions
 ```
 
-M1-T07 implements the approved probability-calibration layer under D-048, D-049, and D-050.
-
-Accepted implementation behavior:
-
-```text
-EEGNet -> temperature scaling
-CSP+LDA -> sigmoid / Platt-style calibration
-identity / no-calibration baseline retained
-validation partition only for calibrator fitting
-train remains decoder/model-fitting partition
-test/final_test excluded from calibrator fitting, calibration-method choice, tuning, and binning
-class order preserved as ("left", "right")
-ECE/reliability diagram uses exactly 10 equal-width bins over [0,1]
-Brier Score reported alongside ECE
-within-subject and cross-subject tracks remain separate
-```
-
-Accepted regression bundle:
-
-```text
-59 passed, 1 warning
-```
-
-The warning is the previously reviewed non-failing PyTorch `padding='same'` warning from EEGNet tests.
-
-Bounded subject-1 smoke verification using runs 4/8/12:
-
-```text
-retained epochs: 13
-train / validation / test: 7 / 3 / 3
-CSP calibrator: platt_scaling
-EEGNet calibrator: temperature_scaling
-CSP selected components: 4
-EEGNet selected epoch: 1
-```
-
-This smoke run is integration evidence only. Its calibration metrics are not reportable evidence of generalizable calibration quality or model efficacy.
-
-No Bayesian goal mapping, Bayesian inference, shared-autonomy policy, adaptation, planning, safety, replay, or later module was implemented in M1-T07.
-
----
-
-# 3. NEXT GOVERNANCE GATE
-
-Before any further implementation:
-
-```text
-1. Identify the next narrow implementation task.
-2. Check MASTER_PROJECT_SPEC.md.
-3. Check CURRENT_TASK.md.
-4. Check PROJECT_STATE.md.
-5. Check DECISIONS.md.
-6. Check relevant technical documentation and accepted code/tests.
-7. Resolve any blocking scientific/architectural decision.
-8. Record any new approved decision in DECISIONS.md.
-9. Obtain explicit Project Owner approval for exactly one narrow task.
-10. Only then activate CURRENT_TASK.md and begin implementation.
-```
-
-Until that happens:
-
-```text
-STOP
-STATUS = NO ACTIVE TASK
-```
+Do not merge this task branch. Stop after tests, bounded synthetic smoke verification, commit, push, and report for scientific review.
