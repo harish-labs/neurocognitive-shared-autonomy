@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** M1 loader and visualization completed; preprocessing decisions approved; no active task authorized  
+**Current stage:** M1 loader, visualization, preprocessing/epochs, and split manifest completed; no active task authorized  
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -48,13 +48,17 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] Establish Git history
 [x] Record approved M1-T03 preprocessing decisions U-001 through U-009
 [x] Reconcile docs/06, docs/08, and docs/15 to D-031 through D-039
+[x] Record D-040 through D-042 and reconcile split/evaluation methodology
+[x] Complete, accept, and squash-merge M1-T04 through PR #13
+[x] Reconcile M1-T04 governance close with no active task
 ```
 
 ## Current authorization
 
 ```text
 [ ] Wait for next approved CURRENT_TASK.md
-[ ] Do not begin preprocessing or epoching without an active implementation ticket
+[ ] Do not begin CSP/LDA or any later module without an active implementation ticket
+[ ] Keep U-013 unresolved until explicit Project Owner approval
 ```
 
 ---
@@ -87,14 +91,15 @@ Completed:
 [x] Approve M1 preprocessing parameters
 ```
 
-Scientific preprocessing decisions are approved. The following remain pending explicit task authorization and implementation:
+Accepted M1 implementation now includes preprocessing, epochs, provenance, and leakage-safe split manifests. Remaining work requires separate explicit authorization:
 
 ```text
-[ ] Implement preprocessing
-[ ] Implement event extraction
-[ ] Implement epoching
-[ ] Preserve provenance
-[ ] Implement leakage-safe split
+[x] Implement preprocessing
+[x] Implement event extraction
+[x] Implement epoching
+[x] Preserve provenance
+[x] Implement leakage-safe split
+[ ] Resolve U-013 — Final CSP configuration
 [ ] Implement CSP+LDA
 [ ] Evaluate classical baseline
 ```
@@ -122,9 +127,10 @@ These choices are recorded as D-031 through D-039 in `DECISIONS.md`.
 ## Evaluation
 
 ```text
-[ ] Freeze train/validation/test protocol
-[ ] Freeze cross-subject protocol
-[ ] Freeze held-out-subject strategy
+[x] Freeze train/validation/test protocol — D-040
+[x] Freeze cross-subject protocol — D-041
+[x] Freeze held-out-subject strategy — D-042
+[x] Implement deterministic split manifests and leakage assertions — M1-T04
 ```
 
 ## Calibration
@@ -205,17 +211,17 @@ These choices are recorded as D-031 through D-039 in `DECISIONS.md`.
 [x] Loader
 [x] Visualization
 [x] Preprocessing parameters approved
-[ ] Preprocessing
-[ ] Event extraction
-[ ] Epoching
-[ ] Data provenance
-[ ] Split manifest
-[ ] Leakage assertions
-[ ] CSP
-[ ] LDA
+[x] Preprocessing
+[x] Event extraction
+[x] Epoching
+[x] Data provenance
+[x] Split manifest
+[x] Leakage assertions
+[ ] CSP — blocked pending U-013 and a new active ticket
+[ ] LDA — blocked pending U-013 and a new active ticket
 [ ] Prediction probability interface
 [ ] Baseline metrics
-[ ] Manual scientific review
+[x] Manual scientific review — completed for M1-T01 through M1-T04
 ```
 
 ---
@@ -375,7 +381,7 @@ Blocked pending policy decisions:
 [ ] Verify T1/T2 semantics from real loaded data
 [ ] Verify channel names
 [ ] Verify montage
-[ ] Verify all splits for leakage
+[x] Verify implemented split manifests for subject/original-trial/derived-window leakage
 [ ] Verify CSP train-only fitting
 [ ] Verify calibrator does not see test labels
 [ ] Verify decoder class order
@@ -501,6 +507,9 @@ Potential research directions:
 [x] EXPERIMENT_LOG.md
 [x] TODO.md
 [x] M1-T03 preprocessing decisions D-031 through D-039 recorded
+[x] Split decisions D-040 through D-042 recorded and methodology reconciled
+[x] M1-T04 split manifest accepted and squash-merged through PR #13
+[x] M1-T04 governance close recorded with no active implementation task
 ```
 
 ---
