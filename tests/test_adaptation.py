@@ -155,12 +155,18 @@ def test_rejects_active_episode_and_data_not_in_feedback_contract() -> None:
         )
 
 
-def test_prior_is_only_available_for_a_new_episode_and_does_not_change_bayes_math() -> None:
+def test_personalized_prior_initializes_only_a_fresh_bayesian_episode() -> None:
     personalizer = adaptation.PriorPersonalizer()
     add_a_feedback(personalizer, 3)
     with pytest.raises(adaptation.AdaptationError, match="before a new Bayesian episode"):
         personalizer.initial_prior_for_new_episode("subject-001", "goal-a", "goal-b", episode_is_active=True)
 
-    episode = bayes.BinaryBayesianGoalEpisode(candidate_a="goal-a", candidate_b="goal-b")
+    personalized_prior = personalizer.initial_prior_for_new_episode("subject-001", "goal-a", "goal-b")
+    episode = bayes.BinaryBayesianGoalEpisode(
+        candidate_a="goal-a",
+        candidate_b="goal-b",
+        initial_prior=personalized_prior,
+    )
+    assert episode.posterior == pytest.approx((0.75, 0.25))
     result = episode.accept_evidence(bayes.binary_goal_evidence_from_calibrated_probabilities([0.8, 0.2]))
-    assert result.posterior == pytest.approx((0.8, 0.2))
+    assert result.posterior == pytest.approx((0.9230769230769231, 0.07692307692307693))

@@ -27,6 +27,46 @@ def test_episode_starts_with_the_exact_approved_uniform_prior() -> None:
     assert state.status is bayes.EpisodeStatus.PENDING
 
 
+def test_fresh_episode_accepts_an_explicit_validated_initial_prior() -> None:
+    state = bayes.BinaryBayesianGoalEpisode(
+        candidate_a="victim_a",
+        candidate_b="victim_b",
+        initial_prior=(0.75, 0.25),
+    )
+
+    assert state.posterior == (0.75, 0.25)
+
+
+def test_explicit_initial_prior_is_used_unchanged_by_the_bayesian_update() -> None:
+    state = bayes.BinaryBayesianGoalEpisode(
+        candidate_a="victim_a",
+        candidate_b="victim_b",
+        initial_prior=(0.75, 0.25),
+    )
+
+    result = state.accept_evidence(evidence(0.8, 0.2))
+
+    np.testing.assert_allclose(result.posterior, (0.9230769230769231, 0.07692307692307693), atol=1e-12)
+
+
+@pytest.mark.parametrize("prior", ([0.5], [0.2, 0.3, 0.5], [np.nan, 1.0], [np.inf, 0.0], [-0.1, 1.1], [0.4, 0.4]))
+def test_malformed_initial_priors_are_rejected(prior: object) -> None:
+    with pytest.raises(bayes.BayesianGoalInferenceError):
+        bayes.BinaryBayesianGoalEpisode(
+            candidate_a="victim_a",
+            candidate_b="victim_b",
+            initial_prior=prior,  # type: ignore[arg-type]
+        )
+
+
+def test_custom_prior_cannot_be_injected_midway_through_an_active_episode() -> None:
+    state = episode()
+    state.accept_evidence(evidence(0.6, 0.4))
+
+    with pytest.raises(bayes.BayesianGoalInferenceError, match="cannot be injected"):
+        state.start_new_episode(initial_prior=(0.75, 0.25))
+
+
 def test_one_step_bayesian_update_uses_prior_times_likelihood_then_normalizes() -> None:
     result = episode().accept_evidence(evidence(0.8, 0.2))
 

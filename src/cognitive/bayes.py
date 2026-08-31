@@ -66,14 +66,20 @@ class BayesianEpisodeResult:
 
 
 class BinaryBayesianGoalEpisode:
-    """A fixed-prior, bounded Bayesian episode for the approved binary protocol."""
+    """A bounded Bayesian episode with an explicit prior only at episode start."""
 
-    def __init__(self, *, candidate_a: str, candidate_b: str) -> None:
+    def __init__(
+        self,
+        *,
+        candidate_a: str,
+        candidate_b: str,
+        initial_prior: tuple[float, float] | list[float] | np.ndarray | None = None,
+    ) -> None:
         candidate_names = (str(candidate_a), str(candidate_b))
         if not all(candidate_names) or candidate_names[0] == candidate_names[1]:
             raise BayesianGoalInferenceError("Candidate A and candidate B must be distinct non-empty names.")
         self._candidate_names = candidate_names
-        self.start_new_episode()
+        self.start_new_episode(initial_prior=initial_prior)
 
     @property
     def candidate_names(self) -> tuple[str, str]:
@@ -95,9 +101,22 @@ class BinaryBayesianGoalEpisode:
     def history(self) -> tuple[BayesianEpisodeResult, ...]:
         return tuple(self._history)
 
-    def start_new_episode(self) -> BayesianEpisodeResult:
-        """Discard episode state and apply the approved uniform prior."""
-        self._posterior = np.asarray(INITIAL_PRIOR, dtype=np.float64)
+    def start_new_episode(
+        self,
+        *,
+        initial_prior: tuple[float, float] | list[float] | np.ndarray | None = None,
+    ) -> BayesianEpisodeResult:
+        """Discard episode state and apply a validated prior for the new episode only."""
+        if (
+            initial_prior is not None
+            and getattr(self, "_status", None) is EpisodeStatus.PENDING
+            and getattr(self, "_update_count", 0) > 0
+        ):
+            raise BayesianGoalInferenceError(
+                "A custom initial prior cannot be injected during an active Bayesian evidence sequence."
+            )
+        selected_prior = INITIAL_PRIOR if initial_prior is None else initial_prior
+        self._posterior = _validated_normalized_probabilities(selected_prior, name="Initial prior")
         self._update_count = 0
         self._status = EpisodeStatus.PENDING
         self._history: list[BayesianEpisodeResult] = []
