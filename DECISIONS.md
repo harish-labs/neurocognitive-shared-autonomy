@@ -1026,6 +1026,96 @@ this decision only resolves the narrow M1-T06 implementation ambiguity
 
 ---
 
+## D-048 — Final Calibration Method
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31  
+**Resolves:** U-016
+
+**Decision:**
+
+```text
+EEGNet uses temperature scaling
+CSP+LDA uses sigmoid / Platt-style calibration
+identity / no-calibration remains the experimental baseline
+calibration remains model-specific
+protected test/final-test data must not influence calibrator fitting or calibration-method choice
+```
+
+**Context:** Calibration is part of the locked project architecture, but implementation could not proceed validly without an explicit approved method choice for each decoder family and an explicit preserved no-calibration baseline.
+
+**Alternatives considered:** one shared calibration method for all decoders; leaving the method unresolved; allowing protected test/final-test performance to drive method choice.
+
+**Rationale:** These approvals freeze a model-specific primary calibration methodology while preserving identity / no-calibration as the experimental baseline and protecting the test/final-test partitions from method-selection leakage.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, and future calibration code only when separately authorized.
+
+**Implementation consequence:** This decision freezes calibration methodology only and does not itself authorize calibration implementation. A separate explicit `CURRENT_TASK.md` ticket is still required before coding. Protected test/final-test data remain excluded from calibrator fitting and calibration-method choice.
+
+**Approved by:** Project Owner
+
+---
+
+## D-049 — Calibration Fitting Partition
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31  
+**Resolves:** U-017
+
+**Decision:**
+
+```text
+existing validation partition is the calibration-fitting partition
+training partition remains for decoder/model fitting
+do not introduce a new split in the primary pipeline
+test/final_test remain untouched and cannot influence fitting, calibration, or selection
+```
+
+**Context:** The project needed an explicit calibrator-fitting boundary that preserves the existing approved split semantics without silently introducing a fourth partition or blending model fitting with calibration fitting.
+
+**Alternatives considered:** a new dedicated calibration split; fitting calibrators on training data; any scheme that exposes test/final-test labels during fitting or selection.
+
+**Rationale:** Reusing the approved validation partition keeps the primary pipeline minimal and auditable while maintaining clear separation between decoder fitting, calibrator fitting, and protected final evaluation.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, and future calibration/evaluation code only when separately authorized.
+
+**Implementation consequence:** This decision freezes calibration methodology only and does not itself authorize calibration implementation. A separate explicit `CURRENT_TASK.md` ticket is still required before coding. The training partition remains for decoder fitting, and the protected test/final-test partitions remain untouched by fitting, calibration, and selection.
+
+**Approved by:** Project Owner
+
+---
+
+## D-050 — Reliability-Diagram Binning
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31  
+**Resolves:** U-018
+
+**Decision:**
+
+```text
+primary reliability diagram and ECE use 10 equal-width confidence bins over [0,1]
+report Brier Score alongside ECE
+do not tune bin count or binning strategy using protected test performance
+```
+
+**Context:** Reportable calibration evaluation required a fixed primary binning rule for reliability diagrams and ECE, plus an explicit companion scalar metric, before later calibration work could be implemented and compared consistently.
+
+**Alternatives considered:** leaving binning unresolved; adaptive or equal-frequency binning as the primary rule; tuning the bin count against protected test performance.
+
+**Rationale:** A fixed 10-bin equal-width primary rule is simple, auditable, and reproducible, while paired Brier reporting helps prevent over-interpreting ECE alone.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, and future calibration/evaluation code only when separately authorized.
+
+**Implementation consequence:** This decision freezes calibration methodology only and does not itself authorize calibration implementation. A separate explicit `CURRENT_TASK.md` ticket is still required before coding, and protected test performance must not be used to tune binning choices.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
@@ -1039,9 +1129,7 @@ None currently unresolved.
 ## Calibration
 
 ```text
-U-016 — Final calibration method
-U-017 — Calibration fitting partition
-U-018 — Reliability-diagram binning
+None currently unresolved.
 ```
 
 ## Bayesian / Goal Mapping
