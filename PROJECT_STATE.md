@@ -53,7 +53,7 @@ Do not blur these roles.
 
 ```text
 Project Phase:
-M1 active — loader, visualization, preprocessing, and epochs verified; split decisions approved
+M1 active — loader, visualization, preprocessing, epochs, and leakage-safe split manifests verified
 
 Current Milestone:
 M1 — EEG Dataset / Loader / Epochs / CSP+LDA
@@ -65,13 +65,16 @@ Current Task ID:
 NONE AUTHORIZED
 
 Task Status:
-PENDING APPROVAL
+NO ACTIVE TASK
 
 Canonical Branch:
 main
 
 Latest Accepted Software Commit:
-1af72b5deb9981f469a4394859aac49add65e2a7
+3b33477166db6889747dabc8d4be21403b480735
+
+Latest Accepted Software Task:
+M1-T04 — EEG Split Manifest (#13)
 
 Latest Approved Scientific-Decision Commit:
 ea00a631b60967cfece65b42e00e7b36c4efac7d
@@ -80,13 +83,13 @@ Latest Valid Experiment:
 None yet
 
 Last Updated:
-2026-08-30
+2026-08-31
 
 Updated By:
-ChatGPT + Project Owner
+ChatGPT + Project Owner + Codex
 ```
 
-Allowed operational statuses:
+Allowed implementation/module statuses:
 
 ```text
 NOT STARTED
@@ -100,11 +103,13 @@ FAIL
 
 ---
 
+---
+
 # 2. CURRENT PROJECT PHASE
 
 Current state:
 
-> **M1-T01, M1-T02, and M1-T03 are completed, merged, scientifically reviewed, and verified on canonical `main`. The repository has a verified EEGBCI loader, visualization/inspection module, and approved preprocessing/epoch extraction pipeline. U-001 through U-009 are resolved as D-031 through D-039. U-010 through U-012 are resolved as D-040 through D-042. No dataset-splitting implementation is currently authorized.**
+> **M1-T01, M1-T02, M1-T03, and M1-T04 are completed, merged, scientifically reviewed, and verified on canonical `main`. The repository has a verified EEGBCI loader, visualization/inspection module, preprocessing/epoch extraction pipeline, and deterministic leakage-safe split-manifest utilities. U-001 through U-009 are resolved as D-031 through D-039. U-010 through U-012 are resolved as D-040 through D-042 and operationalized by M1-T04. No implementation task is currently authorized. U-013 remains unresolved.**
 
 Do not mark coding milestones complete until code has been:
 
@@ -117,6 +122,8 @@ tested
 +
 verified
 ```
+
+---
 
 ---
 
@@ -204,7 +211,7 @@ docs/17_EXPERIMENTAL_DESIGN.md
 docs/18_METRICS_AND_EVALUATION.md
 ```
 
-No active implementation ticket exists. A narrow split-manifest implementation still requires explicit Project Owner authorization in `CURRENT_TASK.md`.
+M1-T04 is accepted and merged through PR #13. `CURRENT_TASK.md` now records no active implementation ticket. U-013 remains unresolved.
 
 ## Next numbered scientific document
 
@@ -246,15 +253,19 @@ Current active coding task:
 None authorized
 ```
 
-`CURRENT_TASK.md` records that M1-T03 is closed and no implementation ticket is active.
+`CURRENT_TASK.md` records M1-T04 as accepted and merged through PR #13 and explicitly leaves no active implementation ticket.
+
+---
 
 ---
 
 # 7. NEXT CANDIDATE IMPLEMENTATION TASK
 
-> **A narrow M1 split-manifest / leakage-safe dataset-splitting task is the next candidate implementation task. D-040 through D-042 and the relevant methodology are aligned, but a new `CURRENT_TASK.md` implementation ticket must still be explicitly approved before coding begins.**
+> **No next implementation task is authorized. CSP/LDA is a future candidate only after U-013 is explicitly resolved and a new narrow `CURRENT_TASK.md` ticket is approved.**
 
-Do not begin dataset splitting, CSP/LDA, or later work until that authorization exists.
+Do not begin CSP/LDA, EEGNet, or later work under the closed M1-T04 authorization.
+
+---
 
 ---
 
@@ -266,7 +277,8 @@ Do not begin dataset splitting, CSP/LDA, or later work until that authorization 
 | 1 | EEG Data Loader | PASS | Yes | Yes | `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` | M1-T01 completed and merged |
 | 2 | EEG Visualization / Inspection | PASS | Yes | Yes | `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` | M1-T02 completed and merged |
 | 3 | EEG Preprocessing / Epochs | PASS | Yes | Yes | `1af72b5deb9981f469a4394859aac49add65e2a7` | M1-T03 completed, reviewed, and merged |
-| 4 | CSP + LDA | NOT STARTED | No | No | — | Depends on valid epochs/split |
+| 3.1 | EEG Split Manifest / Leakage Assertions | PASS | Yes | Yes | `3b33477166db6889747dabc8d4be21403b480735` | M1-T04 accepted and squash-merged through PR #13 |
+| 4 | CSP + LDA | NOT STARTED | No | No | — | Blocked pending U-013 resolution and a new active ticket |
 | 5 | EEGNet / Compact CNN | NOT STARTED | No | No | — | |
 | 6 | Unified Decoder Interface | NOT STARTED | No | No | — | |
 | 7 | Probability Calibration | PARTIAL-BLOCKED | No | No | — | Metrics can precede final method |
@@ -312,6 +324,17 @@ EEG Preprocessing / Epochs:
 - real subject 1 runs 4 / 8 / 12 smoke-verified
 - 7–30 Hz filter, average reference, 64-channel order, 160 Hz, -1.0-to-4.0 s epochs, baseline=None, T0 exclusion, 150 µV rejection with reason/threshold provenance, and *-epo.fif persistence contract verified
 - high real-data rejection counts were preserved as an observation, not used to change D-035
+
+EEG Split Manifest / Leakage Assertions:
+- `src/eeg/splits.py` implemented
+- `tests/test_splits.py` implemented
+- deterministic class-stratified within-subject 60/20/20 assignments at original-trial level
+- deterministic seed-42 cross-subject manifest with exact 76/16/17 counts for the full eligible 109-subject cohort
+- explicit subject/trial/derived-window disjointness and completeness validation
+- versioned persistence, reload, provenance, and protected final-test membership contracts
+- unsupported cross-subject cohort sizes stop for reviewer decision
+- accepted branch commit `86b47c56bd655900cf478dbb7af6ec13eeb26e41`
+- squash-merged through PR #13 as `3b33477166db6889747dabc8d4be21403b480735`
 ```
 
 No software component may be listed as verified until actual code has been executed and checked.
@@ -362,7 +385,7 @@ resampling: none; preserve 160 Hz
 processed representation: MNE Epochs; persisted `*-epo.fif`
 ```
 
-These are no longer scientific blockers for M1-T03, but the affected numbered documents must be reconciled before implementation authorization.
+These are no longer scientific blockers for the accepted M1-T03 preprocessing/epoching pipeline.
 
 ## Evaluation
 
@@ -450,11 +473,13 @@ These unresolved items must remain visible.
 Current state:
 
 ```text
-M1-T03 has no open implementation blocker after acceptance.
-Split-manifest implementation is not active.
+M1-T04 has no open implementation blocker after acceptance and merge.
+No implementation task is active.
 ```
 
-The next split-manifest task is blocked only by the absence of a separately approved active `CURRENT_TASK.md` ticket. Do not invent technical blockers before actual implementation.
+CSP/LDA must not begin until U-013 is explicitly resolved and a new narrow implementation ticket is approved. This is a governance/scientific gate, not permission to choose CSP settings.
+
+---
 
 ---
 
@@ -767,10 +792,10 @@ Processed representation:
 APPROVED — MNE Epochs; persisted `*-epo.fif`
 
 Train/validation/test split:
-APPROVED — D-040; implementation not started
+PASS — D-040 operationalized by accepted M1-T04 split-manifest utilities
 
 Cross-subject split:
-APPROVED — D-041/D-042; implementation not started
+PASS — D-041/D-042 operationalized by accepted M1-T04 seed-42 manifest contract
 
 CSP+LDA:
 NOT STARTED
@@ -950,7 +975,7 @@ EEG loader → preprocessing / epochs:
 PASS for the accepted M1-T03 path
 
 Preprocessing / epochs → split manifest:
-NOT STARTED / NOT AUTHORIZED
+PASS — accepted M1-T04 split contracts and leakage assertions
 
 Split manifest → decoder:
 NOT STARTED
@@ -988,6 +1013,8 @@ NOT STARTED
 
 ---
 
+---
+
 # 21. CURRENT EXPERIMENT STATE
 
 ```text
@@ -1013,7 +1040,7 @@ E7 — Robustness / Ablations:
 BLOCKED
 
 E8 — Cross-subject evaluation:
-PROTOCOL APPROVED / IMPLEMENTATION NOT STARTED
+SPLIT INFRASTRUCTURE PASS / MODEL EVALUATION NOT STARTED
 
 E9 — Adaptation:
 BLOCKED
@@ -1085,7 +1112,7 @@ Real-data smoke tests:
 PASS
 
 Leakage tests:
-NOT STARTED
+PASS — accepted M1-T04 targeted coverage
 
 Calibration metric tests:
 NOT STARTED
@@ -1128,6 +1155,8 @@ Only code-generated or experiment-generated artifacts belong here.
 |---|---|---|---|---|---|---|
 | M1-T01-LOADER | Source + test | `src/eeg/loader.py`; `tests/test_loader.py` | M1-T01 | VALID | `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` | Accepted loader implementation; real subject 1 runs 4/8/12 verified |
 | M1-T02-VISUALIZATION | Source + test + figures | `src/eeg/visualization.py`; `tests/test_visualization.py`; `results/figures/m1_t02_subject1/` | M1-T02 | VALID | `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` | Accepted inspection implementation; subject 1 runs 4/8/12 verified with traces, PSD, sensors, and annotations |
+| M1-T03-PREPROCESSING-EPOCHS | Source + tests | `src/eeg/preprocessing.py`; `src/eeg/epochs.py`; `tests/test_preprocessing.py`; `tests/test_epochs.py` | M1-T03 | VALID | `1af72b5deb9981f469a4394859aac49add65e2a7` | Accepted preprocessing and canonical epoch pipeline |
+| M1-T04-SPLIT-MANIFEST | Source + test | `src/eeg/splits.py`; `tests/test_splits.py` | M1-T04 | VALID | `3b33477166db6889747dabc8d4be21403b480735` | Accepted deterministic split manifests, leakage assertions, provenance, persistence, and final-test protection; PR #13 |
 
 Documentation files are not software result artifacts.
 
@@ -1177,33 +1206,27 @@ scientifically invalid likelihood
 
 # 28. CURRENT MANUAL VERIFICATION QUEUE
 
-Completed loader/inspection verification:
+Completed implementation acceptance:
 
 ```text
-[x] Load real PhysioNet EEG through MNE
-[x] Verify configured subject
-[x] Verify runs 4 / 8 / 12
-[x] Verify 64 channels
-[x] Verify 160 Hz
-[x] Verify plausible duration
-[x] Inspect annotations
-[x] Verify T0 / T1 / T2 semantics
-[x] Inspect standardized channel names
-[x] Verify montage attachment
-[x] Visually confirm montage plausibility
-[x] Generate raw-trace inspection output
-[x] Generate PSD inspection output
-[x] Generate sensor/montage inspection output
-[x] Generate annotation-overview inspection output
+[x] M1-T01 loader accepted and merged
+[x] M1-T02 visualization/inspection accepted and merged
+[x] M1-T03 preprocessing/epochs accepted and merged
+[x] M1-T04 split manifest and leakage assertions accepted
+[x] Verify accepted M1-T04 task branch at 86b47c56bd655900cf478dbb7af6ec13eeb26e41
+[x] Squash-merge M1-T04 through PR #13
+[x] Record canonical software merge commit 3b33477166db6889747dabc8d4be21403b480735
 ```
 
 Next governance gate:
 
 ```text
-[ ] Reconcile docs/06, docs/08, and docs/15 with D-031 through D-039
-[ ] Review and merge documentation-only reconciliation
-[ ] Approve a new M1-T03 CURRENT_TASK.md implementation ticket
+[ ] Resolve U-013 if CSP/LDA is proposed next
+[ ] Approve one narrow CURRENT_TASK.md implementation ticket
+[ ] Do not begin CSP/LDA under the closed M1-T04 authorization
 ```
+
+---
 
 ---
 
@@ -1227,8 +1250,8 @@ Next governance gate:
 Current state:
 
 ```text
-No material software technical debt recorded for merged M1-T01 / M1-T02.
-Documentation alignment for D-031 through D-039 is an active governance blocker, not software debt.
+No material software technical debt is recorded for accepted M1-T01 through M1-T04.
+U-013 is an unresolved scientific decision and governance gate, not software technical debt.
 ```
 
 Only actual implementation debt belongs here.
@@ -1543,7 +1566,7 @@ Next required action:
 ChatGPT scientific review + Project Owner approval + DECISIONS.md update.
 ```
 
-For the current state, those example preprocessing decisions are resolved as D-031 through D-039; the remaining M1-T03 gate is documentation reconciliation plus explicit implementation authorization.
+For the current state, those example preprocessing decisions are resolved as D-031 through D-039. M1-T03 and M1-T04 are accepted and closed; no implementation task is active.
 
 ---
 
@@ -1606,6 +1629,8 @@ Never use placeholders as real experiment entries.
 
 # 45. CURRENT PROJECT STATE SUMMARY
 
-The project currently has three accepted and merged M1 software tasks on canonical `main`: M1-T01 (PhysioNet EEGBCI loader), M1-T02 (EEG visualization/inspection), and M1-T03 (EEG preprocessing/epochs). M1-T03 is accepted at commit `1af72b5deb9981f469a4394859aac49add65e2a7`; final review reported 9 targeted preprocessing/epoch tests and 10 loader regression tests passing, plus real subject 1 smoke checks on runs 4/8/12. Those smoke checks are implementation verification, not model-performance results.
+The project currently has four accepted and merged M1 software tasks on canonical `main`: M1-T01 (PhysioNet EEGBCI loader), M1-T02 (EEG visualization/inspection), M1-T03 (EEG preprocessing/epochs), and M1-T04 (EEG split manifest). M1-T04 was accepted at task-branch commit `86b47c56bd655900cf478dbb7af6ec13eeb26e41` and squash-merged through PR #13 as canonical software commit `3b33477166db6889747dabc8d4be21403b480735`.
 
-The Project Owner approved U-010 through U-012, recorded as D-040 through D-042 at commit `ea00a631b60967cfece65b42e00e7b36c4efac7d`: separate within-subject and cross-subject evaluation tracks, deterministic class-stratified 60/20/20 within-subject splitting at original-trial level, fixed 70/15/15 subject-held-out primary cross-subject evaluation, and a seed-42 frozen subject manifest with 76/16/17 subjects when the full 109-subject cohort is eligible. The split/evaluation methodology is reconciled to those decisions. No dataset-splitting implementation is authorized yet; a separate narrow `CURRENT_TASK.md` ticket remains required. The project remains an offline prerecorded EEG system rather than live EEG.
+M1-T04 operationalizes D-040 through D-042 with deterministic class-stratified within-subject 60/20/20 assignments at original-trial level, a deterministic seed-42 76/16/17 cross-subject manifest for the full eligible 109-subject cohort, explicit leakage/completeness validation, auditable persistence/provenance, and protected final-test membership. It does not implement CSP/LDA or produce model-performance results.
+
+No implementation task is active. U-013 — Final CSP configuration remains unresolved, so CSP/LDA must not begin until that decision is explicitly approved and a new narrow `CURRENT_TASK.md` ticket is authorized. The project remains an offline prerecorded EEG system rather than live EEG.
