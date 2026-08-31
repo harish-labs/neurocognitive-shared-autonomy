@@ -1241,6 +1241,101 @@ reset the posterior to [0.5, 0.5] at the start of each new binary decision episo
 
 ---
 
+## D-055 — Confidence / Entropy Thresholds
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31
+**Resolves:** U-023
+
+**Decision:**
+
+```text
+continue using Shannon entropy of the binary Bayesian posterior as the explicit uncertainty measure
+PROCEED boundary: leading-candidate posterior >= 0.90, matching D-054
+for a binary posterior, this corresponds to entropy <= approximately 0.469 bits
+CONFIRM region: after the Bayesian 5-update horizon, leading posterior >= 0.75 and < 0.90
+corresponding binary entropy is approximately 0.469-0.811 bits
+DEFER region: after the 5-update horizon, leading posterior < 0.75
+corresponding entropy is > approximately 0.811 bits
+posterior thresholds are authoritative
+entropy is the explicit uncertainty measure but must not create an independent contradictory decision rule
+```
+
+**Context:** The shared-autonomy layer needed fixed, interpretable uncertainty thresholds after the approved bounded binary Bayesian episode so that confidence and entropy cannot silently yield conflicting actions.
+
+**Rationale:** The authoritative posterior boundaries preserve the approved D-054 commitment rule, while binary posterior entropy provides an explicit, equivalent uncertainty description for logging and explanation.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/10_BAYESIAN_GOAL_INFERENCE.md`, `docs/12_SHARED_AUTONOMY_AND_HUMAN_AI_INTERACTION.md`, and future uncertainty/shared-autonomy implementation code only when separately authorized.
+
+**Implementation consequence:** This decision freezes shared-autonomy/uncertainty policy methodology only. It does not authorize implementation. A separate explicit `CURRENT_TASK.md` ticket is still required before coding.
+
+**Approved by:** Project Owner
+
+---
+
+## D-056 — Exact PROCEED / CONFIRM / DEFER Policy
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31
+**Resolves:** U-024
+
+**Decision:**
+
+```text
+if Bayesian inference reaches D-054's >= 0.90 commitment threshold before or at update 5, output PROCEED
+otherwise continue until all 5 accepted Bayesian evidence updates are exhausted
+at update 5, if the strongest posterior is >= 0.75 and < 0.90, output CONFIRM for the current leading candidate
+at update 5, if the strongest posterior is < 0.75, output DEFER
+CONFIRM must never silently approve a goal; explicit human approval is required
+human PAUSE, STOP, or OVERRIDE always takes precedence regardless of model confidence, posterior, or autonomy policy
+```
+
+**Context:** The project required an exact policy for interpreting the bounded Bayesian episode without allowing an intermediate-confidence candidate to become an autonomous goal approval.
+
+**Rationale:** This policy retains immediate action only for the D-054 commitment boundary, requires human authority for intermediate confidence, and preserves deferral for unresolved uncertainty.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/12_SHARED_AUTONOMY_AND_HUMAN_AI_INTERACTION.md`, and future shared-autonomy implementation code only when separately authorized.
+
+**Implementation consequence:** This decision freezes shared-autonomy/uncertainty policy methodology only. It does not authorize implementation. A separate explicit `CURRENT_TASK.md` ticket is still required before coding.
+
+**Approved by:** Project Owner
+
+---
+
+## D-057 — Prolonged-Uncertainty Fallback
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31
+**Resolves:** U-025
+
+**Decision:**
+
+```text
+on DEFER, do not force-select the posterior argmax
+do not begin autonomous movement
+hold the agent stationary
+request explicit human input / goal selection rather than accumulating unlimited EEG evidence
+if the human provides a valid explicit choice or override, respect that human authority
+if no human input is provided, remain deferred
+any future binary EEG decision episode starts fresh with D-054's [0.5, 0.5] prior
+do not carry the uncertain posterior into a new episode
+```
+
+**Context:** The bounded Bayesian protocol needed an explicit safe outcome for unresolved uncertainty after five accepted evidence updates.
+
+**Rationale:** Holding position and requesting human input prevents forced intent selection or unlimited evidence accumulation while preserving the human as the final authority over the intended goal.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/12_SHARED_AUTONOMY_AND_HUMAN_AI_INTERACTION.md`, and future shared-autonomy, safety, and human-interface implementation code only when separately authorized.
+
+**Implementation consequence:** D-055 through D-057 freeze the shared-autonomy/uncertainty policy methodology only and do not authorize implementation. A separate explicit `CURRENT_TASK.md` implementation ticket is required before coding.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
@@ -1266,9 +1361,7 @@ None currently unresolved.
 ## Shared Autonomy
 
 ```text
-U-023 — Confidence / entropy thresholds
-U-024 — Exact proceed / confirm / defer policy
-U-025 — Prolonged-uncertainty fallback
+None currently unresolved.
 ```
 
 ## Adaptation
