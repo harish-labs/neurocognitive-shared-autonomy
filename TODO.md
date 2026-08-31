@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** EEG decoding, calibration, and binary Bayesian goal inference through M1-T08 accepted and merged; no active task authorized  
+**Current stage:** EEG decoding, calibration, binary Bayesian goal inference, and uncertainty/shared-autonomy policy through M1-T09 accepted and merged; no active task authorized  
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -36,12 +36,10 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 ## Repository / live state
 
 ```text
-[x] Create / initialize project repository
-[x] Add core governance files
 [x] Record D-031 through D-039 preprocessing/epoch decisions
 [x] Record D-040 through D-042 split/evaluation decisions
 [x] Complete, accept, and merge M1-T04 split manifest
-[x] Record D-043 and D-044 CSP configuration/selection
+[x] Record D-043 and D-044 CSP decisions
 [x] Complete, accept, and merge M1-T05 CSP+LDA baseline
 [x] Record D-045 through D-047 EEGNet decisions
 [x] Complete, accept, and merge M1-T06 EEGNet / Compact CNN
@@ -49,7 +47,9 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] Complete, accept, and merge M1-T07 Probability Calibration
 [x] Record D-051 through D-054 Bayesian / goal-mapping decisions
 [x] Complete, accept, and merge M1-T08 Bayesian Goal Inference
-[x] Reconcile M1-T08 governance close with no active task
+[x] Record D-055 through D-057 uncertainty/shared-autonomy decisions
+[x] Complete, accept, and merge M1-T09 Uncertainty & Shared-Autonomy Policy
+[x] Reconcile M1-T09 governance close with no active task
 ```
 
 ## Current authorization
@@ -62,7 +62,7 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 
 ---
 
-# 3. COMPLETED EEG / CALIBRATION / BAYES IMPLEMENTATION
+# 3. COMPLETED EEG / CALIBRATION / BAYES / SHARED-AUTONOMY IMPLEMENTATION
 
 ```text
 [x] PhysioNet EEGBCI loader
@@ -94,13 +94,20 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] >=0.90 commitment threshold
 [x] maximum 5 accepted evidence updates
 [x] DEFER without forced argmax after non-committing update 5
-[x] explicit episode reset and terminal-state handling
-[x] M1-T08 analytical tests
-[x] M1-T08 regression bundle: 77 passed, 1 warning
-[x] M1-T08 bounded synthetic Bayesian integration smoke
+[x] explicit Bayesian episode reset and terminal-state handling
+[x] binary Shannon entropy in bits
+[x] posterior/entropy consistency validation
+[x] pre-horizon WAITING policy
+[x] D-055/D-056 PROCEED / CONFIRM / DEFER thresholds
+[x] explicit human-confirmation requirement
+[x] DEFER hold-position / human-input request representation
+[x] PAUSE / STOP / OVERRIDE policy precedence hooks
+[x] M1-T09 analytical tests
+[x] M1-T09 regression bundle reported: 100 passed, 1 warning
+[x] M1-T09 bounded synthetic Bayesian -> entropy -> shared-autonomy smoke
 ```
 
-Synthetic Bayesian smoke evidence is integration-only and supports no efficacy claim.
+Synthetic smoke evidence is integration-only and supports no efficacy claim.
 
 ---
 
@@ -110,9 +117,9 @@ Potential next work must be scientifically narrowed and explicitly approved befo
 
 ```text
 [ ] Decide the next single implementation task
-[ ] Resolve U-023 through U-025 before implementing final uncertainty/shared-autonomy policy behavior
-[ ] Consider entropy computation as a narrow module only after checking whether its exact implementation is already fully specified and separable from unresolved policy thresholds
-[ ] Run reportable decoder/calibration/Bayesian evaluation only under approved experiment tasks/protocols
+[ ] Resolve U-026 through U-028 before implementing adaptation/personalization behavior
+[ ] Do not implement reset/resume/corrected-goal behavior after override unless separately authorized by an approved task/decision where required
+[ ] Run reportable decoder/calibration/Bayesian/shared-autonomy evaluation only under approved experiment tasks/protocols
 ```
 
 Do not infer authorization from this list.
@@ -133,9 +140,9 @@ Do not infer authorization from this list.
 ## Shared autonomy / uncertainty policy
 
 ```text
-[ ] U-023 — Decide confidence / entropy thresholds
-[ ] U-024 — Freeze exact PROCEED / CONFIRM / DEFER policy
-[ ] U-025 — Decide prolonged-uncertainty fallback
+[x] U-023 — Confidence / entropy thresholds resolved by D-055
+[x] U-024 — Exact PROCEED / CONFIRM / DEFER policy resolved by D-056
+[x] U-025 — Prolonged-uncertainty fallback resolved by D-057
 ```
 
 ## Adaptation
@@ -188,10 +195,16 @@ Do not infer authorization from this list.
 [x] Verify five-update DEFER behavior and no forced argmax
 [x] Verify new-episode reset and terminal episode behavior
 [x] Verify planner/safety data cannot enter Bayesian likelihood API
+[x] Verify binary Shannon entropy analytical values
+[x] Verify entropy cannot independently override posterior policy
+[x] Verify PROCEED / WAITING / CONFIRM / DEFER boundaries
+[x] Verify PAUSE / STOP / OVERRIDE precedence hooks
+[x] Verify shared-autonomy policy has no planner/safety/environment-execution dependency
 [ ] Run reportable within-subject decoder evaluation
 [ ] Run reportable cross-subject decoder evaluation
 [ ] Run reportable calibration evaluation
 [ ] Run reportable Bayesian inference evaluation
+[ ] Run reportable shared-autonomy evaluation
 [ ] Conduct failure analysis after reportable evaluation
 ```
 
@@ -199,25 +212,39 @@ Do not infer authorization from this list.
 
 # 7. MILESTONE — UNCERTAINTY / SHARED AUTONOMY
 
-Not authorized until required decisions and a narrow task are approved.
+Core non-executing M1-T09 policy layer is accepted.
 
 ```text
-[ ] Shannon entropy of Bayesian goal posterior
-[ ] Analytical entropy tests
-[ ] confidence / uncertainty policy
-[ ] PROCEED / CONFIRM / DEFER behavior
-[ ] prolonged-uncertainty fallback
-[ ] human CONFIRM / OVERRIDE / PAUSE / STOP integration
-[ ] shared-autonomy state machine
-[ ] policy logging
-[ ] state-transition tests
+[x] Shannon entropy of Bayesian goal posterior
+[x] Analytical entropy tests
+[x] confidence / uncertainty policy
+[x] PROCEED / WAITING / CONFIRM / DEFER behavior
+[x] prolonged-uncertainty fallback representation
+[x] PAUSE / STOP / OVERRIDE precedence hooks
+[ ] corrected-goal / reset / resume state-transition behavior if later approved
+[ ] full shared-autonomy execution state machine with planner/safety integration
+[ ] end-to-end policy logging in replay
 ```
 
-U-023 through U-025 remain unresolved.
+D-055 through D-057 are operationalized by M1-T09. This does not authorize later execution-layer work.
 
 ---
 
-# 8. MILESTONE — SAR / A* / SAFETY
+# 8. MILESTONE — ADAPTATION
+
+Blocked by U-026 through U-028.
+
+```text
+[ ] adaptation mechanism
+[ ] update formula
+[ ] bounds / warm-up / reset
+[ ] adaptation tests
+[ ] adaptation experiment if later authorized
+```
+
+---
+
+# 9. MILESTONE — SAR / A* / SAFETY
 
 ```text
 [ ] 2D Gymnasium environment
@@ -236,7 +263,7 @@ Risk-aware planning and prohibited-hazard behavior remain blocked where U-029 th
 
 ---
 
-# 9. MILESTONE — END-TO-END OFFLINE EEG REPLAY
+# 10. MILESTONE — END-TO-END OFFLINE EEG REPLAY
 
 ```text
 [ ] Offline EEG replay
@@ -244,8 +271,7 @@ Risk-aware planning and prohibited-hazard behavior remain blocked where U-029 th
 [ ] Calibration integration
 [ ] Goal-evidence adapter integration
 [ ] Bayes integration
-[ ] Entropy integration
-[ ] Shared-autonomy integration
+[x] Entropy/shared-autonomy core policy modules available
 [ ] Planner integration
 [ ] Safety integration
 [ ] Full mission replay
@@ -257,7 +283,7 @@ This must remain labeled offline EEG replay / simulated real-time BCI unless har
 
 ---
 
-# 10. MILESTONE — EXPERIMENTS
+# 11. MILESTONE — EXPERIMENTS
 
 ```text
 [ ] E1 EEG decoding
@@ -278,7 +304,7 @@ Negative or mixed results are valid. Do not tune protected test data to improve 
 
 ---
 
-# 11. PRESENTATION / DOCUMENTATION
+# 12. PRESENTATION / DOCUMENTATION
 
 ```text
 [ ] Streamlit dashboard
@@ -297,7 +323,7 @@ Negative or mixed results are valid. Do not tune protected test data to improve 
 
 ---
 
-# 12. OPTIONAL / FUTURE — ONLY AFTER CORE
+# 13. OPTIONAL / FUTURE — ONLY AFTER CORE
 
 ```text
 [ ] Live EEG
@@ -318,7 +344,7 @@ These are not current requirements or authorization.
 
 ---
 
-# 13. DONE — GOVERNANCE / IMPLEMENTATION CLOSES
+# 14. DONE — GOVERNANCE / IMPLEMENTATION CLOSES
 
 ```text
 [x] MASTER_PROJECT_SPEC.md and governance framework established
@@ -333,12 +359,14 @@ These are not current requirements or authorization.
 [x] M1-T07 Probability Calibration accepted and merged
 [x] D-051 through D-054 Bayesian / goal-mapping decisions recorded
 [x] M1-T08 Bayesian Goal Inference accepted and merged
-[x] M1-T08 governance close recorded with no active implementation task
+[x] D-055 through D-057 shared-autonomy / uncertainty decisions recorded
+[x] M1-T09 Uncertainty & Shared-Autonomy Policy accepted and merged
+[x] M1-T09 governance close recorded with no active implementation task
 ```
 
 ---
 
-# 14. TODO DISCIPLINE
+# 15. TODO DISCIPLINE
 
 ```text
 backlog item -> TODO.md

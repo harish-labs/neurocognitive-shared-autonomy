@@ -31,7 +31,7 @@ GitHub is the canonical implementation/state source of truth.
 
 ```text
 Project Phase:
-EEG decoding, calibration, and binary Bayesian goal-inference implementation through M1-T08 is accepted and merged.
+EEG decoding, calibration, binary Bayesian goal inference, and uncertainty/shared-autonomy policy through M1-T09 are accepted and merged.
 
 Current Module:
 No active coding task authorized
@@ -46,13 +46,13 @@ Canonical Branch:
 main
 
 Latest Accepted Software Commit:
-43fb1f10b0a78236ca01c21076a37eacf70529a9
+7fd4e4c5824199764567f4d8cc71127063a477be
 
 Latest Accepted Software Task:
-M1-T08 — Bayesian Goal Inference
+M1-T09 — Uncertainty & Shared-Autonomy Policy
 
 Latest Approved Scientific-Decision Commit:
-2cb9208a5f16d5f67fe5830caf1f0837f6ada6d8
+a5e2379c6cf4d843ab1d326b0b8c54372609b9d3
 
 Latest Valid Experiment:
 None yet
@@ -65,7 +65,7 @@ Last Updated:
 
 # 2. ACCEPTED IMPLEMENTATION SEQUENCE
 
-Canonical `main` now contains eight accepted M1 implementation tasks:
+Canonical `main` contains nine accepted M1 implementation tasks:
 
 ```text
 M1-T01 — PhysioNet EEGBCI Data Loader
@@ -76,9 +76,10 @@ M1-T05 — CSP+LDA Baseline
 M1-T06 — EEGNet / Compact CNN
 M1-T07 — Probability Calibration
 M1-T08 — Bayesian Goal Inference
+M1-T09 — Uncertainty & Shared-Autonomy Policy
 ```
 
-The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, or real human-subject claim is authorized.
+The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, or human-subject result claim is authorized.
 
 ---
 
@@ -94,22 +95,22 @@ EEGNet decisions D-045 through D-047 remain operational.
 
 Calibration decisions D-048 through D-050 remain operational.
 
-Bayesian / goal-mapping decisions D-051 through D-054 are now operationalized by M1-T08:
+Bayesian / goal-mapping decisions D-051 through D-054 remain operationalized by M1-T08.
+
+Shared-autonomy / uncertainty decisions D-055 through D-057 are now operationalized by M1-T09:
 
 ```text
-binary-choice interaction protocol only
-exactly two active candidates per decision episode
-left calibrated evidence -> candidate A
-right calibrated evidence -> candidate B
-multi-goal SAR interaction represented as a sequence of binary choices
-calibrated binary probabilities used directly as candidate evidence likelihood weights
-planner/safety desirability excluded from intent likelihoods
-uniform baseline prior [0.5, 0.5]
-commit when posterior >= 0.90
-maximum 5 accepted evidence updates
-if no threshold by update 5 -> DEFER / UNCOMMITTED
-no forced argmax decision
-new episode resets posterior to [0.5, 0.5]
+Shannon entropy of the binary Bayesian posterior is the explicit uncertainty measure
+posterior thresholds are authoritative
+leading posterior >= 0.90 -> PROCEED
+before update 5 and below 0.90 -> WAITING
+at update 5: >= 0.90 -> PROCEED
+at update 5: >= 0.75 and < 0.90 -> CONFIRM
+at update 5: < 0.75 -> DEFER
+CONFIRM requires explicit human approval
+DEFER does not force-select a goal and requests human input while holding position conceptually
+human PAUSE, STOP, and OVERRIDE take precedence over normal confidence policy
+no uncertain posterior carries into a future binary episode; reset behavior remains governed by D-054
 ```
 
 ---
@@ -126,66 +127,70 @@ new episode resets posterior to [0.5, 0.5]
 | EEGNet / Compact CNN | PASS | `6b526d76acb53cd4f632ba87c975b4ede9e89a9c` | accepted neural baseline |
 | Probability Calibration | PASS | `b6a2932372b3b8047f4629b52e5a1822ce4fd057` | M1-T07 accepted |
 | Bayesian Goal Inference | PASS | `43fb1f10b0a78236ca01c21076a37eacf70529a9` | M1-T08 accepted |
-| Uncertainty / Entropy policy | NOT STARTED | — | U-023 through U-025 unresolved |
+| Uncertainty / Shared-Autonomy Policy | PASS | `7fd4e4c5824199764567f4d8cc71127063a477be` | M1-T09 accepted |
 | Adaptation / Personalization | BLOCKED | — | U-026 through U-028 unresolved |
 | SAR / Planning / Safety | NOT STARTED / BLOCKED | — | U-029 through U-033 unresolved where applicable |
 | Reportable Evaluation | NOT STARTED | — | no reportable experiment yet |
 
 ---
 
-# 5. M1-T08 VERIFIED SOFTWARE
+# 5. M1-T09 VERIFIED SOFTWARE
 
 ```text
-src/cognitive/bayes.py implemented
-tests/test_bayes.py implemented
+src/cognitive/uncertainty.py implemented
+src/control/shared_autonomy.py implemented
+tests/test_uncertainty.py implemented
+tests/test_shared_autonomy.py implemented
 accepted task-branch head / canonical software commit:
-43fb1f10b0a78236ca01c21076a37eacf70529a9
+7fd4e4c5824199764567f4d8cc71127063a477be
 ```
 
 Accepted behavior:
 
 ```text
-BinaryGoalEvidence maps approved left/right calibrated evidence to candidate A/B
-BinaryBayesianGoalEpisode starts/reset at [0.5, 0.5]
-sequential update multiplies prior/posterior by likelihood weights and normalizes
-posterior stays finite/non-negative/normalized
-non-binary, malformed, negative, non-finite, or reversed-class evidence is rejected
-posterior >= 0.90 commits the corresponding candidate
-commitment is terminal for that episode
-maximum 5 accepted updates
-fifth non-committing update produces DEFER with no forced argmax
-new episode explicitly resets state/history/count/status
-planner/safety information cannot be passed into likelihood construction through the approved API
+binary posterior validation requires exactly two finite, non-negative values summing to 1
+Shannon entropy is computed in bits with 0 log2(0) treated as zero
+entropy must match the same posterior supplied to the policy
+normal policy uses posterior thresholds, not entropy thresholds, to choose action
+pre-horizon sub-0.90 posterior returns WAITING
+>=0.90 returns PROCEED with the leading goal approved
+update-5 confidence in [0.75,0.90) returns CONFIRM with candidate but no approved goal
+update-5 confidence <0.75 returns DEFER with no forced candidate/approved goal
+CONFIRM and DEFER hold position conceptually and request human input as appropriate
+STOP and PAUSE override normal posterior policy
+OVERRIDE takes precedence without inventing reset/corrected-goal/adaptation semantics
+policy has no planner, safety-controller, or environment-execution dependency
 ```
 
-Final reviewed regression evidence:
+Final reviewed regression evidence reported from the task branch:
 
 ```text
-77 passed, 1 warning
+100 passed, 1 warning
 ```
 
-The warning is the existing non-failing PyTorch `padding='same'` warning from EEGNet tests and is not an acceptance blocker.
+The warning is the existing non-failing PyTorch EEGNet `padding='same'` warning and is not an acceptance blocker.
 
 ---
 
-# 6. M1-T08 SYNTHETIC INTEGRATION SMOKE
+# 6. M1-T09 SYNTHETIC INTEGRATION SMOKE
 
 ```text
-Evidence 1: [0.7, 0.3]
-Evidence 2: [0.8, 0.2]
-Result: candidate A committed on update 2
-Posterior: approximately (0.9032, 0.0968)
+Accumulated Bayesian evidence produced posterior approximately (0.9032, 0.0968)
+Shared-autonomy result: PROCEED for candidate A
+Entropy: approximately 0.458686 bits
 
-Five repetitions of [0.55, 0.45]
-Result: DEFER after update 5
-No forced selection
+A five-update unresolved Bayesian episode produced:
+DEFER
+approved_goal = None
+holds_position = True
+requests_human_input = True
 ```
 
 Interpretation rule:
 
-> This is synthetic integration evidence only. It does not establish that Bayesian inference improves intent decoding, task success, safety, calibration, or human performance.
+> This is synthetic integration evidence only. It does not establish improved intent inference, shared-autonomy benefit, task success, safety, calibration quality, or human performance.
 
-No reportable Bayesian experiment has yet been run.
+No reportable shared-autonomy experiment has yet been run.
 
 ---
 
@@ -200,9 +205,7 @@ None currently unresolved.
 ## Shared Autonomy / Uncertainty Policy
 
 ```text
-U-023 — Confidence / entropy thresholds
-U-024 — Exact proceed / confirm / defer policy
-U-025 — Prolonged-uncertainty fallback
+None currently unresolved.
 ```
 
 ## Adaptation
@@ -250,8 +253,9 @@ Probability calibration: PASS
 Calibration metrics: PASS
 Calibration -> binary goal evidence: PASS
 Binary sequential Bayesian inference: PASS
-Bayesian posterior -> entropy/shared-autonomy policy: NOT STARTED
+Bayesian posterior -> entropy/shared-autonomy policy: PASS
 Planner/safety/environment integration: NOT STARTED
+Adaptation: NOT STARTED / BLOCKED
 Offline replay -> full system: NOT STARTED
 ```
 
@@ -287,7 +291,9 @@ CSP+LDA baseline has been implemented and verified under approved leakage contro
 EEGNet baseline has been implemented and verified under approved leakage controls
 model-specific calibration has been implemented and verified under approved leakage controls
 binary goal-evidence mapping and bounded sequential Bayesian goal inference have been implemented under D-051 through D-054
-synthetic Bayesian integration examples execute as expected
+binary Shannon entropy and the approved PROCEED/CONFIRM/DEFER policy have been implemented under D-055 through D-057
+human PAUSE/STOP/OVERRIDE precedence hooks are implemented at the non-executing policy layer
+synthetic integration examples execute as expected
 ```
 
 Not authorized:
@@ -300,6 +306,7 @@ Bayesian inference improves intent inference or goal selection
 shared autonomy improves task success or safety
 cross-subject generalization claims
 adaptation improvement claims
+live EEG or physical-robot claims
 ```
 
 ---
@@ -318,8 +325,9 @@ Before the next task:
 5. check DECISIONS.md
 6. check relevant technical documentation and accepted code/tests
 7. resolve any blocking scientific/architectural decision
-8. obtain explicit Project Owner approval
-9. activate exactly one CURRENT_TASK.md ticket
+8. record any newly approved decision
+9. obtain explicit Project Owner approval
+10. activate exactly one CURRENT_TASK.md ticket
 ```
 
-The next unresolved scientific boundary begins at U-023 shared-autonomy / uncertainty policy. Do not implement it or any later module until the required decisions and task authorization are explicit.
+The next unresolved scientific boundary begins at U-026 adaptation mechanism. Do not implement adaptation or any later unresolved module until the required decisions and task authorization are explicit.
