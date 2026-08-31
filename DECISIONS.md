@@ -1116,6 +1116,131 @@ do not tune bin count or binning strategy using protected test performance
 
 ---
 
+## D-051 — Binary EEG → Multi-Goal Interaction Protocol
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31  
+**Resolves:** U-019
+
+**Decision:**
+
+```text
+use a binary-choice interaction protocol
+at each decision point expose exactly two currently valid SAR candidate goals/options: candidate A and candidate B
+calibrated "left" EEG evidence supports candidate A
+calibrated "right" EEG evidence supports candidate B
+multi-goal SAR interaction is represented as a sequence of binary choices
+do not treat the binary EEG decoder as a direct K-goal classifier
+```
+
+**Context:** The project required an explicit, non-invented interaction rule connecting the approved binary EEG decoder to the potentially multi-goal Search & Rescue setting before Bayesian goal-inference methodology could be frozen coherently.
+
+**Alternatives considered:** permanently mapping left/right directly to fixed global SAR goals; treating the binary decoder as an arbitrary K-goal classifier; deferring the interaction protocol while implementing later Bayesian logic.
+
+**Rationale:** A binary-choice interaction protocol preserves the approved binary EEG decoder semantics, keeps the human intent interface interpretable, and supports multi-goal SAR behavior as a controlled sequence of binary decisions without silently upgrading the decoder into a multiclass intent model.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/10_BAYESIAN_GOAL_INFERENCE.md`, `docs/12_SHARED_AUTONOMY_AND_HUMAN_AI_INTERACTION.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, and future goal-mapping/Bayesian implementation code only when separately authorized.
+
+**Implementation consequence:** This decision freezes the Bayesian/goal-mapping methodology only. It does not authorize Bayesian implementation. A separate explicit `CURRENT_TASK.md` ticket is still required before coding.
+
+**Approved by:** Project Owner
+
+---
+
+## D-052 — Decoder Posterior → Goal Likelihood Construction
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31  
+**Resolves:** U-020
+
+**Decision:**
+
+```text
+for the currently active binary choice, use the calibrated binary class probabilities directly as the two candidate evidence likelihood weights
+combine these weights with the current prior/posterior through the sequential Bayesian update and normalize the resulting posterior
+do not reinterpret binary decoder probabilities as arbitrary K-goal probabilities
+route cost, path length, environmental risk/safety, planner preference, or goal desirability must not modify the intent likelihood
+preserve the separation between human-intent inference and autonomous planning/safety
+```
+
+**Context:** The project needed an explicit rule for how calibrated binary decoder probabilities enter the Bayesian update without collapsing the separation between neural intent evidence and downstream planning/safety logic.
+
+**Alternatives considered:** treating decoder probabilities as arbitrary K-goal probabilities; injecting planner or safety preferences into the intent likelihood; postponing the likelihood-construction rule until implementation time.
+
+**Rationale:** This rule preserves the meaning of the binary calibrated evidence at the active decision boundary, supports a clean sequential Bayesian update, and prevents autonomous-planning considerations from contaminating human-intent inference.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/10_BAYESIAN_GOAL_INFERENCE.md`, `docs/13_AUTONOMOUS_PLANNING_AND_CONTROL.md`, `docs/14_SAFETY_CRITICAL_CONTROL.md`, and future goal-mapping/Bayesian implementation code only when separately authorized.
+
+**Implementation consequence:** This decision freezes the Bayesian/goal-mapping methodology only. It does not authorize Bayesian implementation. A separate explicit `CURRENT_TASK.md` ticket is still required before coding.
+
+**Approved by:** Project Owner
+
+---
+
+## D-053 — Bayesian Prior Policy
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31  
+**Resolves:** U-021
+
+**Decision:**
+
+```text
+primary baseline prior at the beginning of every binary decision episode is [0.5, 0.5]
+no learned prior
+no scenario-informed prior
+no adaptive/personalized prior in the primary baseline
+```
+
+**Context:** The Bayesian module required an explicit approved prior policy so that later implementation would not silently introduce learned, scenario-biased, or personalized priors into the primary baseline.
+
+**Alternatives considered:** learned priors; scenario-informed priors; adaptive or personalized priors in the primary baseline; leaving the prior unspecified until implementation.
+
+**Rationale:** A uniform `[0.5, 0.5]` baseline prior is simple, transparent, and consistent with the approved binary-choice protocol while avoiding unapproved adaptive or scenario-derived bias in the primary baseline.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/10_BAYESIAN_GOAL_INFERENCE.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, and future Bayesian implementation code only when separately authorized.
+
+**Implementation consequence:** This decision freezes the Bayesian/goal-mapping methodology only. It does not authorize Bayesian implementation. A separate explicit `CURRENT_TASK.md` ticket is still required before coding.
+
+**Approved by:** Project Owner
+
+---
+
+## D-054 — Bayesian Stopping / Commitment Rule
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31  
+**Resolves:** U-022
+
+**Decision:**
+
+```text
+sequentially update the posterior using accepted evidence
+commit candidate A or B when its posterior probability reaches or exceeds 0.90
+maximum 5 accepted evidence updates per binary decision episode
+if neither candidate reaches 0.90 after the fifth accepted evidence update, return UNCOMMITTED / DEFER
+do not force-select the highest posterior candidate
+reset the posterior to [0.5, 0.5] at the start of each new binary decision episode
+```
+
+**Context:** The Bayesian intent layer required an explicit stopping/commitment rule so that later implementation would not silently invent thresholds, maximum evidence horizons, or forced-decision behavior.
+
+**Alternatives considered:** always choosing the highest posterior candidate; unlimited evidence accumulation; lower or higher unapproved commitment thresholds; carrying posterior state across independent binary decision episodes.
+
+**Rationale:** This rule creates a bounded, auditable binary decision episode with a clear commitment threshold, a defined deferral outcome, and an explicit reset policy between episodes.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/10_BAYESIAN_GOAL_INFERENCE.md`, `docs/12_SHARED_AUTONOMY_AND_HUMAN_AI_INTERACTION.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, and future Bayesian/shared-autonomy implementation code only when separately authorized.
+
+**Implementation consequence:** D-051 through D-054 freeze the Bayesian/goal-mapping methodology only and do not authorize Bayesian implementation. A separate explicit `CURRENT_TASK.md` ticket is still required before coding.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
@@ -1135,10 +1260,7 @@ None currently unresolved.
 ## Bayesian / Goal Mapping
 
 ```text
-U-019 — Binary EEG → multi-goal interaction protocol
-U-020 — Decoder posterior → goal likelihood construction
-U-021 — Prior policy
-U-022 — Bayesian stopping / commitment rule
+None currently unresolved.
 ```
 
 ## Shared Autonomy
