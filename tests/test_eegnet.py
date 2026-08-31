@@ -184,6 +184,22 @@ def test_eegnet_forward_returns_two_logits_for_canonical_input() -> None:
     assert torch.isfinite(logits).all()
 
 
+def test_model_construction_does_not_update_batch_norm_running_stats() -> None:
+    model = eegnet.EEGNetModel(n_times=CANONICAL_N_TIMES)
+
+    batch_norm_layers = (
+        model.temporal_batch_norm,
+        model.depthwise_batch_norm,
+        model.separable_batch_norm,
+    )
+
+    for layer in batch_norm_layers:
+        torch.testing.assert_close(layer.running_mean, torch.zeros_like(layer.running_mean))
+        torch.testing.assert_close(layer.running_var, torch.ones_like(layer.running_var))
+        assert int(layer.num_batches_tracked.item()) == 0
+        assert layer.training is True
+
+
 def test_fit_eegnet_rejects_csp_only_cropped_epochs() -> None:
     epochs = make_partitioned_epochs().copy().crop(tmin=1.0, tmax=2.0)
 
@@ -329,4 +345,3 @@ def test_fit_eegnet_accepts_cross_subject_manifest_assignments(monkeypatch) -> N
 
     assert result.selected_epoch_index == 1
     assert {metric.partition_name for metric in result.partition_metrics} >= {"validation", "final_test"}
-

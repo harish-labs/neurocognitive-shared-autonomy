@@ -171,15 +171,21 @@ class EEGNetModel(nn.Module):
         return torch.flatten(outputs, start_dim=1)
 
     def _infer_feature_count(self) -> int:
+        prior_training_states = {module: module.training for module in self.modules()}
         with torch.no_grad():
-            sample = torch.zeros(
-                1,
-                INPUT_CHANNELS,
-                EXPECTED_CHANNEL_COUNT,
-                self.n_times,
-                dtype=torch.float32,
-            )
-            return int(self._forward_features(sample).shape[1])
+            try:
+                self.eval()
+                sample = torch.zeros(
+                    1,
+                    INPUT_CHANNELS,
+                    EXPECTED_CHANNEL_COUNT,
+                    self.n_times,
+                    dtype=torch.float32,
+                )
+                return int(self._forward_features(sample).shape[1])
+            finally:
+                for module, was_training in prior_training_states.items():
+                    module.train(was_training)
 
 
 class EEGNetDecoder:
@@ -565,4 +571,3 @@ def _clone_state_dict(state_dict: dict[str, torch.Tensor]) -> dict[str, torch.Te
 def _set_random_seed(seed: int) -> None:
     torch.manual_seed(seed)
     np.random.seed(seed)
-
