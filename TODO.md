@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** EEG decoding implementation through M1-T06 accepted and merged; no active task authorized  
+**Current stage:** EEG decoding and probability calibration through M1-T07 accepted and merged; no active task authorized  
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -46,7 +46,9 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] Record D-045 and D-046 for final EEGNet architecture/training
 [x] Record D-047 pooling/max-norm supplement
 [x] Complete, review, accept, and merge M1-T06 EEGNet / Compact CNN
-[x] Reconcile M1-T06 governance close with no active task
+[x] Record D-048 through D-050 for final calibration methodology
+[x] Complete, review, accept, and merge M1-T07 Probability Calibration
+[x] Reconcile M1-T07 governance close with no active task
 ```
 
 ## Current authorization
@@ -54,12 +56,12 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 ```text
 [ ] Wait for next explicitly approved CURRENT_TASK.md
 [ ] Do not begin another implementation module without a narrow approved ticket
-[ ] Do not treat smoke-test metrics as reportable model-performance results
+[ ] Do not treat smoke-test calibration metrics as reportable calibration-quality evidence
 ```
 
 ---
 
-# 3. COMPLETED EEG IMPLEMENTATION
+# 3. COMPLETED EEG / CALIBRATION IMPLEMENTATION
 
 ```text
 [x] PhysioNet EEGBCI loader
@@ -79,17 +81,22 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] CSP+LDA baseline
 [x] validation-balanced-accuracy CSP component selection
 [x] CSP probability output
-[x] EEGNet architecture/training decisions
-[x] EEGNet / Compact CNN implementation
+[x] EEGNet architecture/training baseline
 [x] validation-only EEGNet checkpoint selection
 [x] protected test/final-test isolation
 [x] EEGNet softmax probability output
 [x] M1-T06 BatchNorm shape-inference reviewer fix
-[x] M1-T06 final targeted regression bundle: 48 passed, 1 warning
-[x] subject-1 M1-T06 real-data smoke execution
+[x] model-specific calibration methods
+[x] validation-only calibration fitting
+[x] identity / no-calibration baseline
+[x] fixed 10-bin equal-width reliability/ECE utilities
+[x] Brier Score utility
+[x] class order ("left", "right") preserved through calibration
+[x] M1-T07 final targeted regression bundle: 59 passed, 1 warning
+[x] subject-1 M1-T07 bounded real-data smoke execution
 ```
 
-The subject-1 EEGNet smoke retained 13 epochs with train/validation/test = 7/3/3 and validation/test balanced accuracy = 0.5. This is integration evidence only.
+Subject-1 calibration smoke evidence is integration-only and supports no efficacy or generalizable calibration-quality claim.
 
 ---
 
@@ -99,9 +106,10 @@ Potential next work must be narrowed and explicitly approved before implementati
 
 ```text
 [ ] Decide the next single implementation task
+[ ] Resolve Bayesian / goal-mapping decisions U-019 through U-022 before implementing that layer
 [ ] Consider unified decoder interface only if required by the next approved module
 [ ] Run reportable classical-vs-EEGNet evaluation only under an approved experiment task/protocol
-[ ] Begin calibration only after unresolved calibration decisions are approved
+[ ] Run reportable calibration evaluation only under an approved experiment task/protocol
 ```
 
 Do not infer authorization from this list.
@@ -110,71 +118,55 @@ Do not infer authorization from this list.
 
 # 5. BLOCKED — SCIENTIFIC DECISIONS
 
-## Evaluation
-
-```text
-[ ] Freeze final statistical-analysis policy
-[ ] If eligible cross-subject cohort != 109, obtain reviewer decision before freezing final manifest
-```
-
-## Calibration
-
-```text
-[ ] Select calibration method
-[ ] Select calibration fitting partition
-[ ] Freeze reliability-diagram binning
-```
-
 ## Bayesian / goal mapping
 
 ```text
-[ ] Decide binary EEG -> multi-goal interaction protocol
-[ ] Define decoder posterior -> goal-likelihood semantics
-[ ] Decide prior policy
-[ ] Decide Bayesian stopping / commitment rule
-[ ] Freeze evidence sequence/reset semantics where needed
+[ ] U-019 — Decide binary EEG -> multi-goal interaction protocol
+[ ] U-020 — Define decoder posterior -> goal-likelihood semantics
+[ ] U-021 — Decide prior policy
+[ ] U-022 — Decide Bayesian stopping / commitment rule
 ```
 
 ## Shared autonomy
 
 ```text
-[ ] Decide confidence / entropy thresholds
-[ ] Freeze PROCEED / CONFIRM / DEFER behavior
-[ ] Decide mandatory-confirmation conditions
-[ ] Decide prolonged-uncertainty fallback
+[ ] U-023 — Decide confidence / entropy thresholds
+[ ] U-024 — Freeze exact PROCEED / CONFIRM / DEFER policy
+[ ] U-025 — Decide prolonged-uncertainty fallback
 ```
 
 ## Adaptation
 
 ```text
-[ ] Select exact adaptation target/mechanism
-[ ] Define update rule
-[ ] Define bounds
-[ ] Define warm-up / decay / reset behavior
-[ ] Define feedback semantics
+[ ] U-026 — Select exact adaptation mechanism
+[ ] U-027 — Define update formula
+[ ] U-028 — Define bounds / warm-up / reset
 ```
 
 ## Planning / safety
 
 ```text
-[ ] Define environmental risk values
-[ ] Define risk normalization
-[ ] Select risk lambda
-[ ] Define prohibited-hazard threshold
-[ ] Define final no-safe-path behavior
+[ ] U-029 — Define environmental risk values
+[ ] U-030 — Define risk normalization
+[ ] U-031 — Select risk weight lambda
+[ ] U-032 — Define prohibited-hazard threshold
+[ ] U-033 — Define final no-safe-path behavior
 ```
 
 ## Experiments
 
 ```text
-[ ] Freeze exact A/B/C/D component matrix
-[ ] Freeze robustness perturbation levels
-[ ] Freeze inferential-statistics plan
+[ ] U-034 — Freeze exact A/B/C/D component matrix
+[ ] U-035 — Freeze robustness perturbation levels
+[ ] U-036 — Freeze inferential-statistics policy
+[ ] If eligible cross-subject cohort != 109, obtain reviewer decision before freezing a different final manifest
 ```
+
+Calibration U-016 through U-018 are resolved and implemented.
 
 ---
 
-# 6. EEG / MODEL VALIDATION TODO
+# 6. EEG / MODEL / CALIBRATION VALIDATION TODO
 
 ```text
 [x] Verify loader metadata / annotations on real subject 1 runs 4/8/12
@@ -186,33 +178,34 @@ Do not infer authorization from this list.
 [x] Verify EEGNet full canonical epoch and no CSP-only crop
 [x] Verify EEGNet train-only gradient updates
 [x] Verify EEGNet validation-only checkpoint selection
-[x] Verify earliest checkpoint wins exact validation-score ties
 [x] Verify protected test/final-test does not affect EEGNet selection
 [x] Verify decoder class order ("left", "right")
-[x] Verify EEGNet softmax probabilities
 [x] Verify BatchNorm state is not contaminated by shape inference
+[x] Verify EEGNet temperature scaling is validation-only
+[x] Verify CSP+LDA Platt scaling is validation-only
+[x] Verify protected test/final-test does not influence calibrator fitting
+[x] Verify identity calibration baseline
+[x] Verify 10 equal-width ECE bins over [0,1]
+[x] Verify Brier Score
 [ ] Run reportable within-subject decoder evaluation
 [ ] Run reportable cross-subject decoder evaluation
 [ ] Compare CSP+LDA and EEGNet under the approved E1 protocol
+[ ] Run reportable calibration evaluation
 [ ] Conduct failure analysis after reportable evaluation
 ```
 
 ---
 
-# 7. MILESTONE — CALIBRATION / BAYES / UNCERTAINTY
+# 7. MILESTONE — BAYES / UNCERTAINTY
 
-Not authorized until its required decisions/task are approved.
+Not authorized until its required decisions and task are approved.
 
 ```text
-[ ] Calibration metrics
-[ ] Reliability diagrams
-[ ] Calibrator
+[ ] Goal-evidence adapter
 [ ] Generic Bayesian core
 [ ] Analytical Bayes tests
 [ ] Entropy
 [ ] Analytical entropy tests
-[ ] GoalEvidence interface
-[ ] Adaptation interface
 [ ] Synthetic cognitive integration tests
 ```
 
@@ -220,7 +213,6 @@ Blocked where applicable:
 
 ```text
 [ ] Real decoder -> goal evidence mapping
-[ ] Final calibrator choice
 [ ] Final commitment rule
 [ ] Final adaptation update
 ```
@@ -266,12 +258,7 @@ Blocked pending approved risk policy:
 [ ] State-transition tests
 ```
 
-Blocked pending policy decisions:
-
-```text
-[ ] Final confidence / entropy thresholds
-[ ] Final PROCEED / CONFIRM / DEFER rules
-```
+Blocked pending U-023 through U-025.
 
 ---
 
@@ -318,7 +305,7 @@ Negative or mixed results are valid. Do not tune protected test data to improve 
 
 ---
 
-# 12. MILESTONE — PRESENTATION
+# 12. PRESENTATION / DOCUMENTATION
 
 ```text
 [ ] Streamlit dashboard
@@ -331,29 +318,13 @@ Negative or mixed results are valid. Do not tune protected test data to improve 
 [ ] Failure-case visualization
 [ ] Final README update
 [ ] Final technical report update
-[ ] Portfolio update
-[ ] Resume bullets update
+[ ] Portfolio / resume updates only with validated claims
 [ ] Demo video
 ```
 
-Presentation claims must match actual implementation and reportable results.
-
 ---
 
-# 13. DOCUMENTATION TODO
-
-Core numbered documentation already exists. Remaining documentation work is primarily reconciliation with actual implementation/results.
-
-```text
-[ ] Update FINAL_TECHNICAL_REPORT.md after reportable results exist
-[ ] Update GITHUB_README.md with tested user-facing commands when stable
-[ ] Update portfolio/resume positioning only with validated claims
-[ ] Final consistency scan across governance, docs, code, tests, and results
-```
-
----
-
-# 14. OPTIONAL — ONLY AFTER CORE
+# 13. OPTIONAL / FUTURE — ONLY AFTER CORE
 
 ```text
 [ ] Live EEG
@@ -361,10 +332,9 @@ Core numbered documentation already exists. Remaining documentation work is prim
 [ ] Hierarchical multi-goal selection
 [ ] Multiclass EEG
 [ ] Stronger domain adaptation
-[ ] Advanced uncertainty
+[ ] Advanced uncertainty / OOD detection
 [ ] Dynamic Bayesian model
-[ ] ROS2
-[ ] Gazebo
+[ ] ROS2 / Gazebo
 [ ] Formal safety
 [ ] Physical robot
 [ ] RL comparison
@@ -375,24 +345,7 @@ These are not current requirements or authorization.
 
 ---
 
-# 15. FUTURE RESEARCH
-
-```text
-[ ] Cross-subject generalization
-[ ] Few-shot personalization
-[ ] Distribution-shift calibration
-[ ] OOD detection
-[ ] Dynamic SAR
-[ ] Human trust / workload study
-[ ] Error-related potentials
-[ ] Multimodal BCI
-[ ] Intent-change detection
-[ ] Formal runtime assurance
-```
-
----
-
-# 16. DONE — GOVERNANCE / IMPLEMENTATION CLOSES
+# 14. DONE — GOVERNANCE / IMPLEMENTATION CLOSES
 
 ```text
 [x] MASTER_PROJECT_SPEC.md and governance framework established
@@ -404,12 +357,14 @@ These are not current requirements or authorization.
 [x] D-045 and D-046 EEGNet architecture/training recorded
 [x] D-047 EEGNet pooling/max-norm supplement recorded
 [x] M1-T06 EEGNet / Compact CNN accepted and merged
-[x] M1-T06 governance close recorded with no active implementation task
+[x] D-048 through D-050 calibration decisions recorded
+[x] M1-T07 Probability Calibration accepted and merged
+[x] M1-T07 governance close recorded with no active implementation task
 ```
 
 ---
 
-# 17. TODO DISCIPLINE
+# 15. TODO DISCIPLINE
 
 ```text
 backlog item -> TODO.md
