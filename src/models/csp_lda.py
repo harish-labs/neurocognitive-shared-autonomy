@@ -6,6 +6,7 @@ from typing import Iterable
 import mne
 import numpy as np
 from mne.decoding import CSP
+from sklearn.metrics import balanced_accuracy_score
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 from src.eeg.epochs import EPOCH_TMIN, EPOCH_TMAX
@@ -30,7 +31,7 @@ class CspLdaError(ValueError):
 @dataclass(frozen=True)
 class CandidateScore:
     n_components: int
-    validation_accuracy: float
+    validation_balanced_accuracy: float
 
 
 @dataclass(frozen=True)
@@ -113,12 +114,15 @@ def fit_csp_lda(
         candidate_scores.append(
             CandidateScore(
                 n_components=n_components,
-                validation_accuracy=validation_score,
+                validation_balanced_accuracy=validation_score,
             )
         )
         if validation_score > best_score:
             best_score = validation_score
-            best_candidate = n_components
+    best_candidates = tuple(
+        score.n_components for score in candidate_scores if score.validation_balanced_accuracy == best_score
+    )
+    best_candidate = _select_best_candidate(best_candidates)
 
     if best_candidate is None:
         raise CspLdaError("No approved CSP candidate could be selected.")
@@ -189,7 +193,7 @@ def _score_decoder_on_partition(
     )
     true_labels = _labels_from_epochs(partition_epochs, label_column=label_column)
     predicted = decoder.predict(partition_epochs)
-    return float(np.mean(predicted == true_labels))
+    return float(balanced_accuracy_score(true_labels, predicted))
 
 
 def _select_partition_epochs(
@@ -238,23 +242,28 @@ def _normalize_component_candidates(component_candidates: Iterable[int]) -> tupl
     normalized = tuple(int(value) for value in component_candidates)
     if not normalized:
         raise CspLdaError("At least one CSP component candidate is required.")
-    invalid = set(normalized) - set(APPROVED_CSP_COMPONENT_CANDIDATES)
+    normalized_set = set(normalized)
+    approved_set = set(APPROVED_CSP_COMPONENT_CANDIDATES)
+    invalid = normalized_set - approved_set
     if invalid:
         raise CspLdaError(
             "M1-T05 only authorizes CSP candidates from {2,4,6,8}. "
             f"Received unsupported candidate(s): {sorted(invalid)}."
         )
+    if normalized_set != approved_set or len(normalized) != len(APPROVED_CSP_COMPONENT_CANDIDATES):
+        raise CspLdaError(
+            "M1-T05 requires evaluating the full approved CSP candidate set {2,4,6,8} exactly once."
+        )
+    return APPROVED_CSP_COMPONENT_CANDIDATES
 
-    seen: set[int] = set()
-    ordered: list[int] = []
+
+def _select_best_candidate(best_candidates: Iterable[int]) -> int:
+    normalized = tuple(sorted({int(candidate) for candidate in best_candidates}))
+    if not normalized:
+        raise CspLdaError("At least one best CSP candidate is required for tie-breaking.")
     if DEFAULT_CSP_COMPONENT in normalized:
-        ordered.append(DEFAULT_CSP_COMPONENT)
-        seen.add(DEFAULT_CSP_COMPONENT)
-    for candidate in normalized:
-        if candidate not in seen:
-            ordered.append(candidate)
-            seen.add(candidate)
-    return tuple(ordered)
+        return DEFAULT_CSP_COMPONENT
+    return normalized[0]
 
 
 def _validate_epochs_contract(epochs: mne.Epochs) -> None:

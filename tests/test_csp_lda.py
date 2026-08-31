@@ -170,8 +170,38 @@ def test_fit_csp_lda_evaluates_all_approved_candidates_and_tie_breaks_to_default
     monkeypatch.setattr(csp_lda, "_score_decoder_on_partition", spy_score)
     result = csp_lda.fit_csp_lda(epochs)
 
-    assert tuple(seen_candidates) == (4, 2, 6, 8)
+    assert tuple(seen_candidates) == (2, 4, 6, 8)
     assert result.selected_n_components == csp_lda.DEFAULT_CSP_COMPONENT
+
+
+def test_fit_csp_lda_uses_validation_balanced_accuracy(monkeypatch) -> None:
+    epochs = make_partitioned_epochs()
+    seen_candidates: list[int] = []
+
+    def spy_score(decoder, epochs_obj, **kwargs):
+        seen_candidates.append(decoder._csp.n_components)  # noqa: SLF001
+        scores = {2: 0.4, 4: 0.6, 6: 0.55, 8: 0.45}
+        return scores[decoder._csp.n_components]  # noqa: SLF001
+
+    monkeypatch.setattr(csp_lda, "_score_decoder_on_partition", spy_score)
+    result = csp_lda.fit_csp_lda(epochs)
+
+    assert tuple(seen_candidates) == csp_lda.APPROVED_CSP_COMPONENT_CANDIDATES
+    assert result.selected_n_components == 4
+    assert [score.validation_balanced_accuracy for score in result.candidate_scores] == [0.4, 0.6, 0.55, 0.45]
+
+
+def test_fit_csp_lda_tie_breaks_to_smallest_when_four_not_tied(monkeypatch) -> None:
+    epochs = make_partitioned_epochs()
+
+    def spy_score(decoder, epochs_obj, **kwargs):
+        scores = {2: 0.7, 4: 0.5, 6: 0.7, 8: 0.4}
+        return scores[decoder._csp.n_components]  # noqa: SLF001
+
+    monkeypatch.setattr(csp_lda, "_score_decoder_on_partition", spy_score)
+    result = csp_lda.fit_csp_lda(epochs)
+
+    assert result.selected_n_components == 2
 
 
 def test_predict_proba_preserves_probability_shape_and_class_order() -> None:
@@ -217,6 +247,17 @@ def test_fit_csp_lda_accepts_within_subject_manifest_assignments() -> None:
     assert {score.n_components for score in result.candidate_scores} == set(
         csp_lda.APPROVED_CSP_COMPONENT_CANDIDATES
     )
+
+
+def test_fit_csp_lda_rejects_incomplete_candidate_set() -> None:
+    epochs = make_partitioned_epochs()
+
+    try:
+        csp_lda.fit_csp_lda(epochs, component_candidates=(2, 4, 6))
+    except csp_lda.CspLdaError as exc:
+        assert "full approved CSP candidate set" in str(exc)
+    else:
+        raise AssertionError("Expected incomplete candidate set to be rejected.")
 
 
 def test_fit_csp_lda_handles_cross_subject_partition_names() -> None:
