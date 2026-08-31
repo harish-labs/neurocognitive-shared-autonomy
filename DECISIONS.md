@@ -869,6 +869,36 @@ No test-set fitting or tuning.
 
 ---
 
+## D-044 — CSP Component Selection Rule Supplement
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31  
+**Supplements:** D-043
+
+**Decision:**
+
+```text
+Use validation balanced accuracy to select CSP n_components.
+The canonical M1-T05 search must evaluate the full approved candidate set {2,4,6,8}.
+If multiple candidates tie for best validation balanced accuracy, choose 4 if 4 is among the tied candidates.
+Otherwise choose the smallest tied n_components.
+```
+
+**Context:** D-043 fixed the approved CSP candidate set and validation-only selection boundary, but the exact validation metric and deterministic tie-break rule were not yet recorded explicitly.
+
+**Alternatives considered:** plain validation accuracy; evaluating only a subset of the approved candidates; arbitrary first-seen tie resolution.
+
+**Rationale:** Validation balanced accuracy is more appropriate for guarded class-sensitive model selection, while the explicit full-set search and deterministic tie-break rule prevent silent candidate pruning and unstable branch-dependent selection behavior.
+
+**Affected documents/modules:** `DECISIONS.md`, `src/models/csp_lda.py`, `tests/test_csp_lda.py`, and any M1-T05 reporting that states how CSP `n_components` is selected.
+
+**Implementation consequence:** M1-T05 may update the authorized CSP+LDA baseline to score all approved candidates `{2,4,6,8}` by validation balanced accuracy, choose `4` when it is part of the best tied set, otherwise choose the smallest tied candidate, and keep the protected test partition excluded from fitting and selection. This supplement does not authorize EEGNet, calibration, Bayesian, or later modules.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
