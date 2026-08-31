@@ -834,6 +834,41 @@ Final test subjects must not be used for CSP fitting, EEGNet training, hyperpara
 
 ---
 
+## D-043 — Final CSP Configuration
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31  
+**Resolves:** U-013
+
+**Decision:**
+
+```text
+Evaluate CSP n_components ∈ {2,4,6,8} using training/validation only, with 4 as the default candidate.
+Use log-variance CSP features.
+Use primary baseline covariance regularization reg=None.
+Use standard LDA with probability output.
+Select n_components using validation performance only.
+The protected test partition must not influence selection.
+The CSP crop remains the already-approved +1.0 s to +2.0 s from D-033.
+Retain all 64 channels.
+No test-set fitting or tuning.
+```
+
+**Context:** The classical CSP + LDA baseline requires a fixed, leakage-safe configuration and a bounded component-count selection rule before a later implementation ticket can be considered.
+
+**Alternatives considered:** fixing one component count without validation; searching an unrestricted component range; covariance regularization as the primary baseline; using the protected test partition for model selection.
+
+**Rationale:** The approved candidate set permits limited validation-only model selection while preserving a clear default, the already-approved CSP crop and channel policy, a standard interpretable log-variance CSP + LDA baseline, and strict final-test protection.
+
+**Affected documents/modules:** `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, configuration/state documentation, and `src/models/csp_lda.py` only when separately authorized.
+
+**Implementation consequence:** This decision resolves U-013 but does not authorize CSP/LDA implementation. A separate explicit `CURRENT_TASK.md` ticket is required before code, fitting, tuning, or evaluation begins. U-014 and all later unresolved decisions remain unchanged.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
@@ -841,7 +876,6 @@ The following remain explicitly unresolved.
 ## Models
 
 ```text
-U-013 — Final CSP configuration
 U-014 — Final EEGNet architecture details
 U-015 — Final training hyperparameters
 ```
