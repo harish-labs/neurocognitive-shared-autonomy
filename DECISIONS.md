@@ -992,6 +992,40 @@ after validation-only checkpoint selection, evaluate the frozen checkpoint once 
 
 ---
 
+## D-047 — EEGNet Pooling and Depthwise Max-Norm Supplement
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31  
+**Supplements:** D-045
+
+**Decision:**
+
+```text
+supplements D-045
+first average pooling kernel (1,4), stride (1,4)
+second average pooling kernel (1,8), stride (1,8)
+depthwise spatial-convolution max-norm cap 1.0
+no other D-045 architecture values change
+D-046 remains unchanged
+no architecture search or additional EEGNet variants are authorized
+this decision only resolves the narrow M1-T06 implementation ambiguity
+```
+
+**Context:** M1-T06 EEGNet implementation exposed a narrow architectural ambiguity left open by D-045: the exact average-pooling kernel/stride values and the numeric depthwise max-norm cap required for a faithful, non-invented implementation.
+
+**Alternatives considered:** leaving pooling and max-norm unspecified for implementer choice; authorizing multiple EEGNet variants; folding this clarification into a broader architecture revision.
+
+**Rationale:** This supplements D-045 only where implementation-critical constants were missing, preserves every other approved EEGNet architecture value, leaves D-046 unchanged, and prevents silent architectural drift during M1-T06.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, and future EEGNet implementation code only when separately authorized.
+
+**Implementation consequence:** This decision resolves only the narrow M1-T06 ambiguity for EEGNet pooling and depthwise max-norm. It does not authorize architecture search, additional EEGNet variants, or any change to other D-045 values or to D-046.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
