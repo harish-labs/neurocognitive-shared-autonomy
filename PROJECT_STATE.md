@@ -5,7 +5,6 @@
 
 **Purpose:** Authoritative live record of what is actually true now about the project  
 **Update rule:** Update after every accepted implementation task, verified experiment, major blocker, approved scientific decision, or accepted architectural change  
-**Do not use for:** speculative ideas, unapproved methodology, literature notes, hypothetical results, or future features  
 **Workflow:** ChatGPT + Project Owner + Codex + Git/GitHub  
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
@@ -32,7 +31,7 @@ GitHub is the canonical implementation/state source of truth.
 
 ```text
 Project Phase:
-EEG decoding and probability-calibration implementation through M1-T07 is accepted and merged.
+EEG decoding, calibration, and binary Bayesian goal-inference implementation through M1-T08 is accepted and merged.
 
 Current Module:
 No active coding task authorized
@@ -47,29 +46,26 @@ Canonical Branch:
 main
 
 Latest Accepted Software Commit:
-b6a2932372b3b8047f4629b52e5a1822ce4fd057
+43fb1f10b0a78236ca01c21076a37eacf70529a9
 
 Latest Accepted Software Task:
-M1-T07 — Probability Calibration
+M1-T08 — Bayesian Goal Inference
 
 Latest Approved Scientific-Decision Commit:
-7b5f28095b3faa123bf942532a69e443847924a9
+2cb9208a5f16d5f67fe5830caf1f0837f6ada6d8
 
 Latest Valid Experiment:
 None yet
 
 Last Updated:
 2026-08-31
-
-Updated By:
-ChatGPT + Project Owner + Codex
 ```
 
 ---
 
-# 2. CURRENT PROJECT PHASE
+# 2. ACCEPTED IMPLEMENTATION SEQUENCE
 
-The project currently has seven accepted and merged M1 implementation tasks on canonical `main`:
+Canonical `main` now contains eight accepted M1 implementation tasks:
 
 ```text
 M1-T01 — PhysioNet EEGBCI Data Loader
@@ -79,24 +75,10 @@ M1-T04 — EEG Split Manifest
 M1-T05 — CSP+LDA Baseline
 M1-T06 — EEGNet / Compact CNN
 M1-T07 — Probability Calibration
+M1-T08 — Bayesian Goal Inference
 ```
 
-The repository now contains:
-
-```text
-verified EEGBCI loading and inspection
-accepted preprocessing and epoch extraction
-deterministic leakage-safe within-subject and cross-subject split utilities
-accepted CSP+LDA baseline
-accepted EEGNet / compact CNN baseline
-stable binary left/right probability outputs from both decoder families
-accepted model-specific probability calibration
-fixed reliability-bin, ECE, and Brier utilities
-```
-
-No implementation task is currently authorized.
-
-The project remains an **offline prerecorded EEG** system. No live EEG, physical robot, or real human-subject claim is authorized.
+The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, or real human-subject claim is authorized.
 
 ---
 
@@ -104,24 +86,30 @@ The project remains an **offline prerecorded EEG** system. No live EEG, physical
 
 Preprocessing / epoch decisions D-031 through D-039 remain operational.
 
-Split/evaluation decisions D-040 through D-042 remain operational.
+Split / evaluation decisions D-040 through D-042 remain operational.
 
 CSP+LDA decisions D-043 and D-044 remain operational.
 
-EEGNet architecture/training decisions D-045, D-046, and D-047 remain operational.
+EEGNet decisions D-045 through D-047 remain operational.
 
-Calibration decisions D-048 through D-050 are now operationalized by M1-T07:
+Calibration decisions D-048 through D-050 remain operational.
+
+Bayesian / goal-mapping decisions D-051 through D-054 are now operationalized by M1-T08:
 
 ```text
-EEGNet -> temperature scaling
-CSP+LDA -> sigmoid / Platt-style calibration
-identity / no-calibration remains an experimental baseline
-calibration remains model-specific
-validation partition only for calibrator fitting
-train remains decoder/model-fitting partition
-test/final_test remain protected from fitting, calibration-method choice, tuning, and binning
-primary reliability diagram / ECE: 10 equal-width bins over [0,1]
-Brier Score reported alongside ECE
+binary-choice interaction protocol only
+exactly two active candidates per decision episode
+left calibrated evidence -> candidate A
+right calibrated evidence -> candidate B
+multi-goal SAR interaction represented as a sequence of binary choices
+calibrated binary probabilities used directly as candidate evidence likelihood weights
+planner/safety desirability excluded from intent likelihoods
+uniform baseline prior [0.5, 0.5]
+commit when posterior >= 0.90
+maximum 5 accepted evidence updates
+if no threshold by update 5 -> DEFER / UNCOMMITTED
+no forced argmax decision
+new episode resets posterior to [0.5, 0.5]
 ```
 
 ---
@@ -137,68 +125,67 @@ Brier Score reported alongside ECE
 | CSP + LDA | PASS | `d7597efb8db7c8d77aecbd87f9cf2366dd02b484` | accepted classical baseline |
 | EEGNet / Compact CNN | PASS | `6b526d76acb53cd4f632ba87c975b4ede9e89a9c` | accepted neural baseline |
 | Probability Calibration | PASS | `b6a2932372b3b8047f4629b52e5a1822ce4fd057` | M1-T07 accepted |
-| Unified Decoder Interface | NOT STARTED | — | separate authorization required if needed |
-| Bayesian Goal Inference | NOT STARTED | — | U-019 through U-022 unresolved |
-| Uncertainty / Entropy policy | NOT STARTED | — | later policy decisions unresolved |
+| Bayesian Goal Inference | PASS | `43fb1f10b0a78236ca01c21076a37eacf70529a9` | M1-T08 accepted |
+| Uncertainty / Entropy policy | NOT STARTED | — | U-023 through U-025 unresolved |
 | Adaptation / Personalization | BLOCKED | — | U-026 through U-028 unresolved |
-| SAR / Planning / Safety / Shared Autonomy | NOT STARTED / BLOCKED | — | later milestones require their decisions |
-| Reportable EEG / Calibration Evaluation | NOT STARTED | — | no reportable experiment yet |
+| SAR / Planning / Safety | NOT STARTED / BLOCKED | — | U-029 through U-033 unresolved where applicable |
+| Reportable Evaluation | NOT STARTED | — | no reportable experiment yet |
 
 ---
 
-# 5. M1-T07 VERIFIED SOFTWARE
+# 5. M1-T08 VERIFIED SOFTWARE
 
 ```text
-src/models/calibration.py implemented
-tests/test_calibration.py implemented
-accepted task-branch head / canonical software commit b6a2932372b3b8047f4629b52e5a1822ce4fd057
+src/cognitive/bayes.py implemented
+tests/test_bayes.py implemented
+accepted task-branch head / canonical software commit:
+43fb1f10b0a78236ca01c21076a37eacf70529a9
 ```
 
 Accepted behavior:
 
 ```text
-TemperatureScalingCalibrator for EEGNet
-PlattScalingCalibrator for CSP+LDA
-IdentityCalibrator baseline
-validation-only calibrator fitting
-protected test/final-test isolation
-approved class order ("left", "right")
-probability normalization checks
-10 fixed equal-width reliability bins over [0,1]
-ECE calculation
-binary Brier Score using the fixed right-class convention
+BinaryGoalEvidence maps approved left/right calibrated evidence to candidate A/B
+BinaryBayesianGoalEpisode starts/reset at [0.5, 0.5]
+sequential update multiplies prior/posterior by likelihood weights and normalizes
+posterior stays finite/non-negative/normalized
+non-binary, malformed, negative, non-finite, or reversed-class evidence is rejected
+posterior >= 0.90 commits the corresponding candidate
+commitment is terminal for that episode
+maximum 5 accepted updates
+fifth non-committing update produces DEFER with no forced argmax
+new episode explicitly resets state/history/count/status
+planner/safety information cannot be passed into likelihood construction through the approved API
 ```
 
 Final reviewed regression evidence:
 
 ```text
-59 passed, 1 warning
+77 passed, 1 warning
 ```
 
 The warning is the existing non-failing PyTorch `padding='same'` warning from EEGNet tests and is not an acceptance blocker.
 
 ---
 
-# 6. M1-T07 REAL-DATA SMOKE CHECK
-
-Real subject 1, runs 4/8/12:
+# 6. M1-T08 SYNTHETIC INTEGRATION SMOKE
 
 ```text
-retained epochs: 13
-partition counts: train=7, validation=3, test=3
-CSP calibrator: platt_scaling
-EEGNet calibrator: temperature_scaling
-CSP selected components: 4
-EEGNet selected epoch: 1
-```
+Evidence 1: [0.7, 0.3]
+Evidence 2: [0.8, 0.2]
+Result: candidate A committed on update 2
+Posterior: approximately (0.9032, 0.0968)
 
-Calibration metrics were generated during this bounded smoke path, but the validation partition contains only three epochs.
+Five repetitions of [0.55, 0.45]
+Result: DEFER after update 5
+No forced selection
+```
 
 Interpretation rule:
 
-> This is integration evidence only. The observed subject-1 ECE/Brier values are not reportable evidence of generalizable calibration quality, decoder efficacy, or downstream benefit.
+> This is synthetic integration evidence only. It does not establish that Bayesian inference improves intent decoding, task success, safety, calibration, or human performance.
 
-No reportable experiment has yet been run.
+No reportable Bayesian experiment has yet been run.
 
 ---
 
@@ -207,13 +194,10 @@ No reportable experiment has yet been run.
 ## Bayesian / Goal Mapping
 
 ```text
-U-019 — Binary EEG -> multi-goal interaction protocol
-U-020 — Decoder posterior -> goal likelihood construction
-U-021 — Prior policy
-U-022 — Bayesian stopping / commitment rule
+None currently unresolved.
 ```
 
-## Shared Autonomy
+## Shared Autonomy / Uncertainty Policy
 
 ```text
 U-023 — Confidence / entropy thresholds
@@ -247,13 +231,11 @@ U-035 — Robustness perturbation levels
 U-036 — Final inferential-statistics policy
 ```
 
-Calibration U-016 through U-018 are resolved and implemented; they are no longer blockers.
-
 If preprocessing/QC produces an eligible cross-subject cohort other than 109, D-042 still requires reviewer decision before freezing a different final subject manifest.
 
 ---
 
-# 8. CURRENT TECHNICAL STATE
+# 8. CURRENT TECHNICAL / INTEGRATION STATE
 
 ```text
 Loader: PASS
@@ -266,40 +248,23 @@ CSP+LDA: PASS
 EEGNet: PASS
 Probability calibration: PASS
 Calibration metrics: PASS
-Bayesian goal mapping: NOT STARTED
-Bayesian inference: NOT STARTED
-Entropy/shared autonomy: NOT STARTED
-SAR/planning/safety: NOT STARTED
-Offline replay: NOT STARTED
+Calibration -> binary goal evidence: PASS
+Binary sequential Bayesian inference: PASS
+Bayesian posterior -> entropy/shared-autonomy policy: NOT STARTED
+Planner/safety/environment integration: NOT STARTED
+Offline replay -> full system: NOT STARTED
 ```
 
-High artifact rejection in the subject-1 path remains a scientific/data-quality limitation and does not authorize changing the approved 150 µV threshold.
+High artifact rejection observed in the subject-1 path remains a scientific/data-quality limitation and does not authorize changing the approved 150 µV threshold.
 
 ---
 
-# 9. CURRENT INTEGRATION STATE
-
-```text
-EEG loader -> preprocessing/epochs: PASS
-preprocessing/epochs -> split assignment: PASS
-split assignment -> CSP+LDA: PASS
-split assignment -> EEGNet: PASS
-CSP+LDA probability output -> Platt calibration: PASS
-EEGNet logits -> temperature scaling: PASS
-calibration -> goal evidence: BLOCKED by U-019/U-020
-Bayes -> entropy/shared autonomy: NOT STARTED
-planner/safety/environment integration: NOT STARTED
-offline EEG replay -> full system: NOT STARTED
-```
-
----
-
-# 10. CURRENT EXPERIMENT / RESULT STATE
+# 9. CURRENT EXPERIMENT / RESULT STATE
 
 ```text
 Reportable EEG decoding experiment: NOT STARTED
 Reportable calibration experiment: NOT STARTED
-Bayesian experiment: NOT STARTED
+Reportable Bayesian experiment: NOT STARTED
 Shared-autonomy experiment: NOT STARTED
 Planning/safety experiment: NOT STARTED
 A/B/C/D comparison: BLOCKED
@@ -308,11 +273,11 @@ Cross-subject model evaluation: NOT STARTED
 Adaptation experiment: BLOCKED
 ```
 
-No empirical model-performance or calibration-improvement conclusion is currently authorized.
+No empirical performance conclusion is currently authorized.
 
 ---
 
-# 11. CURRENT CLAIM STATUS
+# 10. CURRENT CLAIM STATUS
 
 Authorized implementation claims:
 
@@ -321,8 +286,8 @@ EEGBCI loader/inspection/preprocessing/split pipeline has been implemented and v
 CSP+LDA baseline has been implemented and verified under approved leakage controls
 EEGNet baseline has been implemented and verified under approved leakage controls
 model-specific calibration has been implemented and verified under approved leakage controls
-both model families preserve the fixed left/right class order
-subject-1 real-data smoke execution completes through decoder and calibration paths
+binary goal-evidence mapping and bounded sequential Bayesian goal inference have been implemented under D-051 through D-054
+synthetic Bayesian integration examples execute as expected
 ```
 
 Not authorized:
@@ -330,9 +295,8 @@ Not authorized:
 ```text
 EEGNet outperforms CSP+LDA
 either decoder is above chance in a reportable experiment
-calibration improves probability reliability
-one calibration method is superior to another on reportable data
-Bayesian inference improves goal selection
+calibration improves reliability
+Bayesian inference improves intent inference or goal selection
 shared autonomy improves task success or safety
 cross-subject generalization claims
 adaptation improvement claims
@@ -340,7 +304,7 @@ adaptation improvement claims
 
 ---
 
-# 12. NEXT GOVERNANCE GATE
+# 11. NEXT GOVERNANCE GATE
 
 No next implementation task is authorized.
 
@@ -358,4 +322,4 @@ Before the next task:
 9. activate exactly one CURRENT_TASK.md ticket
 ```
 
-The immediate unresolved architecture boundary after calibration is the Bayesian / goal-mapping layer beginning at U-019. Do not implement it until its required scientific semantics are explicitly approved.
+The next unresolved scientific boundary begins at U-023 shared-autonomy / uncertainty policy. Do not implement it or any later module until the required decisions and task authorization are explicit.

@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** EEG decoding and probability calibration through M1-T07 accepted and merged; no active task authorized  
+**Current stage:** EEG decoding, calibration, and binary Bayesian goal inference through M1-T08 accepted and merged; no active task authorized  
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -38,17 +38,18 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 ```text
 [x] Create / initialize project repository
 [x] Add core governance files
-[x] Record M1-T03 preprocessing decisions D-031 through D-039
-[x] Record split/evaluation decisions D-040 through D-042
+[x] Record D-031 through D-039 preprocessing/epoch decisions
+[x] Record D-040 through D-042 split/evaluation decisions
 [x] Complete, accept, and merge M1-T04 split manifest
-[x] Record D-043 and D-044 for final CSP configuration/selection
+[x] Record D-043 and D-044 CSP configuration/selection
 [x] Complete, accept, and merge M1-T05 CSP+LDA baseline
-[x] Record D-045 and D-046 for final EEGNet architecture/training
-[x] Record D-047 pooling/max-norm supplement
-[x] Complete, review, accept, and merge M1-T06 EEGNet / Compact CNN
-[x] Record D-048 through D-050 for final calibration methodology
-[x] Complete, review, accept, and merge M1-T07 Probability Calibration
-[x] Reconcile M1-T07 governance close with no active task
+[x] Record D-045 through D-047 EEGNet decisions
+[x] Complete, accept, and merge M1-T06 EEGNet / Compact CNN
+[x] Record D-048 through D-050 calibration decisions
+[x] Complete, accept, and merge M1-T07 Probability Calibration
+[x] Record D-051 through D-054 Bayesian / goal-mapping decisions
+[x] Complete, accept, and merge M1-T08 Bayesian Goal Inference
+[x] Reconcile M1-T08 governance close with no active task
 ```
 
 ## Current authorization
@@ -56,18 +57,15 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 ```text
 [ ] Wait for next explicitly approved CURRENT_TASK.md
 [ ] Do not begin another implementation module without a narrow approved ticket
-[ ] Do not treat smoke-test calibration metrics as reportable calibration-quality evidence
+[ ] Do not treat synthetic or bounded smoke results as reportable efficacy evidence
 ```
 
 ---
 
-# 3. COMPLETED EEG / CALIBRATION IMPLEMENTATION
+# 3. COMPLETED EEG / CALIBRATION / BAYES IMPLEMENTATION
 
 ```text
 [x] PhysioNet EEGBCI loader
-[x] Subject/run configuration for runs 4 / 8 / 12
-[x] EDF loading and channel standardization
-[x] standard_1005 montage
 [x] EEG visualization / inspection
 [x] 7–30 Hz preprocessing
 [x] average EEG reference
@@ -80,36 +78,41 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] protected cross-subject split manifest contract
 [x] CSP+LDA baseline
 [x] validation-balanced-accuracy CSP component selection
-[x] CSP probability output
-[x] EEGNet architecture/training baseline
-[x] validation-only EEGNet checkpoint selection
+[x] EEGNet / Compact CNN baseline
+[x] validation-only checkpoint selection
 [x] protected test/final-test isolation
-[x] EEGNet softmax probability output
-[x] M1-T06 BatchNorm shape-inference reviewer fix
-[x] model-specific calibration methods
-[x] validation-only calibration fitting
+[x] model-specific probability calibration
+[x] EEGNet temperature scaling
+[x] CSP+LDA Platt scaling
 [x] identity / no-calibration baseline
-[x] fixed 10-bin equal-width reliability/ECE utilities
+[x] fixed 10-bin reliability/ECE utilities
 [x] Brier Score utility
-[x] class order ("left", "right") preserved through calibration
-[x] M1-T07 final targeted regression bundle: 59 passed, 1 warning
-[x] subject-1 M1-T07 bounded real-data smoke execution
+[x] fixed class order ("left", "right") through decoder/calibration paths
+[x] binary calibrated evidence -> candidate A/B adapter
+[x] fixed Bayesian prior [0.5, 0.5]
+[x] sequential Bayesian posterior update
+[x] >=0.90 commitment threshold
+[x] maximum 5 accepted evidence updates
+[x] DEFER without forced argmax after non-committing update 5
+[x] explicit episode reset and terminal-state handling
+[x] M1-T08 analytical tests
+[x] M1-T08 regression bundle: 77 passed, 1 warning
+[x] M1-T08 bounded synthetic Bayesian integration smoke
 ```
 
-Subject-1 calibration smoke evidence is integration-only and supports no efficacy or generalizable calibration-quality claim.
+Synthetic Bayesian smoke evidence is integration-only and supports no efficacy claim.
 
 ---
 
 # 4. NEXT — NOT AUTHORIZED YET
 
-Potential next work must be narrowed and explicitly approved before implementation.
+Potential next work must be scientifically narrowed and explicitly approved before implementation.
 
 ```text
 [ ] Decide the next single implementation task
-[ ] Resolve Bayesian / goal-mapping decisions U-019 through U-022 before implementing that layer
-[ ] Consider unified decoder interface only if required by the next approved module
-[ ] Run reportable classical-vs-EEGNet evaluation only under an approved experiment task/protocol
-[ ] Run reportable calibration evaluation only under an approved experiment task/protocol
+[ ] Resolve U-023 through U-025 before implementing final uncertainty/shared-autonomy policy behavior
+[ ] Consider entropy computation as a narrow module only after checking whether its exact implementation is already fully specified and separable from unresolved policy thresholds
+[ ] Run reportable decoder/calibration/Bayesian evaluation only under approved experiment tasks/protocols
 ```
 
 Do not infer authorization from this list.
@@ -121,13 +124,13 @@ Do not infer authorization from this list.
 ## Bayesian / goal mapping
 
 ```text
-[ ] U-019 — Decide binary EEG -> multi-goal interaction protocol
-[ ] U-020 — Define decoder posterior -> goal-likelihood semantics
-[ ] U-021 — Decide prior policy
-[ ] U-022 — Decide Bayesian stopping / commitment rule
+[x] U-019 — Binary EEG -> multi-goal interaction protocol resolved by D-051
+[x] U-020 — Decoder posterior -> goal-likelihood construction resolved by D-052
+[x] U-021 — Prior policy resolved by D-053
+[x] U-022 — Bayesian stopping / commitment rule resolved by D-054
 ```
 
-## Shared autonomy
+## Shared autonomy / uncertainty policy
 
 ```text
 [ ] U-023 — Decide confidence / entropy thresholds
@@ -162,11 +165,9 @@ Do not infer authorization from this list.
 [ ] If eligible cross-subject cohort != 109, obtain reviewer decision before freezing a different final manifest
 ```
 
-Calibration U-016 through U-018 are resolved and implemented.
-
 ---
 
-# 6. EEG / MODEL / CALIBRATION VALIDATION TODO
+# 6. VALIDATION TODO
 
 ```text
 [x] Verify loader metadata / annotations on real subject 1 runs 4/8/12
@@ -175,47 +176,44 @@ Calibration U-016 through U-018 are resolved and implemented.
 [x] Verify split leakage assertions
 [x] Verify CSP train-only fitting
 [x] Verify CSP component selection uses validation balanced accuracy only
-[x] Verify EEGNet full canonical epoch and no CSP-only crop
-[x] Verify EEGNet train-only gradient updates
-[x] Verify EEGNet validation-only checkpoint selection
-[x] Verify protected test/final-test does not affect EEGNet selection
-[x] Verify decoder class order ("left", "right")
-[x] Verify BatchNorm state is not contaminated by shape inference
+[x] Verify EEGNet full canonical epoch and validation-only selection
+[x] Verify protected test/final-test isolation for decoder/calibration paths
+[x] Verify class order ("left", "right")
 [x] Verify EEGNet temperature scaling is validation-only
 [x] Verify CSP+LDA Platt scaling is validation-only
-[x] Verify protected test/final-test does not influence calibrator fitting
-[x] Verify identity calibration baseline
-[x] Verify 10 equal-width ECE bins over [0,1]
-[x] Verify Brier Score
+[x] Verify 10 equal-width ECE bins and Brier Score
+[x] Verify binary goal evidence mapping left->A / right->B
+[x] Verify exact Bayesian update math and normalization
+[x] Verify >=0.90 commitment boundary
+[x] Verify five-update DEFER behavior and no forced argmax
+[x] Verify new-episode reset and terminal episode behavior
+[x] Verify planner/safety data cannot enter Bayesian likelihood API
 [ ] Run reportable within-subject decoder evaluation
 [ ] Run reportable cross-subject decoder evaluation
-[ ] Compare CSP+LDA and EEGNet under the approved E1 protocol
 [ ] Run reportable calibration evaluation
+[ ] Run reportable Bayesian inference evaluation
 [ ] Conduct failure analysis after reportable evaluation
 ```
 
 ---
 
-# 7. MILESTONE — BAYES / UNCERTAINTY
+# 7. MILESTONE — UNCERTAINTY / SHARED AUTONOMY
 
-Not authorized until its required decisions and task are approved.
+Not authorized until required decisions and a narrow task are approved.
 
 ```text
-[ ] Goal-evidence adapter
-[ ] Generic Bayesian core
-[ ] Analytical Bayes tests
-[ ] Entropy
+[ ] Shannon entropy of Bayesian goal posterior
 [ ] Analytical entropy tests
-[ ] Synthetic cognitive integration tests
+[ ] confidence / uncertainty policy
+[ ] PROCEED / CONFIRM / DEFER behavior
+[ ] prolonged-uncertainty fallback
+[ ] human CONFIRM / OVERRIDE / PAUSE / STOP integration
+[ ] shared-autonomy state machine
+[ ] policy logging
+[ ] state-transition tests
 ```
 
-Blocked where applicable:
-
-```text
-[ ] Real decoder -> goal evidence mapping
-[ ] Final commitment rule
-[ ] Final adaptation update
-```
+U-023 through U-025 remain unresolved.
 
 ---
 
@@ -225,8 +223,7 @@ Blocked where applicable:
 [ ] 2D Gymnasium environment
 [ ] Map configuration
 [ ] UP / DOWN / LEFT / RIGHT / WAIT
-[ ] A*
-[ ] Manhattan heuristic
+[ ] A* with Manhattan heuristic
 [ ] Blocked cells
 [ ] Basic hard safety
 [ ] Pause / stop blocking
@@ -235,40 +232,17 @@ Blocked where applicable:
 [ ] Safety logs
 ```
 
-Blocked pending approved risk policy:
-
-```text
-[ ] Risk-aware path cost
-[ ] Prohibited hazards
-```
+Risk-aware planning and prohibited-hazard behavior remain blocked where U-029 through U-033 apply.
 
 ---
 
-# 9. MILESTONE — SHARED AUTONOMY
-
-```text
-[ ] Candidate goal representation
-[ ] Approved goal representation
-[ ] Human confirm
-[ ] Human override
-[ ] Pause
-[ ] Stop
-[ ] Shared-autonomy state machine
-[ ] Policy logging
-[ ] State-transition tests
-```
-
-Blocked pending U-023 through U-025.
-
----
-
-# 10. MILESTONE — END-TO-END OFFLINE EEG REPLAY
+# 9. MILESTONE — END-TO-END OFFLINE EEG REPLAY
 
 ```text
 [ ] Offline EEG replay
 [ ] Decoder integration
 [ ] Calibration integration
-[ ] Goal-evidence adapter
+[ ] Goal-evidence adapter integration
 [ ] Bayes integration
 [ ] Entropy integration
 [ ] Shared-autonomy integration
@@ -283,7 +257,7 @@ This must remain labeled offline EEG replay / simulated real-time BCI unless har
 
 ---
 
-# 11. MILESTONE — EXPERIMENTS
+# 10. MILESTONE — EXPERIMENTS
 
 ```text
 [ ] E1 EEG decoding
@@ -292,8 +266,7 @@ This must remain labeled offline EEG replay / simulated real-time BCI unless har
 [ ] E4 uncertainty/shared autonomy
 [ ] E5 planning/safety
 [ ] E6 A/B/C/D comparison
-[ ] E7 ablations
-[ ] E7 robustness
+[ ] E7 ablations / robustness
 [ ] E8 cross-subject
 [ ] E9 adaptation if implemented
 [ ] Statistical analysis
@@ -305,7 +278,7 @@ Negative or mixed results are valid. Do not tune protected test data to improve 
 
 ---
 
-# 12. PRESENTATION / DOCUMENTATION
+# 11. PRESENTATION / DOCUMENTATION
 
 ```text
 [ ] Streamlit dashboard
@@ -324,12 +297,12 @@ Negative or mixed results are valid. Do not tune protected test data to improve 
 
 ---
 
-# 13. OPTIONAL / FUTURE — ONLY AFTER CORE
+# 12. OPTIONAL / FUTURE — ONLY AFTER CORE
 
 ```text
 [ ] Live EEG
 [ ] Human-subject study
-[ ] Hierarchical multi-goal selection
+[ ] Hierarchical multi-goal selection beyond approved sequential binary-choice protocol
 [ ] Multiclass EEG
 [ ] Stronger domain adaptation
 [ ] Advanced uncertainty / OOD detection
@@ -345,26 +318,27 @@ These are not current requirements or authorization.
 
 ---
 
-# 14. DONE — GOVERNANCE / IMPLEMENTATION CLOSES
+# 13. DONE — GOVERNANCE / IMPLEMENTATION CLOSES
 
 ```text
 [x] MASTER_PROJECT_SPEC.md and governance framework established
 [x] D-031 through D-039 preprocessing/epoch decisions recorded
 [x] D-040 through D-042 split/evaluation decisions recorded
 [x] M1-T04 split manifest accepted and merged
-[x] D-043 and D-044 CSP configuration/selection recorded
+[x] D-043 and D-044 CSP decisions recorded
 [x] M1-T05 CSP+LDA accepted and merged
-[x] D-045 and D-046 EEGNet architecture/training recorded
-[x] D-047 EEGNet pooling/max-norm supplement recorded
+[x] D-045 through D-047 EEGNet decisions recorded
 [x] M1-T06 EEGNet / Compact CNN accepted and merged
 [x] D-048 through D-050 calibration decisions recorded
 [x] M1-T07 Probability Calibration accepted and merged
-[x] M1-T07 governance close recorded with no active implementation task
+[x] D-051 through D-054 Bayesian / goal-mapping decisions recorded
+[x] M1-T08 Bayesian Goal Inference accepted and merged
+[x] M1-T08 governance close recorded with no active implementation task
 ```
 
 ---
 
-# 15. TODO DISCIPLINE
+# 14. TODO DISCIPLINE
 
 ```text
 backlog item -> TODO.md
