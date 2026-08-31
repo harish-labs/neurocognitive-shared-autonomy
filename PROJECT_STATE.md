@@ -53,7 +53,7 @@ Do not blur these roles.
 
 ```text
 Project Phase:
-M1 active — loader, visualization, preprocessing, epochs, and leakage-safe split manifests verified
+M1 active — loader, visualization, preprocessing, epochs, leakage-safe split manifests, and CSP+LDA baseline verified
 
 Current Milestone:
 M1 — EEG Dataset / Loader / Epochs / CSP+LDA
@@ -71,13 +71,13 @@ Canonical Branch:
 main
 
 Latest Accepted Software Commit:
-3b33477166db6889747dabc8d4be21403b480735
+d7597efb8db7c8d77aecbd87f9cf2366dd02b484
 
 Latest Accepted Software Task:
-M1-T04 — EEG Split Manifest (#13)
+M1-T05 — CSP+LDA Baseline
 
 Latest Approved Scientific-Decision Commit:
-ea00a631b60967cfece65b42e00e7b36c4efac7d
+ccf3642327680f8bb1ef193e1037e98fdaccffe4
 
 Latest Valid Experiment:
 None yet
@@ -109,7 +109,7 @@ FAIL
 
 Current state:
 
-> **M1-T01, M1-T02, M1-T03, and M1-T04 are completed, merged, scientifically reviewed, and verified on canonical `main`. The repository has a verified EEGBCI loader, visualization/inspection module, preprocessing/epoch extraction pipeline, and deterministic leakage-safe split-manifest utilities. U-001 through U-009 are resolved as D-031 through D-039. U-010 through U-012 are resolved as D-040 through D-042 and operationalized by M1-T04. No implementation task is currently authorized. U-013 remains unresolved.**
+> **M1-T01, M1-T02, M1-T03, M1-T04, and M1-T05 are completed, merged, scientifically reviewed, and verified on canonical `main`. The repository has a verified EEGBCI loader, visualization/inspection module, preprocessing/epoch extraction pipeline, deterministic leakage-safe split-manifest utilities, and an approved CSP+LDA baseline with train-only fitting, validation-only component selection, protected test isolation, and probability output. U-001 through U-009 are resolved as D-031 through D-039. U-010 through U-012 are resolved as D-040 through D-042 and operationalized by M1-T04. U-013 is resolved by D-043 and supplemented by D-044. No implementation task is currently authorized.**
 
 Do not mark coding milestones complete until code has been:
 
@@ -199,7 +199,7 @@ AGENTS.md
 
 ## Current decision-alignment status
 
-`DECISIONS.md` resolves U-001 through U-009 as D-031 through D-039 and U-010 through U-012 as D-040 through D-042.
+`DECISIONS.md` resolves U-001 through U-009 as D-031 through D-039, U-010 through U-012 as D-040 through D-042, and U-013 as D-043 supplemented by D-044.
 
 The approved preprocessing and split/evaluation methodology is aligned on canonical project documents, including:
 
@@ -211,7 +211,7 @@ docs/17_EXPERIMENTAL_DESIGN.md
 docs/18_METRICS_AND_EVALUATION.md
 ```
 
-M1-T04 is accepted and merged through PR #13. `CURRENT_TASK.md` now records no active implementation ticket. U-013 remains unresolved.
+M1-T04 is accepted and merged through PR #13. M1-T05 is accepted and squash-merged on canonical `main`. `CURRENT_TASK.md` now records no active implementation ticket.
 
 ## Next numbered scientific document
 
@@ -253,7 +253,7 @@ Current active coding task:
 None authorized
 ```
 
-`CURRENT_TASK.md` records M1-T04 as accepted and merged through PR #13 and explicitly leaves no active implementation ticket.
+`CURRENT_TASK.md` records M1-T05 as accepted and merged and explicitly leaves no active implementation ticket.
 
 ---
 
@@ -261,9 +261,9 @@ None authorized
 
 # 7. NEXT CANDIDATE IMPLEMENTATION TASK
 
-> **No next implementation task is authorized. CSP/LDA is a future candidate only after U-013 is explicitly resolved and a new narrow `CURRENT_TASK.md` ticket is approved.**
+> **No next implementation task is authorized. EEGNet is the next likely model-stage candidate only after a new narrow `CURRENT_TASK.md` ticket is explicitly approved.**
 
-Do not begin CSP/LDA, EEGNet, or later work under the closed M1-T04 authorization.
+Do not begin EEGNet or later work without a new explicit authorization.
 
 ---
 
@@ -278,7 +278,7 @@ Do not begin CSP/LDA, EEGNet, or later work under the closed M1-T04 authorizatio
 | 2 | EEG Visualization / Inspection | PASS | Yes | Yes | `9b241681dfc986f53f5f8c0fcf40a3e3cea496e7` | M1-T02 completed and merged |
 | 3 | EEG Preprocessing / Epochs | PASS | Yes | Yes | `1af72b5deb9981f469a4394859aac49add65e2a7` | M1-T03 completed, reviewed, and merged |
 | 3.1 | EEG Split Manifest / Leakage Assertions | PASS | Yes | Yes | `3b33477166db6889747dabc8d4be21403b480735` | M1-T04 accepted and squash-merged through PR #13 |
-| 4 | CSP + LDA | NOT STARTED | No | No | — | Blocked pending U-013 resolution and a new active ticket |
+| 4 | CSP + LDA | PASS | Yes | Yes | `d7597efb8db7c8d77aecbd87f9cf2366dd02b484` | M1-T05 accepted and squash-merged on canonical `main` |
 | 5 | EEGNet / Compact CNN | NOT STARTED | No | No | — | |
 | 6 | Unified Decoder Interface | NOT STARTED | No | No | — | |
 | 7 | Probability Calibration | PARTIAL-BLOCKED | No | No | — | Metrics can precede final method |
@@ -335,6 +335,21 @@ EEG Split Manifest / Leakage Assertions:
 - unsupported cross-subject cohort sizes stop for reviewer decision
 - accepted branch commit `86b47c56bd655900cf478dbb7af6ec13eeb26e41`
 - squash-merged through PR #13 as `3b33477166db6889747dabc8d4be21403b480735`
+
+CSP+LDA Baseline:
+- `src/models/csp_lda.py` implemented
+- `tests/test_csp_lda.py` implemented
+- CSP crop applied only inside the CSP path at +1.0 s to +2.0 s
+- all 64 channels preserved
+- full approved candidate search `{2,4,6,8}`
+- validation balanced accuracy used for component selection
+- deterministic tie-break to 4 when tied, otherwise smallest tied candidate
+- train-only fitting with protected test/final-test isolation
+- stable `predict` and `predict_proba` behavior verified
+- accepted rebased branch commit `e1f35e0dd8dd3296b6f85e32ac4ed5a6fd6e2d50`
+- squash-merged on canonical `main` as `d7597efb8db7c8d77aecbd87f9cf2366dd02b484`
+- final targeted regression bundle: 39 passed
+- real subject 1 runs 4 / 8 / 12 smoke-verified with retained-epoch split 7 / 3 / 3 and well-formed probability output
 ```
 
 No software component may be listed as verified until actual code has been executed and checked.
@@ -408,7 +423,6 @@ If preprocessing/QC yields an eligible subject cohort size other than 109, D-042
 ## Models / calibration
 
 ```text
-- exact CSP configuration
 - final EEGNet / compact CNN architecture details
 - final training hyperparameters
 - calibration method
@@ -473,11 +487,11 @@ These unresolved items must remain visible.
 Current state:
 
 ```text
-M1-T04 has no open implementation blocker after acceptance and merge.
+M1-T05 has no open implementation blocker after acceptance and merge.
 No implementation task is active.
 ```
 
-CSP/LDA must not begin until U-013 is explicitly resolved and a new narrow implementation ticket is approved. This is a governance/scientific gate, not permission to choose CSP settings.
+EEGNet and later work must not begin until a new narrow implementation ticket is explicitly approved.
 
 ---
 
@@ -1629,8 +1643,8 @@ Never use placeholders as real experiment entries.
 
 # 45. CURRENT PROJECT STATE SUMMARY
 
-The project currently has four accepted and merged M1 software tasks on canonical `main`: M1-T01 (PhysioNet EEGBCI loader), M1-T02 (EEG visualization/inspection), M1-T03 (EEG preprocessing/epochs), and M1-T04 (EEG split manifest). M1-T04 was accepted at task-branch commit `86b47c56bd655900cf478dbb7af6ec13eeb26e41` and squash-merged through PR #13 as canonical software commit `3b33477166db6889747dabc8d4be21403b480735`.
+The project currently has five accepted and merged M1 software tasks on canonical `main`: M1-T01 (PhysioNet EEGBCI loader), M1-T02 (EEG visualization/inspection), M1-T03 (EEG preprocessing/epochs), M1-T04 (EEG split manifest), and M1-T05 (CSP+LDA baseline). M1-T04 was accepted at task-branch commit `86b47c56bd655900cf478dbb7af6ec13eeb26e41` and squash-merged through PR #13 as canonical software commit `3b33477166db6889747dabc8d4be21403b480735`. M1-T05 was accepted at rebased task-branch commit `e1f35e0dd8dd3296b6f85e32ac4ed5a6fd6e2d50` and squash-merged on canonical `main` as `d7597efb8db7c8d77aecbd87f9cf2366dd02b484`.
 
-M1-T04 operationalizes D-040 through D-042 with deterministic class-stratified within-subject 60/20/20 assignments at original-trial level, a deterministic seed-42 76/16/17 cross-subject manifest for the full eligible 109-subject cohort, explicit leakage/completeness validation, auditable persistence/provenance, and protected final-test membership. It does not implement CSP/LDA or produce model-performance results.
+M1-T04 operationalizes D-040 through D-042 with deterministic class-stratified within-subject 60/20/20 assignments at original-trial level, a deterministic seed-42 76/16/17 cross-subject manifest for the full eligible 109-subject cohort, explicit leakage/completeness validation, auditable persistence/provenance, and protected final-test membership. M1-T05 implements the approved CSP+LDA baseline under D-033 and D-040 through D-044 with train-only fitting, validation balanced-accuracy component selection over the full approved `{2,4,6,8}` set, deterministic tie-breaking, protected test/final-test isolation, and probability outputs.
 
-No implementation task is active. U-013 — Final CSP configuration remains unresolved, so CSP/LDA must not begin until that decision is explicitly approved and a new narrow `CURRENT_TASK.md` ticket is authorized. The project remains an offline prerecorded EEG system rather than live EEG.
+No implementation task is active. The next model-stage work is gated by unresolved EEGNet and later decisions plus a new narrow `CURRENT_TASK.md` authorization. The project remains an offline prerecorded EEG system rather than live EEG.

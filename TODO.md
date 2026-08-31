@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** M1 loader, visualization, preprocessing/epochs, and split manifest completed; no active task authorized  
+**Current stage:** M1 loader, visualization, preprocessing/epochs, split manifest, and CSP+LDA baseline completed; no active task authorized  
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -51,6 +51,9 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] Record D-040 through D-042 and reconcile split/evaluation methodology
 [x] Complete, accept, and squash-merge M1-T04 through PR #13
 [x] Reconcile M1-T04 governance close with no active task
+[x] Record D-043 and D-044 for final CSP configuration and selection rule
+[x] Complete, accept, and squash-merge M1-T05
+[x] Reconcile M1-T05 governance close with no active task
 ```
 
 ## Current authorization
@@ -58,7 +61,7 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 ```text
 [ ] Wait for next approved CURRENT_TASK.md
 [ ] Do not begin CSP/LDA or any later module without an active implementation ticket
-[ ] Keep U-013 unresolved until explicit Project Owner approval
+[x] Resolve U-013 and record the approved CSP rule set
 ```
 
 ---
@@ -99,8 +102,8 @@ Accepted M1 implementation now includes preprocessing, epochs, provenance, and l
 [x] Implement epoching
 [x] Preserve provenance
 [x] Implement leakage-safe split
-[ ] Resolve U-013 — Final CSP configuration
-[ ] Implement CSP+LDA
+[x] Resolve U-013 — Final CSP configuration
+[x] Implement CSP+LDA
 [ ] Evaluate classical baseline
 ```
 
@@ -217,11 +220,11 @@ These choices are recorded as D-031 through D-039 in `DECISIONS.md`.
 [x] Data provenance
 [x] Split manifest
 [x] Leakage assertions
-[ ] CSP — blocked pending U-013 and a new active ticket
-[ ] LDA — blocked pending U-013 and a new active ticket
-[ ] Prediction probability interface
+[x] CSP
+[x] LDA
+[x] Prediction probability interface
 [ ] Baseline metrics
-[x] Manual scientific review — completed for M1-T01 through M1-T04
+[x] Manual scientific review — completed for M1-T01 through M1-T05
 ```
 
 ---
@@ -382,9 +385,9 @@ Blocked pending policy decisions:
 [ ] Verify channel names
 [ ] Verify montage
 [x] Verify implemented split manifests for subject/original-trial/derived-window leakage
-[ ] Verify CSP train-only fitting
+[x] Verify CSP train-only fitting
 [ ] Verify calibrator does not see test labels
-[ ] Verify decoder class order
+[x] Verify decoder class order
 [ ] Verify Bayesian hypothesis order
 [ ] Verify entropy analytically
 [ ] Verify A* optimality on controlled maps
@@ -510,6 +513,9 @@ Potential research directions:
 [x] Split decisions D-040 through D-042 recorded and methodology reconciled
 [x] M1-T04 split manifest accepted and squash-merged through PR #13
 [x] M1-T04 governance close recorded with no active implementation task
+[x] D-043 and D-044 recorded for the approved CSP configuration and selection rule
+[x] M1-T05 CSP+LDA baseline accepted and squash-merged
+[x] M1-T05 governance close recorded with no active implementation task
 ```
 
 ---

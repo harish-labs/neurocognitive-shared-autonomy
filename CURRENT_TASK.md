@@ -27,68 +27,70 @@ M1-T01 — PhysioNet EEGBCI Data Loader
 M1-T02 — EEG Visualization / Inspection
 M1-T03 — EEG Preprocessing & Epochs
 M1-T04 — EEG Split Manifest
+M1-T05 — CSP+LDA Baseline
 ```
 
-M1-T04 acceptance and merge record:
+M1-T05 acceptance and merge record:
 
 ```text
-Accepted task-branch commit:
-86b47c56bd655900cf478dbb7af6ec13eeb26e41
+Accepted rebased task-branch commit:
+e1f35e0dd8dd3296b6f85e32ac4ed5a6fd6e2d50
 
 Pull request:
-#13 — M1-T04: Implement EEG split manifest
+not created / not verifiable from this environment
 
 Squash-merge commit:
-3b33477166db6889747dabc8d4be21403b480735
+d7597efb8db7c8d77aecbd87f9cf2366dd02b484
 ```
 
-M1-T04 operationalizes D-040 through D-042 with deterministic within-subject and cross-subject split manifests, explicit leakage validation, auditable persistence/provenance, and protected final-test membership.
+M1-T05 implements the approved CSP+LDA baseline under D-033 and D-040 through D-044 with train-only fitting, validation-only component selection by balanced accuracy across the full approved `{2,4,6,8}` set, deterministic tie-breaking, protected test/final-test isolation, and probability output.
 
-Do not begin CSP/LDA or any later implementation module without a new explicitly approved `CURRENT_TASK.md` ticket.
+Do not begin EEGNet or any later implementation module without a new explicitly approved `CURRENT_TASK.md` ticket.
 
-U-013 — Final CSP configuration remains unresolved. This closeout does not resolve or reinterpret it.
+U-014 and later unresolved decisions remain unresolved. This closeout does not resolve or reinterpret them.
 
 ---
 
-# 2. CLOSED TASK RECORD — M1-T04
+# 2. CLOSED TASK RECORD — M1-T05
 
 ```text
 Task ID:
-M1-T04
+M1-T05
 
 Task title:
-EEG Split Manifest
+CSP+LDA Baseline
 
 Final status:
 PASS / ACCEPTED / MERGED
 
 Task branch:
-task/m1-t04-eeg-split-manifest
+task/m1-t05-csp-lda-baseline
 
-Accepted branch commit:
-86b47c56bd655900cf478dbb7af6ec13eeb26e41
+Accepted rebased branch commit:
+e1f35e0dd8dd3296b6f85e32ac4ed5a6fd6e2d50
 
 Merged through:
-PR #13
+approved squash merge on canonical main
 
 Canonical software merge commit:
-3b33477166db6889747dabc8d4be21403b480735
+d7597efb8db7c8d77aecbd87f9cf2366dd02b484
 ```
 
 Accepted scope:
 
 ```text
-- deterministic class-stratified within-subject 60/20/20 assignments
-- original-trial grouping and derived-window leakage protection
-- deterministic seed-42 cross-subject assignment
-- exact 76/16/17 counts for the full eligible 109-subject cohort
-- subject disjointness and completeness validation
-- versioned manifest persistence, reload, provenance, and final-test protection
-- explicit stop for unsupported cross-subject cohort sizes
+- single CSP+LDA baseline module
+- CSP crop +1.0 s to +2.0 s applied only inside the CSP path
+- all 64 channels preserved
+- CSP candidates evaluated over the full approved set {2,4,6,8}
+- validation balanced accuracy used for candidate selection
+- deterministic tie-break to 4 when tied, otherwise smallest tied candidate
+- train-only fitting and protected test/final-test isolation
+- stable predict / predict_proba behavior and class-order coverage
 - targeted automated tests
 ```
 
-No CSP/LDA, EEGNet, calibration, Bayesian, shared-autonomy, planning, safety, replay, or experiment implementation was authorized or merged in M1-T04.
+No EEGNet, calibration, Bayesian, shared-autonomy, planning, safety, replay, or later experiment implementation was authorized or merged in M1-T05.
 
 ---
 
@@ -104,7 +106,7 @@ Before any further implementation:
 5. Record that ticket here before Codex begins implementation.
 ```
 
-For CSP/LDA specifically, U-013 remains unresolved and must not be silently decided.
+For EEGNet and later modules, unresolved decisions remain and must not be silently decided.
 
 Until a new ticket is approved:
 
