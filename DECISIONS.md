@@ -899,6 +899,99 @@ Otherwise choose the smallest tied n_components.
 
 ---
 
+## D-045 — Final EEGNet Architecture
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31  
+**Resolves:** U-014
+
+**Decision:**
+
+```text
+EEGNet compact EEG-specific architecture
+input shape batch × 1 × 64 × time
+all 64 EEG channels
+native 160 Hz
+full canonical EEGNet input epoch -1.0 s to +4.0 s
+do not reuse the CSP-only +1.0 s to +2.0 s crop
+F1 = 8
+first temporal convolution kernel length 64 samples
+same padding
+no bias when followed by batch normalization
+depthwise spatial convolution across all 64 channels
+depth multiplier D = 2
+max-norm depthwise constraint where supported
+BatchNorm + ELU + average pooling
+separable convolution with F2 = 16
+separable temporal kernel length 16
+BatchNorm + ELU + average pooling
+dropout 0.5
+flatten + dense 2 logits
+explicit class order ("left", "right")
+softmax probability output
+same fixed architecture for within-subject and cross-subject tracks
+no architecture search, attention, residual blocks, transformers, extra CNN depth, or test-set influence
+```
+
+**Context:** EEGNet implementation requires a fixed approved architecture before any later model-building ticket can be authorized or evaluated consistently across within-subject and cross-subject tracks.
+
+**Alternatives considered:** a looser EEGNet-inspired design; architecture search; CSP-like temporal cropping; deeper or attention-based variants.
+
+**Rationale:** This locks a compact, EEG-specific architecture with fixed input semantics, preserves the approved canonical epoch and channel policy, and prevents silent architectural drift or test-influenced model design.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, and a future `src/models/eegnet.py` only when separately authorized.
+
+**Implementation consequence:** This decision resolves U-014 but does not authorize EEGNet implementation. Any later EEGNet ticket must use this fixed architecture, must keep the full canonical `-1.0 s to +4.0 s` epoch rather than the CSP-only crop, and must preserve the approved class order and test-set isolation.
+
+**Approved by:** Project Owner
+
+---
+
+## D-046 — Final EEGNet Training Hyperparameters
+
+**Status:** APPROVED
+
+**Date:** 2026-08-31  
+**Resolves:** U-015
+
+**Decision:**
+
+```text
+two-class cross-entropy loss on two logits
+Adam optimizer
+learning rate 1e-3
+weight decay 0
+batch size 32
+maximum 200 epochs
+early stopping enabled, patience 20
+checkpoint/model-selection metric = validation balanced accuracy
+if validation balanced accuracy ties, retain the earliest checkpoint reaching the best value
+random seed 42
+shuffle training partition only
+validation receives no gradient updates and is used only for checkpoint selection/early stopping
+test/final-test must never influence training, architecture, hyperparameter selection, early stopping, or checkpoint selection
+no class weighting for the primary baseline
+no learning-rate scheduler for the primary baseline
+use the already-approved M1-T03 epochs; no extra learned normalization, augmentation, channel selection, resampling, or additional filtering
+use the same fixed training hyperparameters for within-subject and cross-subject tracks; fit separate models on their approved training partitions
+after validation-only checkpoint selection, evaluate the frozen checkpoint once on the corresponding protected test partition
+```
+
+**Context:** EEGNet training requires a fixed approved optimization and checkpoint-selection policy before any later implementation ticket can proceed without silent hyperparameter drift or test leakage.
+
+**Alternatives considered:** different optimizers; weighted losses; learning-rate schedules; augmentation or extra learned normalization; test-informed checkpointing.
+
+**Rationale:** These settings create a bounded, reproducible primary EEGNet baseline with explicit validation-only model selection, fixed seed control, and protected test/final-test isolation across both evaluation tracks.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, and future EEGNet training code only when separately authorized.
+
+**Implementation consequence:** This decision resolves U-015 but does not authorize EEGNet implementation. Any later EEGNet ticket must use these fixed training hyperparameters, keep validation limited to checkpoint selection and early stopping, and evaluate the frozen selected checkpoint once on the corresponding protected test partition.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
@@ -906,8 +999,7 @@ The following remain explicitly unresolved.
 ## Models
 
 ```text
-U-014 — Final EEGNet architecture details
-U-015 — Final training hyperparameters
+None currently unresolved.
 ```
 
 ## Calibration
