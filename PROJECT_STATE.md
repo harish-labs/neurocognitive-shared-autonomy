@@ -18,32 +18,31 @@ M4-T01 SAR Environment + Risk Map is accepted and merged.
 M4-T02 Risk-Aware A* Planner is accepted and merged.
 M4-T03 Safety Controller / Hard Constraint Enforcement is accepted and merged.
 M4-T04 Planner → Safety → Environment Execution Integration is accepted and merged.
-D-066 runtime environment-change / controlled-replanning contract is approved.
-M4-T05 Controlled Replanning After Environment Change is authorized and not yet implemented.
+M4-T05 Controlled Replanning After Environment Change is accepted and merged.
 
 Current module:
-Controlled replanning after explicit environment change
+None — M4 core autonomy implementation is closed; next boundary is M5 human interaction.
 
 Current task:
-M4-T05
+None
 
 Task status:
-ACTIVE / NOT STARTED
+NO ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
 
 Latest accepted task-branch software commit:
-1a7ccde578083b3386183a97ca876714afb68e30
+e8183ccebc9c2f67a1b33347b9ef12d25ddbcbfe
 
 Latest accepted software task:
-M4-T04 — Planner → Safety → Environment Execution Integration
+M4-T05 — Controlled Replanning After Environment Change
+
+Latest governance close commit:
+3d5f10752cbb0b03a77e1a633584ccb2fa8b0909
 
 Latest approved scientific/architectural decision commit:
 5f3a1ed66ee1140766cc73c174dbcab790110596
-
-Latest task-authorization commit:
-36a37cdada61f4681c7723a20510368fd7b3febd
 
 Latest valid reportable experiment:
 None yet
@@ -68,14 +67,15 @@ M4-T01 — 2D Search & Rescue Environment + Risk Map
 M4-T02 — Risk-Aware A* Planner
 M4-T03 — Safety Controller / Hard Constraint Enforcement
 M4-T04 — Planner → Safety → Environment Execution Integration
+M4-T05 — Controlled Replanning After Environment Change
 ```
 
-M4-T04 accepted verification:
+M4-T05 accepted verification:
 
 ```text
-pytest tests/test_execution.py -> 13 passed
-pytest tests/test_environment.py tests/test_planner.py tests/test_safety.py tests/test_execution.py -> 71 passed
-pytest -> 201 passed, 1 pre-existing non-failing PyTorch warning
+pytest tests/test_replanning.py -> 13 passed
+pytest tests/test_environment.py tests/test_planner.py tests/test_safety.py tests/test_execution.py tests/test_replanning.py -> 84 passed
+pytest -> 214 passed, 1 pre-existing non-failing PyTorch warning
 ```
 
 The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, or human-subject result claim is authorized.
@@ -89,10 +89,11 @@ SAR environment/risk map: PASS
 Risk-aware A*: PASS
 Hard safety controller: PASS
 Planner -> safety -> environment execution integration: PASS
-Controlled replanning after explicit environment change: AUTHORIZED / NOT STARTED
+Controlled replanning after explicit environment change: PASS
 Offline EEG -> full-system execution: NOT STARTED
+Human interaction layer: NOT STARTED
 UI: NOT STARTED
-Reportable autonomy experiments: NOT STARTED
+Reportable system experiments: NOT STARTED
 ```
 
 Accepted planning/safety semantics:
@@ -110,69 +111,64 @@ planner proposes; safety authorizes; environment executes only approved actions
 emergency stop and pause block execution
 successful planner output is structurally validated before execution
 malformed or substituted plans fail closed with zero movement
+D-066 uses explicit fresh replacement snapshots and one replan attempt per unique environment-change event
+unchanged-map retries and duplicate-event retries are rejected
 ```
 
 ---
 
-# 4. D-066 — CONTROLLED REPLANNING CONTRACT
+# 4. M4 MILESTONE STATE
 
-Approved 2026-09-01:
-
-```text
-each relevant runtime environment change is supplied as a new immutable validated replacement environment/map snapshot
-replacement snapshot preserves the current agent (row,column) as its start
-replacement snapshot preserves the same named goal mapping and same human-approved goal
-replanning occurs only after explicit ENVIRONMENT_CHANGED, or a safety requires_replan=True outcome together with a new changed snapshot
-unchanged-map retries are forbidden
-one environment-change event ID permits at most one replan attempt
-another replan requires another explicit event and new validated snapshot
-replacement NO_SAFE_PATH -> hold position and stop
-PAUSE/STOP remain higher priority and do not themselves create a replan event
-no goal substitution, hard-safety relaxation, stochastic hazard invention, or hidden map mutation
-```
-
-Canonical decision commit:
+Core M4 implementation is now accepted:
 
 ```text
-5f3a1ed66ee1140766cc73c174dbcab790110596
+2D Gymnasium SAR environment: PASS
+canonical risk map / blocked-cell distinction: PASS
+risk-aware A* / Manhattan heuristic: PASS
+hard safety authority: PASS
+planner-safety-environment execution ordering: PASS
+explicit NO_SAFE_PATH handling: PASS
+controlled replanning after explicit environment change: PASS
+pause/stop enforcement within safety/execution/replanning paths: PASS
 ```
+
+No reportable claim that these components improve task success or safety is authorized until the corresponding experiment protocol is approved and run.
 
 ---
 
-# 5. CURRENT M4-T05 AUTHORIZATION
+# 5. NEXT ARCHITECTURAL BOUNDARY
 
-M4-T05 is authorized to implement only a controlled replanning coordinator, primarily in:
+The next implementation family is M5 human interaction / shared-autonomy integration.
 
-```text
-src/autonomy/replanning.py
-tests/test_replanning.py
-```
+The shared-autonomy decision policy already exists from M1-T09, but the separate human interaction layer is not implemented.
 
-Required high-level behavior:
+Before authorizing the next task, freeze or explicitly ticket the required command semantics for:
 
 ```text
-validate explicit replan trigger
-validate unique event ID
-validate replacement environment is a distinct fresh snapshot
-validate same grid and named goals
-validate replacement start equals current old-environment position
-validate blocked/risk map genuinely changed
-preserve exact approved goal
-consume each event at most once
-invoke accepted PlannerSafetyEnvironmentExecutor exactly once on the replacement snapshot
-never auto-retry after NO_SAFE_PATH / HALTED / SAFETY_REJECTED / invalid result
+CONFIRM request association / identifiers
+stale confirmation rejection
+duplicate command handling
+OVERRIDE goal validation and authority boundary
+PAUSE / STOP propagation
+RESUME behavior if included
 ```
 
-M4-T05 must not modify accepted environment/planner/safety/execution semantics unless a genuine blocker is reported and reviewed.
+Do not allow Codex to invent these interaction semantics independently.
 
 ---
 
 # 6. CURRENT SCIENTIFIC BLOCKERS
 
-Planning / safety implementation:
+Core M4 planning/safety implementation:
 
 ```text
-None currently unresolved for M4-T05; D-066 resolves the runtime replanning contract needed for this task.
+None.
+```
+
+M5 human interaction:
+
+```text
+Requires a narrow approved interaction contract/ticket before implementation.
 ```
 
 Experimental analysis remains unresolved:
@@ -183,27 +179,24 @@ U-035 — Robustness perturbation levels
 U-036 — Final inferential-statistics policy
 ```
 
-These do not block M4-T05 implementation, but they must be resolved before the corresponding reportable comparison/robustness/inferential experiments.
-
 ---
 
 # 7. CLAIM STATUS
 
-Authorized implementation claims include that accepted M1-T01 through M1-T10 and M4-T01 through M4-T04 components have been implemented and unit/regression tested under their approved tickets.
+Authorized implementation claims include that the accepted EEG, Bayesian/shared-autonomy/adaptation modules and M4-T01 through M4-T05 software components have been implemented and unit/regression tested under their approved tickets.
 
-Authorized M4-T04 claim:
+Authorized M4 claim:
 
 ```text
-the simulated execution layer enforces planner -> safety -> environment ordering for one fixed approved goal and fails closed on malformed planner output
+the simulated autonomy stack includes a deterministic 2D environment, risk-aware A*, a separate hard-safety controller, safety-gated execution, and event-bounded controlled replanning while preserving the same human-approved goal
 ```
 
-Not yet authorized:
+Not authorized:
 
 ```text
-claim that controlled replanning is implemented before M4-T05 is reviewed and accepted
-claims that dynamic replanning improves task success or safety
 claims that any decoder is above chance in a reportable experiment
 claims that calibration/Bayesian/shared autonomy/adaptation improves outcomes
+claims that planning/replanning/safety improves task outcomes
 cross-subject generalization claims
 live EEG / physical robot / certified real-world safety claims
 ```
@@ -213,8 +206,7 @@ live EEG / physical robot / certified real-world safety claims
 # 8. NEXT ACTION
 
 ```text
-Codex implements M4-T05 exactly as defined in CURRENT_TASK.md on a task branch from current main.
-It must run focused replanning tests, combined autonomy regression tests, and the full test suite.
-It must commit/push and stop for ChatGPT scientific review.
-No merge and no next task before review.
+Project Owner + ChatGPT review and freeze the narrow M5 human-interaction command contract.
+Then ChatGPT creates the next explicit CURRENT_TASK.md ticket.
+Codex must not start another module before that authorization.
 ```
