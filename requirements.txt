@@ -1,4 +1,5 @@
 mne
+gymnasium
 numpy
 pytest
 torch

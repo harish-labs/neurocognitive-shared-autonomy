@@ -3,6 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 import sys
 
+import gymnasium as gym
+import numpy as np
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -27,11 +29,27 @@ def test_reset_restores_configured_start_and_seed_is_deterministic() -> None:
     env = make_environment()
     env.step(environment.Action.UP)
 
-    first = env.reset(seed=42)
-    second = env.reset(seed=42)
+    first_observation, first_info = env.reset(seed=42)
+    second_observation, second_info = env.reset(seed=42)
 
-    assert first == second == environment.EnvironmentState((1, 1), False, None)
+    assert isinstance(env, gym.Env)
+    assert np.array_equal(first_observation, second_observation)
+    assert np.array_equal(first_observation, np.array((1, 1), dtype=np.int64))
+    assert first_info == second_info
+    assert first_info["position"] == (1, 1)
     assert env.last_seed == 42
+
+
+def test_gymnasium_spaces_match_action_and_observation_contracts() -> None:
+    env = make_environment()
+    observation, _ = env.reset()
+
+    assert env.action_space == gym.spaces.Discrete(5)
+    assert [environment.Action(index).name for index in range(env.action_space.n)] == ["UP", "DOWN", "LEFT", "RIGHT", "WAIT"]
+    assert env.action_space.contains(environment.Action.WAIT)
+    assert env.observation_space.contains(observation)
+    assert env.observation_space.shape == (2,)
+    assert env.observation_space.dtype == np.dtype(np.int64)
 
 
 @pytest.mark.parametrize(
@@ -42,34 +60,47 @@ def test_cardinal_actions_follow_row_column_convention(action: environment.Actio
     env = environment.SearchRescueEnvironment(
         environment.EnvironmentConfig(rows=3, columns=4, start=(1, 1), goals={"victim-a": (0, 2)})
     )
-    result = env.step(action)
+    observation, reward, terminated, truncated, info = env.step(action)
 
-    assert not result.blocked_by_structure
-    assert result.state.position == expected
+    assert np.array_equal(observation, np.array(expected, dtype=np.int64))
+    assert reward == 0.0
+    assert not terminated
+    assert not truncated
+    assert not info["blocked_by_structure"]
+    assert info["action"] == action.name
 
 
 def test_blocked_transition_preserves_position() -> None:
-    result = make_environment().step(environment.Action.DOWN)
+    observation, reward, terminated, truncated, info = make_environment().step(environment.Action.DOWN)
 
-    assert result.blocked_by_structure
-    assert not result.moved
-    assert result.state.position == (1, 1)
+    assert np.array_equal(observation, np.array((1, 1), dtype=np.int64))
+    assert reward == 0.0
+    assert not terminated
+    assert not truncated
+    assert info["blocked_by_structure"]
+    assert not info["moved"]
 
 
 def test_wait_preserves_position() -> None:
-    result = make_environment().step(environment.Action.WAIT)
+    observation, reward, terminated, truncated, info = make_environment().step(environment.Action.WAIT)
 
-    assert not result.moved
-    assert result.state.position == (1, 1)
+    assert np.array_equal(observation, np.array((1, 1), dtype=np.int64))
+    assert reward == 0.0
+    assert not terminated
+    assert not truncated
+    assert not info["moved"]
 
 
 def test_entering_goal_terminates_episode() -> None:
     env = make_environment()
     env.step(environment.Action.UP)
-    result = env.step(environment.Action.RIGHT)
+    observation, reward, terminated, truncated, info = env.step(environment.Action.RIGHT)
 
-    assert result.state.terminated
-    assert result.state.reached_goal == "victim-a"
+    assert np.array_equal(observation, np.array((0, 2), dtype=np.int64))
+    assert reward == 0.0
+    assert terminated
+    assert not truncated
+    assert info["reached_goal"] == "victim-a"
     with pytest.raises(environment.EnvironmentError, match="terminated"):
         env.step(environment.Action.WAIT)
 
@@ -95,11 +126,14 @@ def test_canonical_risk_values_are_preserved_and_prohibited_is_identifiable() ->
 def test_raw_mechanics_do_not_apply_prohibited_risk_as_safety_policy() -> None:
     env = make_environment()
     env.step(environment.Action.RIGHT)
-    result = env.step(environment.Action.RIGHT)
+    observation, reward, terminated, truncated, info = env.step(environment.Action.RIGHT)
 
-    assert result.state.position == (1, 3)
-    assert result.moved
-    assert result.destination_risk == 1.0
+    assert np.array_equal(observation, np.array((1, 3), dtype=np.int64))
+    assert reward == 0.0
+    assert not terminated
+    assert not truncated
+    assert info["moved"]
+    assert info["destination_risk"] == 1.0
 
 
 @pytest.mark.parametrize(

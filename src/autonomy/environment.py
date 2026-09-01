@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import Enum, IntEnum
 from typing import Mapping
 
+import gymnasium as gym
+import numpy as np
+from gymnasium import spaces
 
 Coordinate = tuple[int, int]
 
@@ -14,12 +17,12 @@ class EnvironmentError(ValueError):
     """Raised when a SAR environment configuration or operation is invalid."""
 
 
-class Action(str, Enum):
-    UP = "UP"
-    DOWN = "DOWN"
-    LEFT = "LEFT"
-    RIGHT = "RIGHT"
-    WAIT = "WAIT"
+class Action(IntEnum):
+    UP = 0
+    DOWN = 1
+    LEFT = 2
+    RIGHT = 3
+    WAIT = 4
 
 
 class RiskLevel(float, Enum):
@@ -57,23 +60,22 @@ class EnvironmentState:
     reached_goal: str | None
 
 
-@dataclass(frozen=True)
-class TransitionResult:
-    previous_state: EnvironmentState
-    state: EnvironmentState
-    action: Action
-    moved: bool
-    blocked_by_structure: bool
-    destination_risk: float
-
-
-class SearchRescueEnvironment:
+class SearchRescueEnvironment(gym.Env[np.ndarray, int]):
     """Static world mechanics, deliberately independent of planner and safety policy."""
 
+    metadata = {"render_modes": []}
+
     def __init__(self, config: EnvironmentConfig) -> None:
+        super().__init__()
         self.config = _validate_config(config)
         self._last_seed: int | None = None
         self._state = self._initial_state()
+        self.action_space = spaces.Discrete(len(Action))
+        self.observation_space = spaces.Box(
+            low=np.array((0, 0), dtype=np.int64),
+            high=np.array((config.rows - 1, config.columns - 1), dtype=np.int64),
+            dtype=np.int64,
+        )
 
     @property
     def state(self) -> EnvironmentState:
@@ -83,15 +85,19 @@ class SearchRescueEnvironment:
     def last_seed(self) -> int | None:
         return self._last_seed
 
-    def reset(self, *, seed: int | None = None) -> EnvironmentState:
-        """Restore the static configured start state; the seed is retained for reproducibility."""
-        if seed is not None and not isinstance(seed, int):
-            raise EnvironmentError("Reset seed must be an integer or None.")
+    def reset(
+        self,
+        *,
+        seed: int | None = None,
+        options: dict[str, object] | None = None,
+    ) -> tuple[np.ndarray, dict[str, object]]:
+        """Restore the static start state using Gymnasium reset conventions."""
+        super().reset(seed=seed)
         self._last_seed = seed
         self._state = self._initial_state()
-        return self._state
+        return self._observation(), self._info()
 
-    def step(self, action: Action | str) -> TransitionResult:
+    def step(self, action: int | Action | str) -> tuple[np.ndarray, float, bool, bool, dict[str, object]]:
         """Apply raw grid mechanics; planners and safety control remain external."""
         normalized_action = _validate_action(action)
         previous = self._state
@@ -108,13 +114,17 @@ class SearchRescueEnvironment:
             terminated=reached_goal is not None,
             reached_goal=reached_goal,
         )
-        return TransitionResult(
-            previous_state=previous,
-            state=self._state,
-            action=normalized_action,
-            moved=destination != previous.position,
-            blocked_by_structure=structural_block,
-            destination_risk=self.risk_at(destination),
+        return (
+            self._observation(),
+            0.0,
+            self._state.terminated,
+            False,
+            self._info(
+                action=normalized_action,
+                previous_position=previous.position,
+                moved=destination != previous.position,
+                blocked_by_structure=structural_block,
+            ),
         )
 
     def in_bounds(self, coordinate: Coordinate) -> bool:
@@ -140,6 +150,27 @@ class SearchRescueEnvironment:
             if position == coordinate:
                 return name
         return None
+
+    def _observation(self) -> np.ndarray:
+        return np.asarray(self._state.position, dtype=np.int64)
+
+    def _info(
+        self,
+        *,
+        action: Action | None = None,
+        previous_position: Coordinate | None = None,
+        moved: bool | None = None,
+        blocked_by_structure: bool | None = None,
+    ) -> dict[str, object]:
+        return {
+            "position": self._state.position,
+            "reached_goal": self._state.reached_goal,
+            "destination_risk": self.risk_at(self._state.position),
+            "action": action.name if action is not None else None,
+            "previous_position": previous_position,
+            "moved": moved,
+            "blocked_by_structure": blocked_by_structure,
+        }
 
     def _require_in_bounds(self, coordinate: Coordinate) -> None:
         if not _is_coordinate(coordinate) or not self.in_bounds(coordinate):
@@ -177,10 +208,16 @@ def _validate_config(config: EnvironmentConfig) -> EnvironmentConfig:
     return config
 
 
-def _validate_action(action: Action | str) -> Action:
+def _validate_action(action: int | Action | str) -> Action:
     try:
-        return action if isinstance(action, Action) else Action(str(action))
-    except ValueError as exc:
+        if isinstance(action, Action):
+            return action
+        if isinstance(action, str):
+            return Action[action.upper()]
+        if isinstance(action, (bool, np.bool_)):
+            raise ValueError
+        return Action(int(action))
+    except (KeyError, TypeError, ValueError) as exc:
         raise EnvironmentError("Action must be one of UP, DOWN, LEFT, RIGHT, or WAIT.") from exc
 
 
