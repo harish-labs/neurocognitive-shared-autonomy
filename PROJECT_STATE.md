@@ -14,20 +14,18 @@
 ```text
 Project phase:
 EEG decoding/calibration/Bayesian/shared-autonomy/adaptation through M1-T10 are accepted and merged.
-M4-T01 SAR Environment + Risk Map is accepted and merged.
-M4-T02 Risk-Aware A* Planner is accepted and merged.
-M4-T03 Safety Controller / Hard Constraint Enforcement is accepted and merged.
-M4-T04 Planner → Safety → Environment Execution Integration is accepted and merged.
-M4-T05 Controlled Replanning After Environment Change is accepted and merged.
+M4-T01 through M4-T05 are accepted and merged; the core M4 autonomy stack is complete.
+D-067 Human Interaction Command Contract is approved.
+M5-T01 Human Command & Confirmation State Layer is authorized and not yet implemented.
 
 Current module:
-None — M4 core autonomy implementation is closed; next boundary is M5 human interaction.
+Human command / confirmation state layer
 
 Current task:
-None
+M5-T01
 
 Task status:
-NO ACTIVE IMPLEMENTATION TASK
+ACTIVE / NOT STARTED
 
 Canonical branch:
 main
@@ -38,11 +36,11 @@ e8183ccebc9c2f67a1b33347b9ef12d25ddbcbfe
 Latest accepted software task:
 M4-T05 — Controlled Replanning After Environment Change
 
-Latest governance close commit:
-3d5f10752cbb0b03a77e1a633584ccb2fa8b0909
-
 Latest approved scientific/architectural decision commit:
-5f3a1ed66ee1140766cc73c174dbcab790110596
+0c2ed84207f55303610d8b7c61bd9e99eea8301a
+
+Latest task-authorization commit:
+77bb58a8207af007a5f7e2a03791c0ea6e5624c9
 
 Latest valid reportable experiment:
 None yet
@@ -82,7 +80,7 @@ The project remains an **offline prerecorded EEG / simulated real-time BCI** sys
 
 ---
 
-# 3. CURRENT AUTONOMY STATE
+# 3. CURRENT AUTONOMY / INTERACTION STATE
 
 ```text
 SAR environment/risk map: PASS
@@ -90,36 +88,31 @@ Risk-aware A*: PASS
 Hard safety controller: PASS
 Planner -> safety -> environment execution integration: PASS
 Controlled replanning after explicit environment change: PASS
+Shared-autonomy decision policy: PASS (accepted M1-T09)
+Human command / confirmation state layer: AUTHORIZED / NOT STARTED
+Shared-autonomy -> human-command integration: NOT STARTED
 Offline EEG -> full-system execution: NOT STARTED
-Human interaction layer: NOT STARTED
 UI: NOT STARTED
 Reportable system experiments: NOT STARTED
 ```
 
-Accepted planning/safety semantics:
+Accepted control principles now include:
 
 ```text
-risk values = 0.00 / 0.25 / 0.50 / 0.75 / 1.00
-blocked cells are separate hard obstacles
-risk >= 1.00 is prohibited
-HIGH 0.75 remains traversable soft risk
-lambda = 2.0
-step cost = 1.0 + 2.0 * risk(destination)
-Manhattan A* on four-connected grid
-NO_SAFE_PATH never relaxes hard safety or substitutes another goal
-planner proposes; safety authorizes; environment executes only approved actions
-emergency stop and pause block execution
-successful planner output is structurally validated before execution
-malformed or substituted plans fail closed with zero movement
-D-066 uses explicit fresh replacement snapshots and one replan attempt per unique environment-change event
-unchanged-map retries and duplicate-event retries are rejected
+human determines WHAT goal; AI determines HOW safely
+CONFIRM is explicit human authority when required
+STOP > PAUSE > OVERRIDE > CONFIRM/RESUME > autonomous policy
+safety retains veto authority over low-level movement
+stale/duplicate human commands must not create repeated effects
+RESUME is explicit and never replays an old queued action
+OVERRIDE changes the human-approved goal but does not bypass planner/safety
 ```
 
 ---
 
 # 4. M4 MILESTONE STATE
 
-Core M4 implementation is now accepted:
+Core M4 implementation is accepted and closed:
 
 ```text
 2D Gymnasium SAR environment: PASS
@@ -136,39 +129,39 @@ No reportable claim that these components improve task success or safety is auth
 
 ---
 
-# 5. NEXT ARCHITECTURAL BOUNDARY
+# 5. D-067 — HUMAN INTERACTION CONTRACT
 
-The next implementation family is M5 human interaction / shared-autonomy integration.
-
-The shared-autonomy decision policy already exists from M1-T09, but the separate human interaction layer is not implemented.
-
-Before authorizing the next task, freeze or explicitly ticket the required command semantics for:
+Approved on 2026-09-01:
 
 ```text
-CONFIRM request association / identifiers
-stale confirmation rejection
-duplicate command handling
-OVERRIDE goal validation and authority boundary
-PAUSE / STOP propagation
-RESUME behavior if included
+unique request_id for every confirmation request
+CONFIRM only the exact active request; stale/consumed requests rejected
+unique command_id consumed at most once
+duplicate command IDs cause no repeated effect
+OVERRIDE validates a currently valid mission goal and becomes human-approved goal
+OVERRIDE cannot bypass planner/safety and cannot silently resume PAUSE
+PAUSE preserves state and blocks movement until explicit RESUME
+STOP is terminal for the interaction session until explicit reset/new episode
+RESUME is valid only from PAUSED, preserves goal, and requires fresh downstream execution rather than queued-action replay
+command handling is synchronous/deterministic; no background queue
 ```
 
-Do not allow Codex to invent these interaction semantics independently.
+D-067 is implemented only when M5-T01 is separately completed and accepted. Approval alone is not an implementation claim.
 
 ---
 
-# 6. CURRENT SCIENTIFIC BLOCKERS
+# 6. CURRENT SCIENTIFIC / ARCHITECTURAL BLOCKERS
 
-Core M4 planning/safety implementation:
+M5-T01:
 
 ```text
-None.
+No unresolved scientific blocker under D-067.
 ```
 
-M5 human interaction:
+Later M5 integration:
 
 ```text
-Requires a narrow approved interaction contract/ticket before implementation.
+Not authorized yet. Integration of shared-autonomy decisions with the human-command layer must be separately reviewed after M5-T01 acceptance.
 ```
 
 Experimental analysis remains unresolved:
@@ -179,26 +172,23 @@ U-035 — Robustness perturbation levels
 U-036 — Final inferential-statistics policy
 ```
 
+These do not block M5-T01.
+
 ---
 
 # 7. CLAIM STATUS
 
-Authorized implementation claims include that the accepted EEG, Bayesian/shared-autonomy/adaptation modules and M4-T01 through M4-T05 software components have been implemented and unit/regression tested under their approved tickets.
+Authorized implementation claims include that M1-T01 through M1-T10 and M4-T01 through M4-T05 have been implemented, reviewed, accepted, and regression tested under their approved tickets.
 
-Authorized M4 claim:
-
-```text
-the simulated autonomy stack includes a deterministic 2D environment, risk-aware A*, a separate hard-safety controller, safety-gated execution, and event-bounded controlled replanning while preserving the same human-approved goal
-```
-
-Not authorized:
+Not yet authorized as implementation claims:
 
 ```text
-claims that any decoder is above chance in a reportable experiment
-claims that calibration/Bayesian/shared autonomy/adaptation improves outcomes
-claims that planning/replanning/safety improves task outcomes
-cross-subject generalization claims
-live EEG / physical robot / certified real-world safety claims
+human command / confirmation state layer implemented
+full human-interaction integration implemented
+end-to-end EEG-driven mission execution implemented
+any reportable performance/safety improvement
+cross-subject generalization
+live EEG / physical robot / certified real-world safety
 ```
 
 ---
@@ -206,7 +196,9 @@ live EEG / physical robot / certified real-world safety claims
 # 8. NEXT ACTION
 
 ```text
-Project Owner + ChatGPT review and freeze the narrow M5 human-interaction command contract.
-Then ChatGPT creates the next explicit CURRENT_TASK.md ticket.
-Codex must not start another module before that authorization.
+Codex implements M5-T01 exactly as defined in CURRENT_TASK.md on a task branch from the current main.
+Implement only the deterministic human command / confirmation state layer.
+Run focused, adjacent-control, and full regression tests.
+Commit/push and stop for ChatGPT scientific/architectural review.
+Do not merge or begin the next M5 integration task automatically.
 ```
