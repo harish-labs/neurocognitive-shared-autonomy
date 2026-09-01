@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import Enum
 
-from src.autonomy.environment import Action, Coordinate, SearchRescueEnvironment
+from src.autonomy.environment import ACTION_DELTAS, Action, Coordinate, SearchRescueEnvironment
 from src.autonomy.planner import PlannerStatus, PlanningResult, RiskAwareAStarPlanner
 from src.autonomy.safety import SafetyController, SafetyDecision, SafetyStatus
 
@@ -93,6 +93,17 @@ class PlannerSafetyEnvironmentExecutor:
                 environment,
                 "Planner could not produce a valid plan for the approved goal.",
             )
+        if not _is_consistent_success_plan(planning_result, start, approved_goal):
+            return _result(
+                ExecutionStatus.INVALID_GOAL_OR_PLAN,
+                approved_goal,
+                planning_result,
+                (),
+                (start,),
+                (),
+                environment,
+                "Planner SUCCESS result is structurally inconsistent with the execution request.",
+            )
 
         executed_actions: list[Action] = []
         visited_positions: list[Coordinate] = [start]
@@ -177,3 +188,32 @@ def _result(
         terminated=environment.state.terminated,
         reason=reason,
     )
+
+
+def _is_consistent_success_plan(
+    planning_result: PlanningResult,
+    start: Coordinate,
+    approved_goal: Coordinate,
+) -> bool:
+    """Fail closed unless the successful route exactly reconstructs the fixed request."""
+    if planning_result.start != start or planning_result.goal != approved_goal:
+        return False
+    path = planning_result.path
+    actions = planning_result.actions
+    if not path or path[0] != start or path[-1] != approved_goal:
+        return False
+    if len(actions) != len(path) - 1:
+        return False
+    if any(not _is_coordinate(position) for position in path):
+        return False
+    for position, action, next_position in zip(path, actions, path[1:]):
+        if not isinstance(action, Action) or action is Action.WAIT:
+            return False
+        delta = ACTION_DELTAS[action]
+        if (position[0] + delta[0], position[1] + delta[1]) != next_position:
+            return False
+    return True
+
+
+def _is_coordinate(value: object) -> bool:
+    return isinstance(value, tuple) and len(value) == 2 and all(isinstance(item, int) for item in value)

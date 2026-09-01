@@ -166,6 +166,34 @@ def test_unknown_goal_is_not_substituted_or_executed() -> None:
     assert result.final_position == (1, 0)
 
 
+def test_success_result_for_different_goal_is_rejected_before_safety_or_execution(monkeypatch) -> None:
+    env = make_environment()
+    safety = RecordingSafetyController()
+    planner = FixedActionPlanner(goal=(2, 3), path=((1, 0), (2, 3)), actions=(Action.DOWN,))
+    step_calls: list[object] = []
+    monkeypatch.setattr(env, "step", lambda action: step_calls.append(action))
+
+    result = PlannerSafetyEnvironmentExecutor(planner=planner, safety_controller=safety).execute(env, approved_goal=(0, 3))
+
+    assert_malformed_plan_rejected(result, env, (0, 3))
+    assert safety.decisions == []
+    assert step_calls == []
+
+
+def test_inconsistent_success_path_is_rejected_before_safety_or_execution(monkeypatch) -> None:
+    env = make_environment()
+    safety = RecordingSafetyController()
+    planner = FixedActionPlanner(goal=(0, 3), path=((1, 0), (0, 3)), actions=(Action.RIGHT,))
+    step_calls: list[object] = []
+    monkeypatch.setattr(env, "step", lambda action: step_calls.append(action))
+
+    result = PlannerSafetyEnvironmentExecutor(planner=planner, safety_controller=safety).execute(env, approved_goal=(0, 3))
+
+    assert_malformed_plan_rejected(result, env, (0, 3))
+    assert safety.decisions == []
+    assert step_calls == []
+
+
 class RecordingSafetyController(SafetyController):
     def __init__(self) -> None:
         self.decisions = []
@@ -177,20 +205,39 @@ class RecordingSafetyController(SafetyController):
 
 
 class FixedActionPlanner:
-    def __init__(self, *, goal: tuple[int, int], action: Action) -> None:
+    def __init__(
+        self,
+        *,
+        goal: tuple[int, int],
+        action: Action | None = None,
+        path: tuple[tuple[int, int], ...] | None = None,
+        actions: tuple[Action, ...] | None = None,
+    ) -> None:
         self._goal = goal
         self._action = action
+        self._path = path
+        self._actions = actions
 
     def plan(self, environment: SearchRescueEnvironment, *, start: tuple[int, int], approved_goal: tuple[int, int]) -> PlanningResult:
+        path = self._path if self._path is not None else (start, self._goal)
+        actions = self._actions if self._actions is not None else (self._action,)
         return PlanningResult(
             status=PlannerStatus.SUCCESS,
             start=start,
             goal=self._goal,
-            path=(start, self._goal),
-            actions=(self._action,),
+            path=path,
+            actions=actions,
             path_cost=1.0,
             movement_cost=1.0,
             cumulative_risk=0.0,
             risk_cost=0.0,
             expanded_nodes=1,
         )
+
+
+def assert_malformed_plan_rejected(result: object, environment: SearchRescueEnvironment, approved_goal: tuple[int, int]) -> None:
+    assert getattr(result, "status") is ExecutionStatus.INVALID_GOAL_OR_PLAN
+    assert getattr(result, "approved_goal") == approved_goal
+    assert getattr(result, "executed_actions") == ()
+    assert getattr(result, "visited_positions") == ((1, 0),)
+    assert environment.state.position == (1, 0)
