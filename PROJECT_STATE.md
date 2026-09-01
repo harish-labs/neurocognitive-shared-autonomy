@@ -31,13 +31,13 @@ GitHub is the canonical implementation/state source of truth.
 
 ```text
 Project Phase:
-EEG decoding, calibration, binary Bayesian goal inference, uncertainty/shared-autonomy policy, and prior-personalization implementation through M1-T10 are accepted and merged. Planning/safety decisions U-029 through U-033 are now approved as D-061 through D-065. M4-T01 is authorized but not yet implemented.
+EEG decoding, calibration, binary Bayesian goal inference, uncertainty/shared-autonomy policy, and prior personalization through M1-T10 are accepted and merged. M4-T01 2D SAR Environment + Risk Map is now accepted and merged. M4-T02 Risk-Aware A* Planner is authorized and not yet implemented.
 
 Current Module:
-2D Search & Rescue Environment + Risk Map
+Risk-Aware A* Planner
 
 Current Task ID:
-M4-T01
+M4-T02
 
 Task Status:
 ACTIVE / NOT STARTED
@@ -46,16 +46,16 @@ Canonical Branch:
 main
 
 Latest Accepted Software Commit:
-9aeb3477c0bb7304bca3ad2753eaa3a75a59511c
+5310743539675744b284bafdf24789fc2025816d
 
 Latest Accepted Software Task:
-M1-T10 — Adaptation / Prior Personalization
+M4-T01 — 2D Search & Rescue Environment + Risk Map
 
 Latest Approved Scientific-Decision Commit:
 fdef1d5afaf7d13aaffb0e8d5b39379497ee7442
 
 Latest Governance / Task-Authorization Commit:
-91e635f67436138a52556224bad923e26ba8b588
+66300461f172ae7c9edf168a393e525e8829ae79
 
 Latest Valid Experiment:
 None yet
@@ -68,7 +68,7 @@ Last Updated:
 
 # 2. ACCEPTED IMPLEMENTATION SEQUENCE
 
-Canonical `main` contains ten accepted M1 implementation tasks:
+Canonical `main` contains the accepted M1 implementation sequence:
 
 ```text
 M1-T01 — PhysioNet EEGBCI Data Loader
@@ -83,13 +83,25 @@ M1-T09 — Uncertainty & Shared-Autonomy Policy
 M1-T10 — Adaptation / Prior Personalization
 ```
 
-The next authorized task is:
+Canonical `main` now also contains:
 
 ```text
 M4-T01 — 2D Search & Rescue Environment + Risk Map
 ```
 
-M4-T01 is authorized but has not yet been implemented, tested, reviewed, accepted, or merged.
+Accepted M4-T01 canonical software commit:
+
+```text
+5310743539675744b284bafdf24789fc2025816d
+```
+
+The current authorized task is:
+
+```text
+M4-T02 — Risk-Aware A* Planner
+```
+
+M4-T02 is authorized but has not yet been implemented, tested, reviewed, accepted, or merged.
 
 The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, or human-subject result claim is authorized.
 
@@ -113,10 +125,10 @@ Shared-autonomy / uncertainty decisions D-055 through D-057 remain operationaliz
 
 Adaptation decisions D-058 through D-060 remain operationalized by M1-T10.
 
-Planning / safety decisions D-061 through D-065 are approved and available for implementation:
+Planning / safety decisions D-061 through D-065 are approved. M4-T01 operationalizes the environment/risk representation portions; M4-T02 is authorized to operationalize the planner portions.
 
 ```text
-D-061 risk scale:
+D-061:
 FREE 0.00
 LOW 0.25
 MODERATE 0.50
@@ -125,30 +137,25 @@ PROHIBITED 1.00
 blocked cells remain separate hard obstacles
 
 D-062:
-fixed canonical [0,1] risk semantics
+fixed canonical risk semantics
 no per-map/adaptive normalization
 risk contribution is destination-cell risk
 path risk is additive over entered cells
 
 D-063:
-primary risk-aware A* lambda = 2.0
+primary A* lambda = 2.0
 step cost = 1.0 + 2.0 * risk(destination)
-Manhattan heuristic retained
+Manhattan heuristic
 
 D-064:
-risk >= 1.00 is prohibited
-HIGH = 0.75 remains traversable soft risk
-blocked cells independently prohibited
+blocked cells and risk >= 1.00 are excluded from valid planner paths
+HIGH 0.75 remains traversable soft risk
+safety controller will later independently enforce hard transition authorization
 
 D-065:
-NO_SAFE_PATH / UNREACHABLE -> no movement
-hold position
-do not relax hard safety
-do not silently change the human-approved goal
-replan only after relevant environment or explicit human-approved control change
+no permitted route -> explicit NO_SAFE_PATH / UNREACHABLE
+no automatic constraint relaxation or goal substitution
 ```
-
-These planning/safety decisions are approved methodology. They are not yet operationalized in software.
 
 ---
 
@@ -166,82 +173,91 @@ These planning/safety decisions are approved methodology. They are not yet opera
 | Bayesian Goal Inference | PASS | `43fb1f10b0a78236ca01c21076a37eacf70529a9` | M1-T08 accepted |
 | Uncertainty / Shared-Autonomy Policy | PASS | `7fd4e4c5824199764567f4d8cc71127063a477be` | M1-T09 accepted |
 | Adaptation / Prior Personalization | PASS | `9aeb3477c0bb7304bca3ad2753eaa3a75a59511c` | M1-T10 accepted |
-| SAR Environment / Risk Map | AUTHORIZED / NOT STARTED | — | M4-T01 active |
-| A* Planner | NOT STARTED | — | D-061 through D-065 approved; separate future task required |
-| Safety Controller | NOT STARTED | — | D-061 through D-065 approved; separate future task required |
+| SAR Environment / Risk Map | PASS | `5310743539675744b284bafdf24789fc2025816d` | M4-T01 accepted and merged |
+| Risk-Aware A* Planner | AUTHORIZED / NOT STARTED | — | M4-T02 active |
+| Safety Controller | NOT STARTED | — | separate later task required |
+| Planner/Safety/Environment Integration | NOT STARTED | — | requires accepted planner and safety modules |
 | Reportable Evaluation | NOT STARTED | — | no reportable experiment yet |
 
 ---
 
-# 5. M1-T10 VERIFIED SOFTWARE
+# 5. M4-T01 VERIFIED SOFTWARE
+
+Canonical accepted files:
 
 ```text
-src/cognitive/adaptation.py implemented
-src/cognitive/bayes.py supports validated optional initial priors at new-episode boundaries
-tests/test_adaptation.py implemented
-tests/test_bayes.py extended for personalized-prior initialization
-accepted task-branch head / canonical software commit:
-9aeb3477c0bb7304bca3ad2753eaa3a75a59511c
+src/autonomy/__init__.py
+src/autonomy/environment.py
+tests/test_environment.py
+requirements.txt includes gymnasium
 ```
 
 Accepted behavior:
 
 ```text
-new personalization state starts alpha 1/1, update_count 0
-order-independent candidate-pair identity with subject isolation
-explicit accepted CONFIRM / corrected OVERRIDE updates only
-3-event warm-up before non-uniform prior applies
-prior bounds preserve normalized [0.25,0.75] limits
-adaptation OFF always returns [0.5,0.5]
-reset restores initial state and uniform prior
-trace records retain explicit source observation provenance
-fresh Bayesian episodes may receive a validated custom initial prior
-default Bayesian initial prior remains [0.5,0.5]
-custom prior cannot be injected during an active Bayesian evidence sequence
-Bayesian evidence update remains posterior proportional to prior/posterior times likelihood
-no threshold adaptation, evidence weighting, decoder retraining, planner, safety, or environment execution dependency
+deterministic 2D single-agent SAR mechanics
+(row, column) coordinate convention
+UP / DOWN / LEFT / RIGHT / WAIT
+Gymnasium Env interface
+Discrete(5) action space
+position observation space
+reset -> observation, info
+step -> observation, reward, terminated, truncated, info
+neutral reward 0.0
+truncated=False for static core environment
+named goals and goal termination
+blocked cells separate from risk
+risk values exactly 0.00 / 0.25 / 0.50 / 0.75 / 1.00
+PROHIBITED 1.00 exposed without folding future safety-controller authority into environment mechanics
+no planner or safety controller implemented in M4-T01
 ```
 
-Final reviewed regression evidence reported from the task branch:
+Final reviewed verification reported from the accepted branch:
 
 ```text
-124 passed, 1 warning
+pytest tests/test_environment.py -> 20 passed
+pytest -> 150 passed, 1 pre-existing PyTorch warning
+Gymnasium check_env -> passed
 ```
 
-The warning is the existing non-failing PyTorch EEGNet `padding='same'` warning and is not an acceptance blocker.
+The PyTorch warning is pre-existing and non-failing.
 
 ---
 
-# 6. CURRENT M4-T01 AUTHORIZATION
+# 6. CURRENT M4-T02 AUTHORIZATION
 
-M4-T01 is authorized to implement only:
+M4-T02 is authorized to implement only:
 
 ```text
-deterministic 2D single-agent SAR environment
-UP / DOWN / LEFT / RIGHT / WAIT environment action semantics
-canonical row/column coordinate convention
-named goal positions
-blocked-cell representation
-D-061 canonical risk-map representation
-reset / goal termination / validation
-focused environment tests
-full regression test execution
+deterministic four-connected A*
+Manhattan heuristic
+approved goal as fixed planner target
+blocked/risk>=1.00 exclusion from valid plans
+HIGH 0.75 as soft traversable risk
+step cost = 1.0 + 2.0*risk(destination)
+path/action reconstruction
+movement/risk/path cost decomposition
+explicit SUCCESS / INVALID_START / INVALID_GOAL / NO_SAFE_PATH outcomes
+deterministic tie-breaking
+planner tests and full regression execution
 ```
 
-M4-T01 must not implement:
+M4-T02 must not implement:
 
 ```text
-A* planner
-lambda-weighted route selection
 safety controller
-NO_SAFE_PATH planner policy
+action execution authorization
+human STOP/PAUSE execution logic
 shared-autonomy integration
-EEG integration
-offline replay
+replanning trigger loop
+dynamic hazards
+EEG/Bayesian integration
 UI
+reportable experiments
+lambda tuning or alternative production planners
 ```
 
-The active ticket is defined in `CURRENT_TASK.md`.
+The detailed active ticket is authoritative in `CURRENT_TASK.md`.
 
 ---
 
@@ -268,7 +284,8 @@ None currently unresolved.
 ## Planning / Safety
 
 ```text
-None currently unresolved for the approved primary environment/risk/planning/safety policy.
+No unresolved scientific parameter blocks M4-T02.
+Safety-controller implementation remains a later separate task after M4-T02 acceptance.
 ```
 
 ## Experimental Analysis
@@ -300,8 +317,8 @@ Calibration -> binary goal evidence: PASS
 Binary sequential Bayesian inference: PASS
 Bayesian posterior -> entropy/shared-autonomy policy: PASS
 Explicit-feedback prior personalization -> fresh Bayesian initial prior: PASS
-SAR environment/risk map: AUTHORIZED / NOT STARTED
-Planner: NOT STARTED
+SAR environment/risk map: PASS
+Risk-aware A* planner: AUTHORIZED / NOT STARTED
 Safety controller: NOT STARTED
 Planner/safety/environment integration: NOT STARTED
 Offline replay -> full system: NOT STARTED
@@ -338,12 +355,11 @@ EEGBCI loader/inspection/preprocessing/split pipeline has been implemented and v
 CSP+LDA baseline has been implemented and verified under approved leakage controls
 EEGNet baseline has been implemented and verified under approved leakage controls
 model-specific calibration has been implemented and verified under approved leakage controls
-binary goal-evidence mapping and bounded sequential Bayesian goal inference are implemented under D-051 through D-054
-binary Shannon entropy and PROCEED/CONFIRM/DEFER policy are implemented under D-055 through D-057
-human PAUSE/STOP/OVERRIDE precedence hooks are implemented at the non-executing policy layer
-subject/pair-specific bounded prior personalization is implemented under D-058 through D-060
-personalized priors can initialize fresh Bayesian episodes while leaving Bayes update mathematics unchanged
-planning/safety methodology D-061 through D-065 is approved but not yet implemented
+binary goal-evidence mapping and bounded sequential Bayesian goal inference are implemented
+binary Shannon entropy and PROCEED/CONFIRM/DEFER policy are implemented
+human PAUSE/STOP/OVERRIDE precedence hooks exist at the non-executing policy layer
+subject/pair-specific bounded prior personalization is implemented
+M4-T01 deterministic Gymnasium-compatible 2D SAR environment and canonical risk map are implemented and verified
 ```
 
 Not authorized:
@@ -355,7 +371,7 @@ calibration improves reliability
 Bayesian inference improves intent inference or goal selection
 shared autonomy improves task success or safety
 adaptation/personalization improves performance
-risk-aware planning improves task outcomes
+risk-aware A* is implemented or improves outcomes before M4-T02 acceptance
 safety controller improves safety outcomes
 cross-subject generalization claims
 live EEG or physical-robot claims
@@ -368,10 +384,11 @@ live EEG or physical-robot claims
 The current authorized next action is:
 
 ```text
-Codex implements M4-T01 exactly as defined in CURRENT_TASK.md on a task branch.
-Codex runs focused environment tests and the full regression suite.
+Codex creates a task branch from current main.
+Codex implements M4-T02 exactly as defined in CURRENT_TASK.md.
+Codex runs focused planner tests, environment+planner regression, and full pytest.
 Codex commits and pushes the task branch.
 Codex stops and reports for ChatGPT scientific review.
 ```
 
-Do not begin A*, the safety controller, or M4-T02 until M4-T01 has been reviewed and accepted.
+Do not implement the safety-controller task until M4-T02 has been reviewed and accepted.
