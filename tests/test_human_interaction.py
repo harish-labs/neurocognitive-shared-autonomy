@@ -13,6 +13,7 @@ from src.control.human_interaction import (
     HumanCommandType,
     HumanInteractionController,
     HumanInteractionError,
+    PolicyGoalStatus,
 )
 import src.control.human_interaction as human_interaction
 
@@ -253,6 +254,37 @@ def test_reset_is_explicit_and_only_replaces_interaction_state() -> None:
     assert not controller.state.paused
     assert not controller.state.stopped
     assert not controller.state.consumed_command_ids
+
+
+def test_policy_goal_adoption_requires_exact_symbolic_registry_key_without_command_consumption() -> None:
+    controller = HumanInteractionController()
+
+    adopted = controller.adopt_policy_goal("victim_a", goal_registry={"victim_a": (1, 2)})
+    substring = controller.adopt_policy_goal("victim", goal_registry={"victim_a": (1, 2)})
+
+    assert adopted.status is PolicyGoalStatus.APPLIED
+    assert adopted.applied
+    assert adopted.approved_goal == "victim_a"
+    assert substring.status is PolicyGoalStatus.INVALID_GOAL
+    assert substring.approved_goal == "victim_a"
+    assert not controller.state.consumed_command_ids
+
+
+def test_policy_goal_adoption_fails_closed_for_pause_stop_and_active_confirmation() -> None:
+    paused = HumanInteractionController()
+    paused.handle_command(command("pause", HumanCommandType.PAUSE))
+    stopped = HumanInteractionController()
+    stopped.handle_command(command("stop", HumanCommandType.STOP))
+    confirming = HumanInteractionController()
+    confirming.open_confirmation_request("request-1", "victim_a")
+
+    results = (
+        paused.adopt_policy_goal("victim_a", goal_registry={"victim_a": object()}),
+        stopped.adopt_policy_goal("victim_a", goal_registry={"victim_a": object()}),
+        confirming.adopt_policy_goal("victim_a", goal_registry={"victim_a": object()}),
+    )
+
+    assert all(result.status is PolicyGoalStatus.INVALID_STATE for result in results)
 
 
 def test_handlers_have_no_execution_stack_dependencies_or_calls() -> None:

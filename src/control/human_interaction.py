@@ -33,6 +33,14 @@ class CommandStatus(str, Enum):
     INVALID_STATE = "INVALID_STATE"
 
 
+class PolicyGoalStatus(str, Enum):
+    """Outcomes for non-human policy-goal adoption under D-068."""
+
+    APPLIED = "APPLIED"
+    INVALID_GOAL = "INVALID_GOAL"
+    INVALID_STATE = "INVALID_STATE"
+
+
 class HumanInteractionError(ValueError):
     """Raised when a confirmation request cannot be registered."""
 
@@ -81,6 +89,20 @@ class CommandResult:
     stopped: bool
     active_request_id: str | None
     requires_fresh_execution: bool
+    reason: str
+
+
+@dataclass(frozen=True)
+class PolicyGoalAdoptionResult:
+    """Read-only result for one authorization-only policy goal adoption attempt."""
+
+    status: PolicyGoalStatus
+    policy_goal: object
+    approved_goal: object | None
+    paused: bool
+    stopped: bool
+    active_request_id: str | None
+    applied: bool
     reason: str
 
 
@@ -174,6 +196,51 @@ class HumanInteractionController:
     def reset(self) -> None:
         """Start a fresh M5-T01 interaction session without touching other modules."""
         self._state = _initial_state()
+
+    def adopt_policy_goal(
+        self,
+        policy_goal: object,
+        *,
+        goal_registry: Mapping[object, object],
+    ) -> PolicyGoalAdoptionResult:
+        """Adopt one exact symbolic policy goal without creating a human command."""
+        if self._state.stopped:
+            return self._policy_goal_result(
+                PolicyGoalStatus.INVALID_STATE,
+                policy_goal,
+                applied=False,
+                reason="STOP is terminal until an explicit reset or new session.",
+            )
+        if self._state.paused:
+            return self._policy_goal_result(
+                PolicyGoalStatus.INVALID_STATE,
+                policy_goal,
+                applied=False,
+                reason="PAUSE blocks autonomous policy-goal adoption.",
+            )
+        if self._state.active_confirmation is not None:
+            return self._policy_goal_result(
+                PolicyGoalStatus.INVALID_STATE,
+                policy_goal,
+                applied=False,
+                reason="An active confirmation request cannot be bypassed by policy adoption.",
+            )
+        if not _is_current_symbolic_goal(policy_goal, goal_registry):
+            return self._policy_goal_result(
+                PolicyGoalStatus.INVALID_GOAL,
+                policy_goal,
+                applied=False,
+                reason="Policy goal must exactly match a current symbolic goal-registry key.",
+            )
+
+        changed = self._state.approved_goal != policy_goal
+        self._state = _replace_state(self._state, approved_goal=policy_goal)
+        return self._policy_goal_result(
+            PolicyGoalStatus.APPLIED,
+            policy_goal,
+            applied=changed,
+            reason="Exact symbolic policy goal adopted without human-command processing.",
+        )
 
     def _handle_stop(self, command: HumanCommand) -> CommandResult:
         active = self._state.active_confirmation
@@ -315,6 +382,26 @@ class HumanInteractionController:
             reason=reason,
         )
 
+    def _policy_goal_result(
+        self,
+        status: PolicyGoalStatus,
+        policy_goal: object,
+        *,
+        applied: bool,
+        reason: str,
+    ) -> PolicyGoalAdoptionResult:
+        active = self._state.active_confirmation
+        return PolicyGoalAdoptionResult(
+            status=status,
+            policy_goal=policy_goal,
+            approved_goal=self._state.approved_goal,
+            paused=self._state.paused,
+            stopped=self._state.stopped,
+            active_request_id=None if active is None else active.request_id,
+            applied=applied,
+            reason=reason,
+        )
+
 
 def _initial_state() -> HumanControlState:
     return HumanControlState(
@@ -367,3 +454,10 @@ def _goal_is_valid(
         except TypeError:
             return False
     return False
+
+
+def _is_current_symbolic_goal(goal: object, goal_registry: object) -> bool:
+    """Require a non-empty symbolic goal to match one configured registry key exactly."""
+    if not isinstance(goal, str) or not goal or not isinstance(goal_registry, Mapping):
+        return False
+    return goal in goal_registry
