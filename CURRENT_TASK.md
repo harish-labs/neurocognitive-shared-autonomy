@@ -6,87 +6,92 @@
 **Purpose:** Hold exactly one active implementation task for Codex, while retaining the immediately preceding accepted task record.  
 **Current status:** ACTIVE / NOT STARTED  
 **Current milestone:** M4 — 2D Search & Rescue / A* / Safety  
-**Task ID:** M4-T02  
-**Task title:** Risk-Aware A* Planner  
+**Task ID:** M4-T03  
+**Task title:** Safety Controller / Hard Constraint Enforcement  
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
 **Repository instructions:** `AGENTS.md`  
 **Canonical branch:** `main`  
-**Canonical starting commit:** `5310743539675744b284bafdf24789fc2025816d`  
+**Canonical starting commit:** `c224a4dfb3684d0d4555d7a606a90dc822571c11`  
 **Last updated:** 2026-09-01
 
 ---
 
-# 1. CLOSED TASK RECORD — M4-T01
+# 1. CLOSED TASK RECORD — M4-T02
 
 ```text
 Task ID:
-M4-T01
+M4-T02
 
 Task title:
-2D Search & Rescue Environment + Risk Map
+Risk-Aware A* Planner
 
 Final status:
 PASS / SCIENTIFICALLY ACCEPTED / MERGED
 
 Task branch:
-task/m4-t01-sar-environment-risk-map
+task/m4-t02-risk-aware-a-star-planner
 
 Accepted task-branch head / canonical software commit:
-5310743539675744b284bafdf24789fc2025816d
+c224a4dfb3684d0d4555d7a606a90dc822571c11
 ```
 
-Accepted M4-T01 behavior:
+Accepted M4-T02 behavior:
 
 ```text
-deterministic single-agent 2D grid environment
-consistent (row, column) coordinates
-exact action set UP / DOWN / LEFT / RIGHT / WAIT
-Gymnasium-compatible Env
-Discrete(5) action space
-2-integer position observation space
-Gymnasium reset/step contracts
-neutral reward 0.0
-truncated=False in the static core environment
-named goal and termination behavior
-blocked cells represented separately from risk
-canonical risk values 0.00 / 0.25 / 0.50 / 0.75 / 1.00
-HIGH 0.75 remains soft/traversable at environment-mechanics level
-PROHIBITED 1.00 is identifiable but is not enforced as the safety-controller authority in environment.py
-no A*, safety controller, NO_SAFE_PATH control policy, EEG integration, or UI implemented
+deterministic four-connected A*
+fixed neighbor order UP / DOWN / LEFT / RIGHT
+stable priority-queue tie breaking
+Manhattan heuristic
+explicit caller-supplied approved goal
+no EEG / Bayesian / shared-autonomy input
+blocked cells excluded
+risk >= 1.00 excluded
+HIGH 0.75 remains traversable soft risk
+lambda = 2.0
+step_cost = 1.0 + 2.0 * risk(destination)
+start cell not double charged
+path/action reconstruction
+movement_cost / cumulative_risk / risk_cost / path_cost decomposition
+SUCCESS / INVALID_START / INVALID_GOAL / NO_SAFE_PATH outcomes
+planner does not mutate or step the environment
+WAIT not expanded as a search edge
+no safety-controller behavior, replanning loop, execution, or UI added
 ```
 
 Accepted verification reported from the task branch:
 
 ```text
-pytest tests/test_environment.py -> 20 passed
-pytest -> 150 passed, 1 pre-existing non-failing PyTorch warning
-Gymnasium check_env -> passed
+pytest tests/test_planner.py -> 18 passed
+pytest tests/test_environment.py tests/test_planner.py -> 38 passed
+pytest -> 168 passed, 1 pre-existing non-failing PyTorch warning
+```
+
+Scientific review also verified that the branch was one clean commit ahead of canonical main and changed only:
+
+```text
+src/autonomy/planner.py
+tests/test_planner.py
 ```
 
 ---
 
-# 2. M4-T02 OBJECTIVE
+# 2. M4-T03 OBJECTIVE
 
-Implement only the deterministic risk-aware A* planning module downstream of an already approved human goal.
+Implement only the deterministic safety-controller authority layer that validates a proposed single environment action before execution.
 
-The planner determines HOW to reach the supplied goal. It must never infer, change, rank, or substitute human intent.
-
-M4-T02 implements:
+The governing rule is:
 
 ```text
-A*
-Manhattan heuristic
-four-connected path search
-D-061 through D-064 risk/constraint semantics
-path reconstruction
-action reconstruction
-explicit NO_SAFE_PATH planning failure
-planning cost decomposition and trace metadata
+planner proposes
+→ safety controller authorizes/rejects
+→ environment executes only if approved
 ```
 
-M4-T02 does **not** implement the safety controller or execute environment transitions.
+M4-T03 implements hard safety checks and explicit safety decisions only.
+
+M4-T03 must **not** execute `env.step()`, run A* search, infer human intent, or implement the later full execution/replanning loop.
 
 ---
 
@@ -102,46 +107,39 @@ Codex must read, in this order:
 5. CURRENT_TASK.md
 6. docs/03_SEARCH_AND_RESCUE_SCENARIO.md
 7. docs/04_SYSTEM_ARCHITECTURE.md
-8. docs/13_AUTONOMOUS_PLANNING_AND_CONTROL.md
-9. docs/14_SAFETY_CRITICAL_CONTROL.md
-10. docs/15_IMPLEMENTATION_BLUEPRINT.md
-11. docs/16_REPOSITORY_AND_CODE_ARCHITECTURE.md
-12. docs/19_TESTING_AND_VERIFICATION.md
-13. src/autonomy/environment.py
-14. tests/test_environment.py
+8. docs/12_SHARED_AUTONOMY_AND_HUMAN_AI_INTERACTION.md
+9. docs/13_AUTONOMOUS_PLANNING_AND_CONTROL.md
+10. docs/14_SAFETY_CRITICAL_CONTROL.md
+11. docs/15_IMPLEMENTATION_BLUEPRINT.md
+12. docs/16_REPOSITORY_AND_CODE_ARCHITECTURE.md
+13. docs/19_TESTING_AND_VERIFICATION.md
+14. src/autonomy/environment.py
+15. src/autonomy/planner.py
+16. tests/test_environment.py
+17. tests/test_planner.py
 ```
 
-GitHub `main` is canonical. Do not use an uploaded reference copy in place of current repository code.
+GitHub `main` is canonical.
 
 ---
 
 # 4. GOVERNING APPROVED DECISIONS
 
-M4-T02 must preserve:
+M4-T03 must preserve:
 
 ```text
 D-003 — Human determines WHAT; AI determines HOW safely
-D-017 — simple 2D, single-agent, static-first SAR environment
-D-018 — environment action vocabulary UP / DOWN / LEFT / RIGHT / WAIT
-D-019 — A* with Manhattan heuristic for the four-connected grid
-D-020 — planner receives an already approved goal and does not infer intent
-D-021 — planner proposes -> safety checks -> environment executes
-D-061 — canonical environmental risk values
-D-062 — no map-dependent normalization; destination-cell additive risk
-D-063 — lambda = 2.0; step_cost = 1.0 + 2.0 * risk(destination)
-D-064 — blocked cells and risk >= 1.00 are non-traversable for a valid plan; HIGH 0.75 remains soft risk
-D-065 — if no safe route exists, return explicit NO_SAFE_PATH / UNREACHABLE; never weaken hard constraints or silently change goal
+D-016 — human CONFIRM / OVERRIDE / PAUSE / STOP controls exist; human stop cannot be bypassed
+D-018 — approved action vocabulary UP / DOWN / LEFT / RIGHT / WAIT
+D-021 — planner proposes -> safety controller checks -> environment executes only if approved
+D-056 — human PAUSE / STOP / OVERRIDE take precedence over normal autonomy policy
+D-057 — unresolved uncertainty holds position; no autonomous movement
+D-061 — canonical risk values
+D-064 — risk >= 1.00 is prohibited; HIGH 0.75 remains traversable soft risk; blocked cells independently prohibited
+D-065 — hard safety constraints must never be relaxed to obtain movement/path
 ```
 
-Canonical risk scale:
-
-```text
-FREE       = 0.00
-LOW        = 0.25
-MODERATE   = 0.50
-HIGH       = 0.75
-PROHIBITED = 1.00
-```
+For this task, safety enforcement is simulated software safety only; no real-world certification claim is authorized.
 
 ---
 
@@ -150,371 +148,440 @@ PROHIBITED = 1.00
 Primary authorized files:
 
 ```text
-src/autonomy/planner.py
-tests/test_planner.py
+src/autonomy/safety.py
+tests/test_safety.py
 ```
 
-Only if necessary for exports/imports:
+Only if required for package exports/imports:
 
 ```text
 src/autonomy/__init__.py
 ```
 
-Do not modify `src/autonomy/environment.py` unless a genuine integration defect prevents the planner from consuming the already accepted M4-T01 interface. If such a defect is found, stop and report it rather than silently redesigning M4-T01.
+Do not modify accepted `environment.py` or `planner.py` unless a genuine integration defect prevents the safety controller from reading their existing public semantics. If so, stop and report the blocker rather than redesigning them silently.
 
-No other source files are authorized.
-
----
-
-# 6. PLANNER INPUT CONTRACT
-
-The planner must receive explicit planning inputs and must not depend on EEG/cognitive/shared-autonomy internals.
-
-Minimum planning request semantics:
-
-```text
-start: (row, column)
-approved_goal: (row, column)
-map dimensions / environment map access
-blocked cells
-risk map
-risk lambda fixed to approved 2.0 for the primary planner
-optional map_id / request_id metadata if useful and non-invasive
-```
-
-The planner may accept the immutable/configuration aspects of the accepted `SearchRescueEnvironment` or an explicit planner request derived from it, but it must not mutate environment state during planning.
-
-Do not accept raw EEG, decoder probabilities, Bayesian posterior, uncertainty, or adaptation state as planner inputs.
+No unrelated source files are authorized.
 
 ---
 
-# 7. A* SEARCH SEMANTICS
+# 6. SAFETY INPUT CONTRACT
 
-Use deterministic four-connected A*.
+The safety controller must evaluate one proposed action against the current environment/map state and explicit human-control state.
 
-Movement candidates:
-
-```text
-UP    -> (r-1, c)
-DOWN  -> (r+1, c)
-LEFT  -> (r, c-1)
-RIGHT -> (r, c+1)
-```
-
-`WAIT` is part of the environment action vocabulary but must not be expanded as a progress edge in ordinary A* path search.
-
-A valid planner path must not contain:
+Minimum request/input semantics:
 
 ```text
-out-of-bounds cells
-blocked cells
-cells with canonical risk >= 1.00
+current_position
+proposed_action
+environment/map access
+paused: bool
+emergency_stop: bool
 ```
 
-HIGH risk `0.75` remains traversable and is handled through soft cost.
+The controller may derive the proposed next coordinate deterministically using the accepted action semantics.
+
+It must not require:
+
+```text
+raw EEG
+decoder probability
+Bayesian posterior
+entropy
+adaptation state
+planner path cost
+Streamlit/UI state
+```
+
+The safety decision must be independent of model confidence.
 
 ---
 
-# 8. COST FUNCTION
+# 7. SAFETY OUTPUT CONTRACT
 
-For each entered destination cell:
-
-```text
-movement_cost_increment = 1.0
-risk_exposure_increment = risk(destination_cell)
-weighted_risk_cost_increment = 2.0 * risk(destination_cell)
-step_cost = 1.0 + 2.0 * risk(destination_cell)
-```
-
-For the complete returned path:
+Return an explicit structured immutable/read-only decision containing at least:
 
 ```text
-movement_cost = number of moves
-cumulative_risk = sum of destination-cell risk over entered cells
-risk_cost = 2.0 * cumulative_risk
-path_cost = movement_cost + risk_cost
+status
+proposed_action
+approved_action
+safe
+intervention_type
+reason
+requires_replan
+current_position
+proposed_next_position
 ```
 
-The start cell is not charged again as movement/risk exposure merely for being the start.
+Recommended statuses:
 
-No per-map risk normalization, learned weighting, adaptive lambda, or hidden extra penalty is permitted.
+```text
+APPROVED
+REJECTED
+REPLAN_REQUIRED
+HALTED
+```
+
+Recommended intervention categories, matching the safety specification:
+
+```text
+NONE
+OUT_OF_BOUNDS
+BLOCKED_CELL
+PROHIBITED_HAZARD
+PAUSED
+EMERGENCY_STOP
+INVALID_ACTION
+INVALID_STATE
+```
+
+Exact enum class names may differ, but semantics must remain explicit and tested.
+
+For any non-approved result:
+
+```text
+approved_action = None
+```
+
+The controller must never substitute another movement action automatically.
 
 ---
 
-# 9. HEURISTIC
+# 8. REQUIRED PRECEDENCE / CHECK ORDER
 
-Use Manhattan distance:
+Use deterministic safety precedence:
 
 ```text
-h((r,c), goal) = abs(r-goal_r) + abs(c-goal_c)
+1. emergency stop
+2. paused
+3. current state / current position validity
+4. proposed action validity
+5. proposed next position within bounds
+6. blocked-cell check
+7. prohibited-hazard check
+8. approve
 ```
 
-The heuristic must not include hidden risk estimates.
+Higher-priority conditions must dominate lower-priority ones.
 
-With non-negative risk and minimum step cost 1.0, Manhattan distance remains the primary lower-bound heuristic for this four-connected planner.
+Examples:
+
+```text
+emergency_stop=True + otherwise-valid RIGHT -> HALTED / EMERGENCY_STOP
+paused=True + proposed blocked-cell move -> PAUSED result, not BLOCKED_CELL
+out-of-bounds move -> rejected before any risk lookup outside the map
+```
+
+The exact status mapping between `REJECTED`, `REPLAN_REQUIRED`, and `HALTED` must follow the rules below.
 
 ---
 
-# 10. DETERMINISM / TIE BREAKING
+# 9. HUMAN STOP / PAUSE
 
-Equal-cost searches must resolve deterministically.
+## Emergency stop
 
-Use a fixed neighbor expansion order:
+If `emergency_stop=True`:
+
+```text
+status = HALTED
+safe = False
+approved_action = None
+intervention = EMERGENCY_STOP
+requires_replan = False
+```
+
+No movement action, including `WAIT`, is approved while emergency stop is active.
+
+## Pause
+
+If `paused=True` and emergency stop is not active:
+
+```text
+status = HALTED
+safe = False
+approved_action = None
+intervention = PAUSED
+requires_replan = False
+```
+
+Pause is reversible, but M4-T03 does not implement resume/event-loop behavior.
+
+---
+
+# 10. CURRENT STATE VALIDATION
+
+Before evaluating movement, current position must:
+
+```text
+be a valid (row, column) integer coordinate
+be in bounds
+not be blocked
+not have risk >= 1.00
+```
+
+If critical current state is invalid:
+
+```text
+status = HALTED
+safe = False
+approved_action = None
+intervention = INVALID_STATE
+requires_replan = False
+```
+
+This is the fail-safe default for malformed/unsafe current state.
+
+---
+
+# 11. ACTION VALIDATION
+
+Approved action vocabulary remains exactly:
 
 ```text
 UP
 DOWN
 LEFT
 RIGHT
+WAIT
 ```
 
-Use a stable priority-queue tie-break mechanism so repeated identical requests produce identical paths.
+Invalid action:
 
-This is an implementation reproducibility convention only; it must not alter the scientific risk/cost model.
+```text
+status = REJECTED
+safe = False
+approved_action = None
+intervention = INVALID_ACTION
+requires_replan = False
+```
+
+The controller must not coerce arbitrary values into another action.
+
+Using the already accepted numeric Gymnasium action representation is permitted only when it maps exactly to the accepted `Action` enum.
 
 ---
 
-# 11. PLANNER OUTPUT CONTRACT
+# 12. WAIT SEMANTICS
 
-Return an explicit structured planning result containing at least:
-
-```text
-status
-start
-goal
-path
-actions
-path_cost
-movement_cost
-cumulative_risk
-risk_cost
-expanded_nodes
-```
-
-Success path semantics:
+If emergency stop/pause are inactive and current state is valid:
 
 ```text
-path begins with start
-path ends with approved_goal
-actions reconstruct every transition between consecutive path coordinates
-len(actions) = max(len(path)-1, 0)
+WAIT
 ```
 
-Minimum statuses:
+produces the same proposed next position as current position and is safety-approved.
 
-```text
-SUCCESS
-NO_SAFE_PATH
-INVALID_START
-INVALID_GOAL
-```
+WAIT must still fail if the current state itself is invalid.
 
-A status may use a typed enum/string representation as long as behavior is explicit and tested.
-
-Do not silently return an empty path for every failure without a status explaining why.
+WAIT does not itself request replanning.
 
 ---
 
-# 12. START / GOAL VALIDATION
+# 13. OUT-OF-BOUNDS
 
-Before search:
+For UP/DOWN/LEFT/RIGHT, derive the proposed next coordinate using accepted row/column deltas.
 
-Start must:
-
-```text
-be a valid (row, column) coordinate
-be in bounds
-not be blocked
-not have risk >= 1.00
-```
-
-Goal must:
+If next position is outside map bounds:
 
 ```text
-be a valid (row, column) coordinate
-be in bounds
-not be blocked
-not have risk >= 1.00
-match the explicitly supplied approved goal for the request
+status = REJECTED
+safe = False
+approved_action = None
+intervention = OUT_OF_BOUNDS
+requires_replan = True
 ```
 
-The planner must not choose another goal when the supplied goal is invalid or unreachable.
-
-If `start == goal` and the cell is valid:
-
-```text
-status = SUCCESS
-path = [start]
-actions = []
-movement_cost = 0
-cumulative_risk = 0
-risk_cost = 0
-path_cost = 0
-```
+The safety controller must not call a risk lookup on an out-of-bounds coordinate.
 
 ---
 
-# 13. NO-SAFE-PATH SEMANTICS IN THIS TASK
+# 14. BLOCKED CELL
 
-If A* exhausts all permitted paths without reaching the supplied approved goal:
-
-```text
-status = NO_SAFE_PATH
-path = []
-actions = []
-```
-
-The planner must not:
+If proposed next position is in `blocked_cells`:
 
 ```text
-relax risk >= 1.00 prohibition
-ignore blocked cells
-teleport
-switch to another goal
-execute WAIT or movement as a fallback
-mutate the environment
+status = REPLAN_REQUIRED
+safe = False
+approved_action = None
+intervention = BLOCKED_CELL
+requires_replan = True
 ```
 
-Holding the agent stationary and deciding when replanning may occur belongs to later planner/safety/control integration; M4-T02 only returns the explicit planning failure.
+Do not execute or substitute another move.
 
 ---
 
-# 14. ARCHITECTURAL BOUNDARY
+# 15. PROHIBITED HAZARD
 
-`src/autonomy/planner.py` may depend on environment map/configuration semantics.
-
-It must not depend on:
+If proposed next position has canonical risk >= 1.00:
 
 ```text
-src/eeg/*
-src/models/*
-src/cognitive/*
-shared-autonomy thresholds
-human feedback adaptation
-Streamlit/UI
+status = REPLAN_REQUIRED
+safe = False
+approved_action = None
+intervention = PROHIBITED_HAZARD
+requires_replan = True
 ```
 
-The planner must not call `env.step()` to search a route. Planning is computation over map state/configuration, not execution.
+HIGH risk `0.75` remains safety-permitted and must not be rejected merely because it is high soft risk.
 
-The planner must not implement safety-controller authorization records or emergency-stop behavior.
+No lower risk threshold may be invented.
 
 ---
 
-# 15. TEST REQUIREMENTS
+# 16. APPROVAL
 
-Add focused tests covering at least:
+If none of the hard constraints trigger:
 
 ```text
-zero-risk shortest path
-Manhattan heuristic values
-path/action reconstruction
-start == goal
-blocked cells never appear in path
-PROHIBITED risk 1.00 never appears in path
-HIGH risk 0.75 remains traversable
-risk-aware route trade-off: a longer lower-risk route can beat a shorter higher-risk route under lambda 2.0
-cost decomposition matches movement + 2.0*cumulative_risk
-start cell is not double-charged
-invalid/out-of-bounds start -> INVALID_START
-blocked/prohibited start -> INVALID_START
-invalid/out-of-bounds goal -> INVALID_GOAL
-blocked/prohibited goal -> INVALID_GOAL
-fully separated goal -> NO_SAFE_PATH
-planner never changes the supplied goal
-deterministic identical request -> identical path and actions
-planning does not mutate the environment state
-WAIT is not introduced into a successful A* route
+status = APPROVED
+safe = True
+approved_action = proposed_action
+intervention = NONE
+requires_replan = False
 ```
 
-Use small synthetic maps with manually checkable expected results.
-
-Do not claim system-level safety or task-performance improvement from unit tests.
+The returned approved action must be exactly the proposed action; the safety controller may approve or reject, but may not optimize or substitute.
 
 ---
 
-# 16. REGRESSION REQUIREMENT
+# 17. ARCHITECTURAL BOUNDARY
+
+`src/autonomy/safety.py` may depend on accepted environment action/map semantics.
+
+It must not:
+
+```text
+call environment.step()
+run A*
+modify environment state
+modify planner output
+infer or change approved goal
+inspect EEG or model probabilities
+inspect Bayesian posterior/entropy
+adapt thresholds
+perform human override goal selection
+implement full replanning
+implement Streamlit/UI
+```
+
+`requires_replan=True` is only a decision flag in M4-T03. A later integration task will decide how to invoke replanning.
+
+---
+
+# 18. TEST REQUIREMENTS
+
+Add focused deterministic tests covering at least:
+
+```text
+valid low/free-risk move -> APPROVED
+HIGH 0.75 move -> APPROVED
+WAIT on valid state -> APPROVED and same next position
+emergency stop overrides valid movement
+emergency stop has priority over pause/lower safety conditions
+pause blocks valid movement
+pause has priority over blocked/prohibited checks
+invalid current coordinate -> INVALID_STATE / HALTED
+blocked current state -> INVALID_STATE / HALTED
+prohibited current state -> INVALID_STATE / HALTED
+invalid action -> INVALID_ACTION
+out-of-bounds move -> OUT_OF_BOUNDS and no crash/risk lookup
+blocked destination -> BLOCKED_CELL + requires_replan
+prohibited destination -> PROHIBITED_HAZARD + requires_replan
+approved_action is None for all non-approved outcomes
+approved action is exactly proposed action for APPROVED
+safety check does not mutate environment state
+safety controller never calls env.step()
+identical request -> identical decision
+```
+
+Use small synthetic maps and manually checkable expectations.
+
+No unit test may be described as proof of real-world safety or system-level safety improvement.
+
+---
+
+# 19. REGRESSION REQUIREMENT
 
 Run at minimum:
 
 ```text
-pytest tests/test_planner.py
-pytest tests/test_environment.py tests/test_planner.py
+pytest tests/test_safety.py
+pytest tests/test_environment.py tests/test_planner.py tests/test_safety.py
 pytest
 ```
 
 Report exact results.
 
-The previously accepted non-failing PyTorch warning may remain if unchanged.
+The existing pre-non-failing PyTorch warning may remain if unchanged.
 
 ---
 
-# 17. OUT OF SCOPE / FORBIDDEN
+# 20. OUT OF SCOPE / FORBIDDEN
 
-Do not implement in M4-T02:
+Do not implement in M4-T03:
 
 ```text
-safety controller
-action authorization or rejection during execution
-human PAUSE / STOP execution logic
+full planner -> safety -> environment execution loop
+automatic call to planner when requires_replan=True
+replanning trigger/event manager
 shared-controller integration
-replanning triggers/event loop
-map mutation/dynamic hazards
-EEG replay integration
-Bayesian/shared-autonomy integration
-Streamlit/UI
-autonomy metrics/experiments
+CONFIRM/DEFER state-machine integration
+OVERRIDE goal-selection semantics
+EEG replay
+Bayesian integration
+human-interface UI
+Streamlit
+logging/metrics experiment framework
 A/B/C/D experiments
 robustness perturbations
+dynamic hazards
 reinforcement learning
-Dijkstra as an alternative production planner
-multiple lambda variants or lambda tuning
-3D or continuous-space planning
+real-world safety claims
 ```
-
-Do not modify D-061 through D-065.
 
 ---
 
-# 18. ACCEPTANCE CRITERIA
+# 21. ACCEPTANCE CRITERIA
 
-M4-T02 may be reported `PASS` only if:
+M4-T03 may be reported `PASS` only if:
 
 ```text
-deterministic A* implemented
-Manhattan heuristic implemented
-four-connected movement only
-risk-aware step/path cost exactly follows D-062/D-063
-blocked and risk >= 1.00 cells excluded from valid plans
-HIGH 0.75 remains soft/traversable
-structured SUCCESS / NO_SAFE_PATH / invalid-input outcomes implemented
-path and action reconstruction implemented
-cost decomposition exposed and correct
-planner does not mutate environment or execute steps
-focused planner tests pass
-accepted environment tests remain passing
-full regression suite is run and reported
-no safety/shared-autonomy/EEG scope added
+safety controller implemented as a separate authority layer
+emergency stop and pause have explicit highest-priority handling
+current-state fail-safe validation implemented
+invalid action handled explicitly
+out-of-bounds / blocked / prohibited destination checks implemented
+HIGH 0.75 remains permitted
+WAIT is permitted only when current state is valid and controls are not halted
+structured decision and intervention outputs implemented
+approved_action never substituted
+requires_replan semantics implemented without invoking planner
+controller does not call env.step() or mutate environment
+focused tests pass
+environment + planner + safety combined tests pass
+full regression suite run and reported
+no integration/shared-autonomy/EEG/UI scope added
 ```
 
 ---
 
-# 19. STOP CONDITIONS
+# 22. STOP CONDITIONS
 
 Stop and report `BLOCKED` if:
 
 ```text
-accepted M4-T01 environment interface cannot support planner map queries without changing scientific semantics
-canonical docs/code conflict on coordinate, risk, or blocked-cell semantics
-implementation requires a new risk value or lambda
-implementation requires safety-controller behavior to define a valid A* result
-implementation would need to modify unrelated accepted modules
+accepted environment action/map interface cannot support safety checks without changing scientific semantics
+canonical docs/decisions conflict on hard-safety precedence
+implementation requires a new hazard threshold
+implementation requires automatic replanning or environment execution to define a safety decision
+implementation requires changes to unrelated accepted modules
 ```
 
 Do not resolve such conflicts independently.
 
 ---
 
-# 20. COMPLETION REPORT
+# 23. COMPLETION REPORT
 
 Codex must report:
 
@@ -524,9 +591,9 @@ Branch
 Commit SHA
 Files created
 Files modified
-Planner API
-Cost function implemented
-Tie-breaking convention
+Safety API
+Check order / precedence
+Intervention/status mapping
 Tests added
 Tests executed
 Exact test results
@@ -542,4 +609,4 @@ After implementing, testing, committing, and pushing the task branch:
 STOP
 ```
 
-Do not merge and do not begin the safety-controller task until ChatGPT scientific review and Project Owner acceptance.
+Do not merge and do not begin planner/safety/environment integration until ChatGPT scientific review and Project Owner acceptance.
