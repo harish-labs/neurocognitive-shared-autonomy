@@ -247,7 +247,7 @@ def test_handlers_have_no_execution_stack_dependencies_or_calls() -> None:
     controller = HumanInteractionController()
     forbidden_dependencies = (
         "src.autonomy",
-        "src.cognitive",
+        "src.cognition",
         "src.eeg",
         "src.models",
     )
