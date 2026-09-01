@@ -1,139 +1,360 @@
 # CURRENT_TASK.md
 
 ## NeuroCognitive Shared Autonomy for Search & Rescue
-### No Active Codex Implementation Ticket
+### Active Codex Implementation Ticket
 
-**Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no task is currently authorized  
-**Current status:** NO ACTIVE TASK  
-**Current milestone:** M1 — EEG Dataset / Loader / Epochs / Decoders / Calibration / Bayesian Goal Inference / Shared-Autonomy Policy / Prior Personalization  
-**Task ID:** NONE AUTHORIZED  
-**Task title:** Awaiting next approved implementation ticket  
+**Purpose:** Hold exactly one active implementation task for Codex  
+**Current status:** ACTIVE / NOT STARTED  
+**Current milestone:** M4 — 2D Search & Rescue / A* / Safety  
+**Task ID:** M4-T01  
+**Task title:** 2D Search & Rescue Environment + Risk Map  
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
 **Repository instructions:** `AGENTS.md`  
 **Canonical branch:** `main`  
-**Last updated:** 2026-08-31
+**Authorized from governance commit:** `fdef1d5afaf7d13aaffb0e8d5b39379497ee7442`  
+**Last updated:** 2026-09-01
 
 ---
 
-# 1. CURRENT AUTHORIZATION STATE
+# 1. TASK OBJECTIVE
 
-There is currently no active implementation task authorized for Codex.
+Implement only the deterministic 2D Search & Rescue environment and canonical risk-map representation required by the approved architecture and D-061 through D-065.
 
-Completed, scientifically reviewed, accepted, and merged on canonical `main`:
+This task establishes world state and environment transitions only.
 
-```text
-M1-T01 — PhysioNet EEGBCI Data Loader
-M1-T02 — EEG Visualization / Inspection
-M1-T03 — EEG Preprocessing & Epochs
-M1-T04 — EEG Split Manifest
-M1-T05 — CSP+LDA Baseline
-M1-T06 — EEGNet / Compact CNN
-M1-T07 — Probability Calibration
-M1-T08 — Bayesian Goal Inference
-M1-T09 — Uncertainty & Shared-Autonomy Policy
-M1-T10 — Adaptation / Prior Personalization
-```
-
-Do not begin another implementation module until a new narrow `CURRENT_TASK.md` ticket is explicitly approved by the Project Owner.
+Do **not** implement A* planning or the safety controller in M4-T01.
 
 ---
 
-# 2. CLOSED TASK RECORD — M1-T10
+# 2. READ FIRST
+
+Codex must read, in this order:
 
 ```text
-Task ID:
-M1-T10
-
-Task title:
-Adaptation / Prior Personalization
-
-Final status:
-PASS / ACCEPTED / MERGED
-
-Task branch:
-task/m1-t10-prior-personalization
-
-Accepted task-branch head / canonical software commit:
-9aeb3477c0bb7304bca3ad2753eaa3a75a59511c
+1. MASTER_PROJECT_SPEC.md
+2. AGENTS.md
+3. PROJECT_STATE.md
+4. DECISIONS.md
+5. docs/03_SEARCH_AND_RESCUE_SCENARIO.md
+6. docs/04_SYSTEM_ARCHITECTURE.md
+7. docs/05_TECHNOLOGY_STACK.md
+8. docs/13_AUTONOMOUS_PLANNING_AND_CONTROL.md
+9. docs/14_SAFETY_CRITICAL_CONTROL.md
+10. docs/15_IMPLEMENTATION_BLUEPRINT.md
+11. docs/16_REPOSITORY_AND_CODE_ARCHITECTURE.md
+12. docs/19_TESTING_AND_VERIFICATION.md
 ```
 
-M1-T10 operationalizes approved D-058 through D-060.
+If repository paths differ, inspect the actual repository and preserve the approved architecture rather than inventing a new package structure.
 
-Accepted behavior:
+---
+
+# 3. GOVERNING APPROVED DECISIONS
+
+M4-T01 must preserve:
 
 ```text
-subject-specific, candidate-pair-specific prior personalization
-order-independent stable candidate-pair identity
-alpha_A = 1 / alpha_B = 1 initialization
-explicit human-approved CONFIRM / corrected OVERRIDE feedback only
-PAUSE / STOP / unresolved DEFER / autonomous PROCEED without explicit feedback do not adapt
-3-valid-feedback warm-up
-adaptation OFF and warm-up use [0.5,0.5]
-post-warm-up adaptive prior bounded to [0.25,0.75]
-explicit reset returns alpha 1/1, update_count 0, prior [0.5,0.5]
-traceable update records keyed by anonymous subject and candidate pair
-personalized prior may initialize a fresh Bayesian episode only
-mid-sequence custom-prior injection is rejected
-default Bayesian episode prior remains [0.5,0.5]
-Bayesian evidence-update mathematics remain unchanged
-no threshold adaptation, evidence weighting, model retraining, planner, safety, environment, replay, or UI implemented
+D-003 — Human determines WHAT; AI determines HOW safely
+D-017 — simple 2D, single-agent, static-first SAR environment
+D-018 — action space UP / DOWN / LEFT / RIGHT / WAIT
+D-019 — A* is the later approved planner; do not implement it here
+D-021 — planner -> safety -> environment execution architecture; do not collapse layers
+D-061 — canonical environmental risk values
+D-062 — fixed normalization / destination-cell additive risk semantics
+D-063 — lambda = 2.0 is approved for later planner use; environment may expose risk but must not perform planning
+D-064 — risk >= 1.00 is prohibited; blocked cells remain a distinct hard category
+D-065 — NO_SAFE_PATH policy is approved for later planner/safety integration; do not implement planner fallback here
 ```
 
-Accepted regression evidence reported from the task branch:
+Canonical risk scale:
 
 ```text
-124 passed, 1 warning
-```
-
-The warning is the previously reviewed non-failing PyTorch EEGNet `padding='same'` warning.
-
-Corrected bounded synthetic integration smoke:
-
-```text
-adaptation OFF -> (0.5, 0.5)
-three valid explicit feedback events -> personalized prior (0.75, 0.25)
-fresh Bayesian episode initial posterior -> (0.75, 0.25)
-after evidence (0.8, 0.2) -> posterior approximately (0.9230769231, 0.0769230769)
-```
-
-This smoke is integration evidence only. It does not establish personalization benefit, improved decoding, improved intent inference, task success, or safety.
-
-Implementation-path note:
-
-```text
-The cognitive/adaptation specification names src/cognition/adaptation.py.
-The established repository package is src/cognitive/.
-M1-T10 therefore uses src/cognitive/adaptation.py without changing the scientific architecture.
+FREE       = 0.00
+LOW        = 0.25
+MODERATE   = 0.50
+HIGH       = 0.75
+PROHIBITED = 1.00
 ```
 
 ---
 
-# 3. NEXT GOVERNANCE GATE
+# 4. ALLOWED FILES
 
-The next unresolved scientific boundary begins at U-029 planning/safety.
-
-Before any further implementation:
+Primary authorized files:
 
 ```text
-1. Identify one narrow next module.
-2. Check MASTER_PROJECT_SPEC.md.
-3. Check CURRENT_TASK.md.
-4. Check PROJECT_STATE.md.
-5. Check DECISIONS.md.
-6. Check relevant technical documentation and accepted code/tests.
-7. Resolve any blocking scientific/architectural decision.
-8. Record any newly approved decision in DECISIONS.md.
-9. Obtain explicit Project Owner approval for exactly one narrow task.
-10. Only then activate CURRENT_TASK.md and begin implementation.
+src/autonomy/environment.py
+tests/test_environment.py
 ```
 
-U-029 and later unresolved decisions remain unauthorized.
+Only if required by the repository/package structure:
 
-Until a new task is explicitly approved:
+```text
+src/autonomy/__init__.py
+requirements.txt
+```
+
+`requirements.txt` may add Gymnasium only if it is not already available through the project environment and is required for this implementation.
+
+Do not modify unrelated EEG, model, cognitive, calibration, or shared-autonomy implementation files.
+
+---
+
+# 5. REQUIRED ENVIRONMENT MODEL
+
+Implement a small deterministic 2D grid environment compatible with the approved Gymnasium direction.
+
+Minimum state/configuration must support:
+
+```text
+grid dimensions
+agent start/current position
+one or more named goal positions
+blocked cells
+risk map using only D-061 canonical values
+current termination state
+seeded reset where applicable
+```
+
+The environment must preserve a single coordinate convention consistently across state, actions, tests, and returned information.
+
+Preferred convention from the planning specification:
+
+```text
+(row, column)
+```
+
+Do not silently mix `(x, y)` with `(row, column)`.
+
+---
+
+# 6. ACTION SEMANTICS
+
+Supported actions only:
+
+```text
+UP
+DOWN
+LEFT
+RIGHT
+WAIT
+```
+
+Conceptually:
+
+```text
+UP    -> (r-1, c)
+DOWN  -> (r+1, c)
+LEFT  -> (r, c-1)
+RIGHT -> (r, c+1)
+WAIT  -> (r, c)
+```
+
+The environment must expose deterministic action/state-transition semantics suitable for later safety-controller integration.
+
+M4-T01 must not create low-level EEG joystick control; these are environment actions only.
+
+---
+
+# 7. RISK / HAZARD REPRESENTATION
+
+The environment must validate and expose canonical cell risk values exactly as approved:
+
+```text
+0.00
+0.25
+0.50
+0.75
+1.00
+```
+
+Requirements:
+
+```text
+- no per-map normalization
+- no adaptive rescaling
+- blocked cells are represented separately from risk values
+- PROHIBITED risk = 1.00 is explicitly identifiable
+- HIGH risk = 0.75 remains a distinct value and must not be silently converted to blocked
+- risk metadata must be queryable by later planner/safety code
+```
+
+Do not apply lambda or compute A* path cost in this environment task.
+
+---
+
+# 8. TRANSITION BOUNDARY FOR THIS TASK
+
+Because the final architecture requires the safety controller to authorize execution, M4-T01 must keep environment mechanics separable from safety policy.
+
+The environment may provide deterministic transition helpers and must reject structurally invalid environment operations such as malformed actions/configuration.
+
+Do **not** implement the future safety controller's policy logic in `environment.py`.
+
+In particular, do not add autonomous policy decisions, goal substitution, planner behavior, Bayesian logic, or shared-autonomy thresholds here.
+
+---
+
+# 9. RESET / TERMINATION
+
+At minimum:
+
+```text
+reset restores the configured start state deterministically
+reaching a configured goal may terminate the environment episode
+WAIT leaves position unchanged
+state returned after each transition is internally consistent
+```
+
+Do not invent rescue physiology, triage mechanics, reward shaping, dynamic hazards, stochastic movement, or multi-agent behavior.
+
+---
+
+# 10. VALIDATION REQUIREMENTS
+
+Reject or clearly fail on invalid configuration, including where practical:
+
+```text
+non-positive grid dimensions
+start outside grid
+start on blocked cell
+blocked cell outside grid
+goal outside grid
+invalid risk-map coordinate
+risk value outside the approved canonical set
+invalid/unknown action
+```
+
+Do not silently coerce arbitrary risk values into the nearest approved level.
+
+---
+
+# 11. TEST REQUIREMENTS
+
+Add focused deterministic tests covering at least:
+
+```text
+reset to configured start
+UP/DOWN/LEFT/RIGHT transitions
+WAIT transition
+coordinate convention consistency
+goal/termination behavior
+blocked-cell representation distinct from risk
+risk values 0.00 / 0.25 / 0.50 / 0.75 / 1.00 preserved exactly
+invalid arbitrary risk value rejected
+PROHIBITED = 1.00 identifiable without converting HIGH = 0.75 to prohibited
+invalid action rejected
+invalid map coordinates/config rejected
+seeded reset deterministic where seed is exposed
+```
+
+Tests must not pretend that planner or safety behavior exists yet.
+
+---
+
+# 12. REGRESSION REQUIREMENT
+
+Run the new environment tests plus the existing accepted suite sufficiently to demonstrate M4-T01 does not break M1-T01 through M1-T10.
+
+At minimum report:
+
+```text
+pytest tests/test_environment.py
+pytest
+```
+
+If the full suite cannot run because of an environment/dependency issue, report the exact blocker rather than claiming PASS.
+
+---
+
+# 13. OUT OF SCOPE / FORBIDDEN
+
+Do not implement in M4-T01:
+
+```text
+A* planner
+Manhattan-search algorithm
+lambda-weighted path selection
+path replanning
+safety controller
+PROHIBITED transition rejection as a separate safety authority layer
+NO_SAFE_PATH planner policy
+autonomous goal switching
+shared-autonomy integration
+EEG integration
+offline replay
+Streamlit/UI
+reward optimization or reinforcement learning
+dynamic hazards
+multi-agent simulation
+3D simulation
+```
+
+The environment may expose enough map/state information for these later modules, but must not absorb them.
+
+---
+
+# 14. ACCEPTANCE CRITERIA
+
+Task may be reported `PASS` only if:
+
+```text
+2D deterministic SAR environment implemented
+approved five-level risk representation implemented exactly
+blocked cells remain distinct from risk
+approved action space implemented exactly
+configuration validation implemented
+focused tests added and passed
+full existing regression suite executed and reported
+no planner/safety/shared-autonomy scope added
+no scientific values beyond D-061 through D-065 invented
+```
+
+---
+
+# 15. STOP CONDITIONS
+
+Stop and report `BLOCKED` if:
+
+```text
+existing repository structure makes the prescribed module location materially ambiguous
+Gymnasium dependency cannot be installed/used in the accepted environment
+an approved environment/risk decision conflicts with actual canonical code
+implementation would require changing D-061 through D-065
+implementation would require planner or safety policy to make the environment valid
+```
+
+Do not redesign the architecture to bypass a blocker.
+
+---
+
+# 16. COMPLETION REPORT
+
+Codex must report:
+
+```text
+Status
+Branch
+Commit SHA
+Files created
+Files modified
+Implementation completed
+Tests added
+Tests executed
+Exact test results
+Dependency changes
+Manual checks
+Known limitations
+Open blockers
+Scope confirmation
+```
+
+After implementing, testing, committing, and pushing the task branch:
 
 ```text
 STOP
-STATUS = NO ACTIVE TASK
 ```
+
+Do not merge and do not begin M4-T02 until ChatGPT scientific review and Project Owner acceptance.
