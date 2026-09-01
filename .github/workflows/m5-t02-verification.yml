@@ -1,0 +1,28 @@
+name: M5-T02 Verification
+
+on:
+  push:
+    branches:
+      - ci/m5-t02-verification
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact verification branch
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install pandas scikit-learn
+      - name: Focused M5-T02 tests
+        run: python -m pytest tests/test_interaction_bridge.py tests/test_human_interaction.py tests/test_shared_autonomy.py
+      - name: Adjacent control regression
+        run: python -m pytest tests/test_shared_autonomy.py tests/test_human_interaction.py tests/test_interaction_bridge.py tests/test_safety.py tests/test_execution.py tests/test_replanning.py
+      - name: Full regression
+        run: python -m pytest
