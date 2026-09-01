@@ -1698,6 +1698,77 @@ Safety retains veto authority over low-level movement. Human OVERRIDE may change
 
 ---
 
+## D-068 — Shared-Autonomy to Human-Interaction Authorization Contract
+
+**Status:** APPROVED
+
+**Date:** 2026-09-01  
+**Supplements:** D-003, D-020, D-021, D-056, D-057, D-067
+
+**Decision:**
+
+```text
+M5-T02 is an authorization-only integration boundary. It connects accepted SharedAutonomyDecision outputs to the accepted HumanInteractionController and produces explicit deterministic authorization/hold state. It does not execute movement, invoke the planner, call safety, step the environment, or perform replanning.
+
+Goal identity remains symbolic at this boundary. A shared-autonomy candidate/approved goal must exactly match a currently valid configured mission-goal identifier, represented by a key in EnvironmentConfig.goals or an equivalent caller-supplied current goal registry. Do not use substring matching, fallback goals, nearest goals, planner-preferred goals, or a hard-coded Left/Right-to-victim mapping.
+
+PROCEED:
+- A structurally valid PROCEED decision with an exact currently valid symbolic goal may be adopted as the interaction state's policy-approved goal only when the interaction controller is not PAUSED and not STOPPED and no unresolved confirmation request would be bypassed.
+- M5-T02 performs no movement and creates no direct planner/safety/environment call.
+- Missing, invalid, stale, or non-current goal identity fails closed and holds.
+
+CONFIRM:
+- A structurally valid CONFIRM decision with an exact currently valid candidate may open one explicit ConfirmationRequest using a deterministic caller-supplied request_id.
+- No autonomous goal approval occurs while confirmation is required.
+- Existing active-confirmation identity and uniqueness rules from D-067/M5-T01 remain authoritative; M5-T02 may not replace or bypass an unresolved active request.
+- Human CONFIRM remains the only action that approves the candidate attached to that active request.
+
+WAITING / DEFER:
+- Do not change the approved goal.
+- Do not invent a confirmation candidate or force an argmax goal.
+- Hold under D-057 and request human input where the accepted shared-autonomy decision requires it.
+
+HUMAN AUTHORITY:
+- STOPPED interaction state blocks policy goal adoption and confirmation opening.
+- PAUSE blocks autonomous PROCEED goal adoption; no policy result may cause movement while paused.
+- An already-active confirmation may remain preserved during PAUSE under D-067, and explicit human CONFIRM/OVERRIDE behavior remains owned by HumanInteractionController.
+- OVERRIDE remains the human-selected approved goal and is never generated or reinterpreted by the policy bridge.
+- RESUME remains an explicit human command; M5-T02 does not synthesize it or replay queued movement.
+
+ONE HUMAN COMMAND / ONE PROCESSING PATH:
+- Human commands are consumed exactly once by HumanInteractionController.
+- M5-T02 must never synthesize a duplicate PAUSE, STOP, OVERRIDE, CONFIRM, or RESUME command from SharedAutonomyDecision.human_action.
+- The same human action must not be processed once through shared_autonomy.py and again as a newly invented HumanCommand.
+- Shared-autonomy PAUSE/STOP/OVERRIDE outputs may be observed for consistency, but the bridge must not convert them into a second human-command side effect.
+
+POLICY-APPROVED GOAL API:
+- HumanInteractionController may gain one narrow non-human-command API for adopting an accepted policy-approved symbolic goal.
+- The API must validate exact current goal identity and fail closed when STOPPED, PAUSED, an unresolved confirmation would be bypassed, or the goal is not currently valid.
+- This API is not a human command, consumes no command_id, creates no execution, and must not weaken D-067.
+
+BINARY EEG / MULTI-GOAL BOUNDARY:
+- M5-T02 consumes an already-produced symbolic SharedAutonomyDecision.
+- It does not decide how binary EEG maps onto multiple mission goals, does not hard-code the older candidate-only interface conventions, and does not introduce multiclass EEG.
+
+EXECUTION BOUNDARY:
+- M5-T02 ends at deterministic goal authorization / confirmation / hold state.
+- A later separately reviewed M5 task must connect an approved symbolic goal to the current environment's exact goal coordinate and implement interruptible planner -> safety -> environment execution while preserving PAUSE/STOP/OVERRIDE and D-066 replanning authority.
+```
+
+**Context:** M5-T01 implemented deterministic human command/confirmation state, while the accepted shared-autonomy policy still emits symbolic goal decisions and the accepted executor consumes an already-approved SAR coordinate. A narrow authorization bridge is required before any full execution integration so Codex does not invent goal-resolution, human-command duplication, or movement semantics.
+
+**Alternatives considered:** directly combining policy, human commands, planning, safety, and movement in one large integration task; hard-coding binary EEG choices to fixed victim coordinates; converting shared-autonomy human_action fields into duplicate HumanCommand events; allowing PROCEED to bypass PAUSE or an active confirmation.
+
+**Rationale:** Separating authorization from movement keeps human WHAT authority explicit, preserves D-067 command identity and precedence, avoids premature coupling to the synchronous route executor, and leaves interruptible execution for a separately reviewable task.
+
+**Affected documents/modules:** `DECISIONS.md`, `CURRENT_TASK.md`, `PROJECT_STATE.md`, `src/control/shared_autonomy.py`, `src/control/human_interaction.py`, future `src/control/interaction_bridge.py`, and corresponding tests.
+
+**Implementation consequence:** A separately authorized M5-T02 task may implement only the shared-autonomy-to-human-interaction authorization bridge under this contract. D-068 does not authorize planner/safety/environment execution, EEG/model integration, adaptation updates, UI, logging/metrics infrastructure, or experiments.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
