@@ -1435,6 +1435,156 @@ no model retraining, threshold adaptation, evidence weighting, or raw-EEG modifi
 
 ---
 
+## D-061 — Environmental Risk Values
+
+**Status:** APPROVED
+
+**Date:** 2026-09-01  
+**Resolves:** U-029
+
+**Decision:**
+
+```text
+Use a fixed normalized environmental-risk scale:
+FREE = 0.00
+LOW = 0.25
+MODERATE = 0.50
+HIGH = 0.75
+PROHIBITED = 1.00
+
+Blocked/obstacle cells remain a separate hard non-traversable category and must not be represented only as a high risk value.
+```
+
+**Context:** The SAR environment requires explicit, interpretable risk values before risk-aware A* planning and prohibited-hazard safety checks can be implemented reproducibly.
+
+**Rationale:** A five-level fixed scale over [0,1] is simple, auditable, and sufficient for controlled simulated experiments while preserving the architectural distinction between soft environmental risk and hard obstacles.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/13_AUTONOMOUS_PLANNING_AND_CONTROL.md`, `docs/14_SAFETY_CRITICAL_CONTROL.md`, future SAR environment/planner/safety code and experiment configuration.
+
+**Implementation consequence:** Future SAR code may represent traversable environmental risk using exactly these canonical values. This decision does not by itself authorize implementation.
+
+**Approved by:** Project Owner
+
+---
+
+## D-062 — Risk Normalization and Exposure Aggregation
+
+**Status:** APPROVED
+
+**Date:** 2026-09-01  
+**Resolves:** U-030
+
+**Decision:**
+
+```text
+The D-061 values are already canonical normalized values on [0,1].
+Do not perform per-map min-max normalization, adaptive normalization, or data-dependent rescaling.
+For planning, the risk contribution of a move is the risk value of the destination cell entered by that move.
+Total path risk is the sum of entered-cell risk values; the start cell is not charged again as a movement risk contribution.
+```
+
+**Context:** Risk-aware planning needs an unambiguous normalization and aggregation rule so identical map semantics produce identical costs across runs and maps.
+
+**Rationale:** Fixed normalization avoids map-dependent reinterpretation of hazard severity, while destination-cell additive exposure gives a transparent risk term that composes naturally with discrete A* movement cost.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/13_AUTONOMOUS_PLANNING_AND_CONTROL.md`, future map/risk schemas, planner, tests, and evaluation code.
+
+**Implementation consequence:** Future planner code may consume D-061 values directly and sum destination-cell exposure without additional normalization. This decision does not by itself authorize implementation.
+
+**Approved by:** Project Owner
+
+---
+
+## D-063 — Risk Weight Lambda
+
+**Status:** APPROVED
+
+**Date:** 2026-09-01  
+**Resolves:** U-031
+
+**Decision:**
+
+```text
+Primary risk-aware A* weight: lambda = 2.0
+Per-move planning cost for a traversable destination cell:
+step_cost = 1.0 + 2.0 * risk(destination_cell)
+Total path objective remains equivalent to distance + lambda * cumulative risk.
+Use Manhattan distance as the heuristic over the four-connected grid.
+Do not tune lambda using protected final system-test outcomes.
+```
+
+**Context:** The approved conceptual objective J = distance + lambda * risk requires a fixed primary lambda before risk-aware route behavior can be implemented and compared reproducibly.
+
+**Rationale:** lambda = 2.0 gives simulated environmental risk meaningful influence without converting every non-zero-risk cell into a hard obstacle; one unit of maximum normalized traversable-risk exposure is weighted equivalently to two extra movement-cost units before hard safety filtering.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/13_AUTONOMOUS_PLANNING_AND_CONTROL.md`, future planner configuration, planner tests, and planning/safety experiments.
+
+**Implementation consequence:** Future primary A* planning must use lambda = 2.0 unless this decision is explicitly superseded. This decision does not by itself authorize implementation.
+
+**Approved by:** Project Owner
+
+---
+
+## D-064 — Prohibited-Hazard Threshold
+
+**Status:** APPROVED
+
+**Date:** 2026-09-01  
+**Resolves:** U-032
+
+**Decision:**
+
+```text
+A hazard cell is prohibited when its canonical risk value is >= 1.00.
+Under D-061, PROHIBITED = 1.00 is therefore a hard non-traversable safety condition.
+HIGH = 0.75 remains traversable and is handled as soft risk through the planner cost.
+Blocked/obstacle cells remain independently prohibited regardless of risk value.
+The planner must not use a prohibited cell in a valid path, and the safety controller must reject any proposed transition into one.
+```
+
+**Context:** The project requires a precise boundary between traversable soft risk and hard hazard prohibition so the planner and safety controller cannot interpret the same map inconsistently.
+
+**Rationale:** Reserving 1.00 for prohibition preserves lower risk levels as genuine soft trade-offs and keeps hard safety enforcement explicit rather than hiding it inside an arbitrarily large path cost.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/13_AUTONOMOUS_PLANNING_AND_CONTROL.md`, `docs/14_SAFETY_CRITICAL_CONTROL.md`, future environment/planner/safety code and tests.
+
+**Implementation consequence:** Future planning and safety modules must treat risk >= 1.00 as prohibited and must not silently relax this threshold to obtain a route. This decision does not by itself authorize implementation.
+
+**Approved by:** Project Owner
+
+---
+
+## D-065 — Final No-Safe-Path Policy
+
+**Status:** APPROVED
+
+**Date:** 2026-09-01  
+**Resolves:** U-033
+
+**Decision:**
+
+```text
+If no route to the current human-approved goal exists after enforcing map bounds, blocked cells, and prohibited hazards, return an explicit NO_SAFE_PATH / UNREACHABLE result.
+Do not execute movement.
+Hold the agent stationary.
+Do not relax hard safety constraints or the prohibited-hazard threshold.
+Do not silently choose a different mission goal.
+Log the no-safe-path event and the reason.
+A new planning attempt may occur only after a relevant environment change or an explicit human-approved goal/control change.
+```
+
+**Context:** Safety and planning require a deterministic fail-safe outcome when an approved goal cannot be reached without violating hard constraints.
+
+**Rationale:** Holding position preserves the human's authority over WHAT goal is intended while preventing the autonomy layer from trading away hard safety merely to produce a path. Explicit failure is scientifically preferable to hidden fallback behavior.
+
+**Affected documents/modules:** `DECISIONS.md`, `docs/13_AUTONOMOUS_PLANNING_AND_CONTROL.md`, `docs/14_SAFETY_CRITICAL_CONTROL.md`, future planner/safety/shared-control integration and tests.
+
+**Implementation consequence:** Future planner/safety integration must expose and test the explicit no-safe-path outcome. It may not switch goals or weaken hard constraints automatically. This decision does not by itself authorize implementation.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
@@ -1472,11 +1622,7 @@ None currently unresolved.
 ## Planning / Safety
 
 ```text
-U-029 — Environmental risk values
-U-030 — Risk normalization
-U-031 — Risk weight λ
-U-032 — Prohibited-hazard threshold
-U-033 — Final no-safe-path policy
+None currently unresolved.
 ```
 
 ## Experimental Analysis
