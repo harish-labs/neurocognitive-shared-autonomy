@@ -1769,6 +1769,104 @@ EXECUTION BOUNDARY:
 
 ---
 
+## D-069 — Interruptible Navigation Execution Contract
+
+**Status:** APPROVED
+
+**Date:** 2026-09-01  
+**Supplements:** D-064, D-065, D-066, D-067, D-068
+
+**Decision:**
+
+```text
+STEPWISE EXECUTION
+- M5-T03 introduces a new human-authority-aware navigation runtime.
+- Navigation start validates authorization, resolves the exact symbolic goal against the current environment, and creates a plan, but performs zero movement.
+- Each advance operation performs at most one safety-approved environment.step().
+- Do not execute an entire route blindly in one runtime call.
+
+PRESERVE ACCEPTED M4 MODULES
+- Do not rewrite the accepted PlannerSafetyEnvironmentExecutor or ControlledReplanningCoordinator merely to obtain interruptibility.
+- M5-T03 adds a separate runtime integration layer; accepted M4 semantics remain regression-protected.
+
+FRESH EXECUTION AUTHORIZATION
+Movement may begin only from a fresh accepted authorization source:
+1. a fresh M5-T02 InteractionBridgeResult from PROCEED with status AUTHORIZED and policy_goal_adopted=True;
+2. an applied human CONFIRM result;
+3. an applied human OVERRIDE result; or
+4. an applied RESUME result with an approved goal and a fresh-execution requirement.
+WAITING, DEFER, PAUSE, STOP, stale/invalid commands, duplicate commands, and repeated non-adopting PROCEED results cannot start navigation.
+
+EXECUTION IDENTITY
+- Every navigation attempt has a caller-supplied unique non-empty execution_id.
+- A consumed/closed execution_id cannot be replayed and returns an explicit duplicate/no-op result.
+
+EXACT SYMBOLIC GOAL RESOLUTION
+At navigation start:
+- the symbolic goal must exactly equal HumanInteractionController.state.approved_goal;
+- it must exactly match a key in the active EnvironmentConfig.goals;
+- its coordinate is resolved only from that exact key;
+- no value matching, substring/fuzzy matching, fallback, nearest goal, or planner-selected alternative is allowed.
+
+PAUSE
+- PAUSE causes zero movement and preserves current position and approved symbolic goal.
+- The currently executable plan is invalidated/closed so no queued action remains executable.
+- RESUME never continues or replays the old plan.
+- A valid applied RESUME requires a fresh navigation start and fresh A* plan from the current position.
+
+STOP
+- STOP terminates the current navigation session and permits zero further movement.
+- Continuation requires explicit reset/new episode plus a new navigation session/execution_id; ordinary RESUME remains invalid after STOP.
+
+OVERRIDE
+- Once the controller's approved symbolic goal changes, no action from the previous goal/plan may execute.
+- The prior execution attempt closes before movement toward the new goal.
+- Movement toward the override goal requires a new fresh execution authorization and fresh plan from the current position.
+- Safety remains authoritative and override cannot relax hard constraints.
+
+ACTIVE CONFIRMATION / HOLD
+- An active confirmation blocks movement even if an older approved_goal remains stored.
+- The runtime must obey current hold/confirmation authority rather than continue movement merely because a historical approved goal exists.
+- Future movement after confirmation requires a fresh accepted authorization source.
+
+ONE HUMAN COMMAND / ONE PROCESSING PATH
+- The navigation runtime never calls HumanInteractionController.handle_command() and never synthesizes CONFIRM, OVERRIDE, PAUSE, RESUME, or STOP.
+- Human commands are processed externally exactly once; the runtime reads their resulting authoritative state/results.
+
+SAFETY BEFORE EVERY TRANSITION
+- SafetyController.check() is called immediately before each individual environment transition.
+- HALTED, REJECTED, or REPLAN_REQUIRED means the proposed action is not executed.
+- Safety retains veto authority over every low-level move.
+
+REPLAN BOUNDARY
+- A safety decision with requires_replan=True causes explicit REPLAN_REQUIRED/HOLD in M5-T03.
+- M5-T03 does not retry planning against the unchanged map and does not automatically invoke the accepted synchronous replanning coordinator.
+- D-066 replacement-snapshot replanning remains authoritative and will be integrated in a later separately reviewed stepwise task.
+
+ENVIRONMENT / STATE STALENESS
+- A navigation attempt is bound to the current validated environment/map configuration and current expected agent state.
+- Hidden/implicit map mutation, unexpected state movement, goal-registry change, or stale plan state fails closed before another environment transition.
+
+CONTROL CYCLE
+- M5-T03 is synchronous and deterministic.
+- No async command queue, background worker, thread, hidden retry loop, or timer is authorized.
+- Human commands may be processed between advance-one-step calls, providing an authority interception point before every subsequent move.
+```
+
+**Context:** M5-T02 now ends at deterministic symbolic goal authorization. The accepted M4 executor consumes a complete route synchronously, while the higher-authority planning specification prefers per-action control checks and D-067 requires PAUSE, STOP, OVERRIDE, and RESUME semantics that can preempt future movement. A separate runtime contract is therefore required before connecting authorization to movement.
+
+**Alternatives considered:** modifying the accepted M4 whole-route executor in place; executing a complete route before checking new human state; resuming a queued old action after PAUSE; permitting a stored historical approved_goal to keep moving during CONFIRM/HOLD; silently replanning on an unchanged map; asynchronous command/event workers.
+
+**Rationale:** One-action-at-a-time execution creates a deterministic human-authority interception point before every environment transition, preserves the accepted planner -> safety -> environment ordering, prevents stale queued movement after PAUSE/OVERRIDE, and keeps D-066 replanning separately reviewable.
+
+**Affected documents/modules:** `DECISIONS.md`, `CURRENT_TASK.md`, `PROJECT_STATE.md`, future `src/control/navigation_runtime.py`, accepted `src/control/interaction_bridge.py`, `src/control/human_interaction.py`, `src/autonomy/planner.py`, `src/autonomy/safety.py`, `src/autonomy/environment.py`, and corresponding tests.
+
+**Implementation consequence:** A separately authorized M5-T03 may implement only fresh-authorization-to-stepwise-navigation integration under this contract. D-069 does not authorize D-066 stepwise replacement-snapshot replanning integration, EEG/model integration, adaptation, UI, logging/metrics infrastructure, experiments, dependency maintenance, or changes to accepted scientific thresholds/policies.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
