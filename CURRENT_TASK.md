@@ -1,310 +1,114 @@
 # CURRENT_TASK.md
 
 ## NeuroCognitive Shared Autonomy for Search & Rescue
-### Active Codex Implementation Ticket
+### Current Codex Implementation Authority
 
-**Purpose:** Hold exactly one active implementation task for Codex, while retaining the immediately preceding accepted task record.  
-**Current status:** ACTIVE / NOT STARTED  
+**Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.  
+**Current status:** NO ACTIVE IMPLEMENTATION TASK  
 **Current milestone:** M4 — 2D Search & Rescue / A* / Safety  
-**Task ID:** M4-T04  
-**Task title:** Planner → Safety → Environment Execution Integration  
+**Task ID:** None  
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
 **Repository instructions:** `AGENTS.md`  
 **Canonical branch:** `main`  
-**Canonical starting commit:** `ef7e27dfd8bf6446ddb1f0c783800b13ebbdca71`  
 **Last updated:** 2026-09-01
 
 ---
 
-# 1. CLOSED TASK RECORD — M4-T03
+# 1. CLOSED TASK RECORD — M4-T04
 
 ```text
-Task ID: M4-T03
-Task title: Safety Controller / Hard Constraint Enforcement
-Final status: PASS / SCIENTIFICALLY ACCEPTED / MERGED
-Task branch: task/m4-t03-safety-controller
-Accepted task-branch head: 6573ba90f96447081b3edfd5560d354fe2f69a6b
-Canonical merge commit: ef7e27dfd8bf6446ddb1f0c783800b13ebbdca71
+Task ID:
+M4-T04
+
+Task title:
+Planner → Safety → Environment Execution Integration
+
+Final status:
+PASS / SCIENTIFICALLY ACCEPTED / MERGED
+
+Task branch:
+task/m4-t04-execution-integration
+
+Initial implementation commit:
+b77e04a8951e7d6d5aeb40eb4ed359e29d9ad1e3
+
+Accepted corrected task-branch head / canonical software commit:
+1a7ccde578083b3386183a97ca876714afb68e30
 ```
 
-Accepted verification:
+Accepted M4-T04 behavior:
 
 ```text
-pytest tests/test_safety.py -> 20 passed
-pytest tests/test_environment.py tests/test_planner.py tests/test_safety.py -> 58 passed
-pytest -> 188 passed, 1 pre-existing non-failing PyTorch warning
+explicit already-approved goal is the only mission target input
+planner computes one deterministic route
+planner SUCCESS result is fail-closed validated before any safety check or movement
+validated plan must preserve exact execution start and approved goal
+validated path endpoints, action/path length, coordinates, and per-edge action reconstruction must be internally consistent
+WAIT is not accepted as a route edge in a successful A* execution plan
+malformed/substituted SUCCESS plans return INVALID_GOAL_OR_PLAN with zero movement
+NO_SAFE_PATH returns with zero movement and preserves the supplied goal
+SafetyController.check is called before every environment step
+env.step() is called only for an APPROVED safety decision
+HALTED stops execution immediately
+REJECTED / REPLAN_REQUIRED stops the current route without executing the rejected action
+HIGH 0.75 remains traversable when planner and safety permit it
+execution traces record executed actions, visited positions, safety decisions, final position, termination, and reason
+no automatic replanning, dynamic map mutation, goal substitution, EEG/Bayesian integration, UI, or experiments were added
 ```
 
-Accepted behavior: deterministic hard-safety authority; emergency stop > pause > invalid state > invalid action > bounds > blocked > prohibited > approve; HIGH 0.75 remains permitted; WAIT may be approved; blocked/prohibited moves request replanning; controller does not call env.step() or A*.
-
----
-
-# 2. M4-T04 OBJECTIVE
-
-Implement only the deterministic execution/orchestration layer that connects the already accepted planner, safety controller, and environment for one approved goal.
-
-Required architecture:
+Accepted verification reported from the corrected task branch:
 
 ```text
-explicit approved goal
-→ planner computes path
-→ propose next action
-→ safety controller checks that action
-→ environment executes only an APPROVED action
+pytest tests/test_execution.py -> 13 passed
+pytest tests/test_environment.py tests/test_planner.py tests/test_safety.py tests/test_execution.py -> 71 passed
+pytest -> 201 passed, 1 pre-existing non-failing PyTorch warning
 ```
 
-The integration layer may iterate through the accepted path one action at a time, with a safety check before every environment step.
-
-It must not infer or change human intent.
-
----
-
-# 3. READ FIRST
-
-Read, in order:
+Scientific review verified:
 
 ```text
-MASTER_PROJECT_SPEC.md
-AGENTS.md
-PROJECT_STATE.md
-DECISIONS.md
-CURRENT_TASK.md
-docs/04_SYSTEM_ARCHITECTURE.md
-docs/12_SHARED_AUTONOMY_AND_HUMAN_AI_INTERACTION.md
-docs/13_AUTONOMOUS_PLANNING_AND_CONTROL.md
-docs/14_SAFETY_CRITICAL_CONTROL.md
-docs/15_IMPLEMENTATION_BLUEPRINT.md
-docs/16_REPOSITORY_AND_CODE_ARCHITECTURE.md
-docs/19_TESTING_AND_VERIFICATION.md
-src/autonomy/environment.py
-src/autonomy/planner.py
-src/autonomy/safety.py
-src/control/shared_autonomy.py
-relevant accepted tests
-```
-
-GitHub `main` is canonical.
-
----
-
-# 4. GOVERNING DECISIONS / BOUNDARIES
-
-Preserve D-003, D-016, D-018 through D-021, D-056, D-057, and D-061 through D-065.
-
-In particular:
-
-```text
-human determines WHAT goal; autonomy determines HOW safely
-planner never changes supplied approved goal
-planner proposes; safety authorizes; environment executes only approved actions
-blocked cells and risk >= 1.00 are hard non-traversable
-HIGH 0.75 remains soft/traversable
-NO_SAFE_PATH means no movement and no goal substitution
-PAUSE/STOP prevent autonomous movement
-```
-
-No live-EEG or physical-robot claim is authorized.
-
----
-
-# 5. ALLOWED FILES
-
-Primary:
-
-```text
-src/autonomy/execution.py
-tests/test_execution.py
-```
-
-Only if required for exports:
-
-```text
-src/autonomy/__init__.py
-```
-
-Do not modify accepted environment/planner/safety/shared-autonomy modules unless a genuine integration defect is found; if so, stop and report the blocker.
-
----
-
-# 6. REQUIRED EXECUTION API
-
-Provide a deterministic structured execution result. Exact class/function naming may vary, but it must expose at least:
-
-```text
-status
-approved_goal
-planning_result
-executed_actions
-visited_positions
-safety_decisions
-final_position
-terminated
-reason
-```
-
-Minimum execution statuses:
-
-```text
-SUCCESS
-NO_SAFE_PATH
-SAFETY_REJECTED
-HALTED
-INVALID_GOAL_OR_PLAN
-```
-
-The integration API receives an already approved goal coordinate. It must not receive raw EEG, decoder probabilities, Bayesian posterior, entropy, or adaptation state.
-
----
-
-# 7. NORMAL EXECUTION
-
-For a valid supplied approved goal:
-
-```text
-1. plan from current environment state to approved goal using RiskAwareAStarPlanner
-2. if planning status is not SUCCESS, do not move
-3. for each planned action:
-   a. call SafetyController.check using current environment position
-   b. execute env.step(action) only when safety status is APPROVED
-   c. record decision/action/new position
-4. stop successfully when the environment reaches the approved goal / terminates
-```
-
-Never execute an entire planned route without per-step safety authorization.
-
----
-
-# 8. NO_SAFE_PATH
-
-If planner returns NO_SAFE_PATH:
-
-```text
-no env.step() calls
-agent remains stationary
-return explicit NO_SAFE_PATH
-preserve supplied approved goal
-```
-
-Do not relax hard constraints or select another goal.
-
----
-
-# 9. SAFETY REJECTION / HALT
-
-If safety returns HALTED:
-
-```text
-execute no rejected action
-stop integration immediately
-return HALTED
-```
-
-If safety returns REJECTED or REPLAN_REQUIRED during execution:
-
-```text
-execute no rejected action
-stop current route immediately
-return SAFETY_REJECTED
-preserve requires_replan / reason in trace
-```
-
-M4-T04 does not implement a dynamic replanning event loop. A replan flag may be surfaced, but automatic map mutation/retry loops are out of scope.
-
----
-
-# 10. HUMAN CONTROL INPUT
-
-The integration API may accept explicit:
-
-```text
-paused: bool
-emergency_stop: bool
-```
-
-and pass these to the safety controller for every proposed action.
-
-Do not invent confirmation or override-goal semantics here. Shared-autonomy decisions remain upstream; M4-T04 consumes only an already approved goal plus explicit pause/stop state.
-
----
-
-# 11. TEST REQUIREMENTS
-
-Add focused tests covering at least:
-
-```text
-successful zero-risk execution reaches approved goal
-risk-aware planner route is actually followed
-safety check occurs before every env.step
-HIGH 0.75 route can execute if approved by planner/safety
-NO_SAFE_PATH causes zero movement
-emergency stop causes zero movement / HALTED
-pause causes zero movement / HALTED
-safety rejection prevents env.step for rejected action
-blocked/prohibited action cannot be executed even if proposed
-visited positions/actions/safety trace are internally consistent
-approved goal is never substituted
-identical inputs produce identical execution trace
-environment terminates at reached goal
-integration does not access EEG/model/Bayesian internals
-```
-
-Use small synthetic deterministic maps.
-
----
-
-# 12. REGRESSION REQUIREMENT
-
-Run at minimum:
-
-```text
-pytest tests/test_execution.py
-pytest tests/test_environment.py tests/test_planner.py tests/test_safety.py tests/test_execution.py
-pytest
-```
-
-Report exact results. The existing non-failing PyTorch warning may remain if unchanged.
-
----
-
-# 13. OUT OF SCOPE / FORBIDDEN
-
-Do not implement:
-
-```text
-dynamic hazard/map mutation
-multi-step automatic replanning loop
-EEG replay/full BCI integration
-new shared-autonomy thresholds or decisions
-confirmation UI
-adaptation changes
-reportable experiments/metrics
-Streamlit/UI
-RL or alternative planners
-3D/continuous simulation
+branch was 2 commits ahead and 0 behind canonical main before merge
+only src/autonomy/execution.py and tests/test_execution.py changed
+malformed SUCCESS plans are rejected before SafetyController.check or env.step()
 ```
 
 ---
 
-# 14. ACCEPTANCE CRITERIA
+# 2. CURRENT IMPLEMENTATION AUTHORITY
 
-PASS only if:
+No Codex implementation task is currently authorized.
 
-```text
-accepted planner -> safety -> environment order is enforced
-no action executes without safety APPROVED
-NO_SAFE_PATH/PAUSE/STOP cause no movement
-approved goal remains fixed
-execution trace is explicit and deterministic
-focused + combined autonomy + full regression tests pass
-no scientific values or policies are invented
-```
+Do not begin another module from `TODO.md` or the implementation blueprint without a new narrow `CURRENT_TASK.md` ticket.
 
 ---
 
-# 15. STOP CONDITIONS
+# 3. NEXT ARCHITECTURAL BOUNDARY TO RESOLVE
 
-Stop and report BLOCKED if integration requires changing accepted planner/safety/environment semantics, adding a new scientific policy, or choosing unresolved EEG/shared-autonomy behavior.
+The remaining M4 blueprint includes replanning, but the accepted M4-T01 environment is intentionally static and M4-T04 explicitly forbids automatic map mutation/replanning.
 
-After implementation, tests, commit, and push: STOP. Do not merge and do not start EEG/full-system integration or experiments until ChatGPT review and Project Owner acceptance.
+Before authorizing a replanning implementation task, the Project Owner and scientific reviewer must freeze the runtime contract for **what constitutes a relevant environment change and how that changed map/state is supplied to the replanning coordinator**.
+
+This is needed so Codex does not independently invent:
+
+```text
+dynamic hazard mutation semantics
+blocked-cell update semantics
+risk-map update semantics
+when a safety REPLAN_REQUIRED flag triggers a new search
+whether replanning uses the same environment object or a validated replacement snapshot
+how current position and approved goal are preserved across a replan
+replan-attempt limits or retry behavior
+```
+
+Existing approved constraints remain binding:
+
+```text
+approved goal may not be silently changed
+hard blocked/prohibited constraints may not be relaxed
+NO_SAFE_PATH means no movement
+new planning may occur only after a relevant environment change or explicit human-approved goal/control change under D-065
+```
+
+Until this boundary is explicitly approved, implementation must stop here.
