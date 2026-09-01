@@ -1585,6 +1585,41 @@ A new planning attempt may occur only after a relevant environment change or an 
 
 ---
 
+## D-066 — Controlled Replanning / Runtime Environment-Change Contract
+
+**Status:** APPROVED
+
+**Date:** 2026-09-01
+
+**Decision:**
+
+```text
+Represent each relevant runtime environment change by supplying a new immutable, validated replacement environment/map snapshot.
+Preserve the agent's current (row, column) position and the same human-approved goal across the replacement snapshot.
+Replanning may occur only after either:
+1. an explicit ENVIRONMENT_CHANGED event; or
+2. a safety decision with requires_replan=True together with a new validated environment snapshot.
+Never repeatedly replan against an unchanged map after a rejection.
+Permit at most one replan for each supplied environment-change event; any further replan requires another explicit environment-change event and another validated replacement snapshot.
+If the replacement snapshot still yields NO_SAFE_PATH, hold position and stop.
+PAUSE and STOP retain higher priority and do not themselves trigger autonomous replanning.
+Do not substitute goals, relax blocked/prohibited safety constraints, invent stochastic/dynamic hazard behavior, or mutate the active map implicitly/hiddenly.
+```
+
+**Context:** M4-T04 completed one-plan planner → safety → environment execution, while the implementation blueprint still requires controlled replanning. A runtime contract was required so replanning could be implemented without silently inventing map-mutation semantics, retry loops, or goal/safety changes.
+
+**Alternatives considered:** mutating the active environment object in place; automatically retrying indefinitely after any safety rejection; replanning against an unchanged map; allowing the replanner to alter the approved goal or relax hard constraints.
+
+**Rationale:** Explicit immutable replacement snapshots make environment changes auditable and deterministic, preserve current position and human goal authority, and bound replanning so a rejected route cannot cause an uncontrolled retry loop.
+
+**Affected documents/modules:** `DECISIONS.md`, `CURRENT_TASK.md`, `PROJECT_STATE.md`, `docs/13_AUTONOMOUS_PLANNING_AND_CONTROL.md`, `docs/14_SAFETY_CRITICAL_CONTROL.md`, `src/autonomy/execution.py` and/or a narrow replanning coordinator when separately authorized, and corresponding tests.
+
+**Implementation consequence:** A separately authorized M4-T05 task may implement controlled replanning only under this contract. This decision does not authorize stochastic hazards, hidden map mutation, unlimited retries, goal substitution, or safety relaxation.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
