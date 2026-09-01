@@ -13,38 +13,39 @@
 
 ```text
 Project phase:
-EEG decoding/calibration/Bayesian/shared-autonomy/adaptation through M1-T10 are accepted and merged.
-M4-T01 through M4-T05 are accepted and merged; the core M4 autonomy stack is complete.
-D-067 Human Interaction Command Contract is approved.
-M5-T01 Human Command & Confirmation State Layer is authorized and not yet implemented.
+M1-T01 through M1-T10 accepted and merged.
+M4-T01 through M4-T05 accepted and merged.
+M5-T01 Human Command & Confirmation State Layer accepted and merged.
 
 Current module:
-Human command / confirmation state layer
+None — M5-T01 is closed; next boundary is M5 shared-autonomy / human-command integration.
 
 Current task:
-M5-T01
+None
 
 Task status:
-ACTIVE / NOT STARTED
+NO ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
 
 Latest accepted task-branch software commit:
-e8183ccebc9c2f67a1b33347b9ef12d25ddbcbfe
+732cf91890e22a1a66bbe918a4b01500af5966f2
 
 Latest accepted software task:
-M4-T05 — Controlled Replanning After Environment Change
+M5-T01 — Human Command & Confirmation State Layer
 
 Latest approved scientific/architectural decision commit:
 0c2ed84207f55303610d8b7c61bd9e99eea8301a
 
-Latest task-authorization commit:
-77bb58a8207af007a5f7e2a03791c0ea6e5624c9
+Latest governance close commit:
+60a8fda01a3923d789a2dafa657523a234061bce
 
 Latest valid reportable experiment:
 None yet
 ```
+
+The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, or human-subject result claim is authorized.
 
 ---
 
@@ -66,21 +67,64 @@ M4-T02 — Risk-Aware A* Planner
 M4-T03 — Safety Controller / Hard Constraint Enforcement
 M4-T04 — Planner → Safety → Environment Execution Integration
 M4-T05 — Controlled Replanning After Environment Change
+M5-T01 — Human Command & Confirmation State Layer
 ```
 
-M4-T05 accepted verification:
-
-```text
-pytest tests/test_replanning.py -> 13 passed
-pytest tests/test_environment.py tests/test_planner.py tests/test_safety.py tests/test_execution.py tests/test_replanning.py -> 84 passed
-pytest -> 214 passed, 1 pre-existing non-failing PyTorch warning
-```
-
-The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, or human-subject result claim is authorized.
+Total accepted implementation tasks: 16.
 
 ---
 
-# 3. CURRENT AUTONOMY / INTERACTION STATE
+# 3. M5-T01 ACCEPTED STATE
+
+Accepted software commit:
+
+```text
+732cf91890e22a1a66bbe918a4b01500af5966f2
+```
+
+Accepted scope:
+
+```text
+src/control/human_interaction.py
+tests/test_human_interaction.py
+```
+
+Accepted behavior:
+
+```text
+D-067 command/request identity semantics enforced
+CONFIRM requires exact active request and approves only its attached candidate
+stale confirmations fail closed
+command IDs are consumed once; duplicates do not repeat effects
+OVERRIDE validates exact currently valid goals and fails closed for unsupported containers
+OVERRIDE changes only human-approved goal state and never bypasses planner/safety
+PAUSE preserves state
+RESUME is explicit, valid only from PAUSED, preserves the approved goal, and never replays queued motion
+STOP is terminal until explicit reset/new session
+headless deterministic state layer only
+no planner/safety/environment/EEG/Bayesian/UI integration was added in M5-T01
+```
+
+Accepted verification:
+
+```text
+python -m pytest tests/test_human_interaction.py
+-> 19 passed
+
+python -m pytest tests/test_shared_autonomy.py tests/test_safety.py tests/test_execution.py tests/test_replanning.py tests/test_human_interaction.py
+-> 77 passed
+
+python -m pytest
+-> 233 passed, 1 warning
+```
+
+The warning is the already-known non-failing PyTorch `padding='same'` warning from the accepted EEGNet/calibration path.
+
+Verification was executed in a temporary GitHub Actions environment rooted at the accepted M5-T01 task SHA. The temporary CI workflow was not merged into `main`.
+
+---
+
+# 4. CURRENT AUTONOMY / INTERACTION STATE
 
 ```text
 SAR environment/risk map: PASS
@@ -88,65 +132,39 @@ Risk-aware A*: PASS
 Hard safety controller: PASS
 Planner -> safety -> environment execution integration: PASS
 Controlled replanning after explicit environment change: PASS
-Shared-autonomy decision policy: PASS (accepted M1-T09)
-Human command / confirmation state layer: AUTHORIZED / NOT STARTED
+Shared-autonomy decision policy: PASS
+Human command / confirmation state layer: PASS
 Shared-autonomy -> human-command integration: NOT STARTED
+Human-command -> planner/safety/execution integration: NOT STARTED
 Offline EEG -> full-system execution: NOT STARTED
 UI: NOT STARTED
 Reportable system experiments: NOT STARTED
 ```
 
-Accepted control principles now include:
+Accepted authority principles remain:
 
 ```text
 human determines WHAT goal; AI determines HOW safely
-CONFIRM is explicit human authority when required
 STOP > PAUSE > OVERRIDE > CONFIRM/RESUME > autonomous policy
 safety retains veto authority over low-level movement
-stale/duplicate human commands must not create repeated effects
-RESUME is explicit and never replays an old queued action
-OVERRIDE changes the human-approved goal but does not bypass planner/safety
+human override cannot relax hard safety
+stale/duplicate human commands cannot cause repeated effects
 ```
 
 ---
 
-# 4. M4 MILESTONE STATE
+# 5. KNOWN OPERATIONAL ISSUE
 
-Core M4 implementation is accepted and closed:
-
-```text
-2D Gymnasium SAR environment: PASS
-canonical risk map / blocked-cell distinction: PASS
-risk-aware A* / Manhattan heuristic: PASS
-hard safety authority: PASS
-planner-safety-environment execution ordering: PASS
-explicit NO_SAFE_PATH handling: PASS
-controlled replanning after explicit environment change: PASS
-pause/stop enforcement within safety/execution/replanning paths: PASS
-```
-
-No reportable claim that these components improve task success or safety is authorized until the corresponding experiment protocol is approved and run.
-
----
-
-# 5. D-067 — HUMAN INTERACTION CONTRACT
-
-Approved on 2026-09-01:
+Clean-environment regression exposed a pre-existing dependency-manifest gap:
 
 ```text
-unique request_id for every confirmation request
-CONFIRM only the exact active request; stale/consumed requests rejected
-unique command_id consumed at most once
-duplicate command IDs cause no repeated effect
-OVERRIDE validates a currently valid mission goal and becomes human-approved goal
-OVERRIDE cannot bypass planner/safety and cannot silently resume PAUSE
-PAUSE preserves state and blocks movement until explicit RESUME
-STOP is terminal for the interaction session until explicit reset/new episode
-RESUME is valid only from PAUSED, preserves goal, and requires fresh downstream execution rather than queued-action replay
-command handling is synchronous/deterministic; no background queue
+requirements.txt currently omits pandas and scikit-learn
+accepted pre-M5 modules/tests require them
 ```
 
-D-067 is implemented only when M5-T01 is separately completed and accepted. Approval alone is not an implementation claim.
+For M5-T01 verification, `pandas` and `scikit-learn` were installed only in the temporary CI environment so the existing regression suite could execute. No dependency-file change was bundled into M5-T01.
+
+This should be handled separately through a narrow maintenance/governance action; it is not evidence of an M5-T01 software regression.
 
 ---
 
@@ -155,13 +173,14 @@ D-067 is implemented only when M5-T01 is separately completed and accepted. Appr
 M5-T01:
 
 ```text
-No unresolved scientific blocker under D-067.
+None — task accepted and merged.
 ```
 
-Later M5 integration:
+Next M5 integration:
 
 ```text
-Not authorized yet. Integration of shared-autonomy decisions with the human-command layer must be separately reviewed after M5-T01 acceptance.
+Not yet authorized.
+The exact shared-autonomy-decision -> human-command -> approved-goal/execution transition contract must be reviewed and frozen before Codex implementation.
 ```
 
 Experimental analysis remains unresolved:
@@ -172,23 +191,24 @@ U-035 — Robustness perturbation levels
 U-036 — Final inferential-statistics policy
 ```
 
-These do not block M5-T01.
-
 ---
 
 # 7. CLAIM STATUS
 
-Authorized implementation claims include that M1-T01 through M1-T10 and M4-T01 through M4-T05 have been implemented, reviewed, accepted, and regression tested under their approved tickets.
-
-Not yet authorized as implementation claims:
+Authorized implementation claim:
 
 ```text
-human command / confirmation state layer implemented
+the software now includes a deterministic human command and confirmation state layer implementing the approved D-067 CONFIRM / OVERRIDE / PAUSE / RESUME / STOP contract, with stale/duplicate protection and no direct movement execution
+```
+
+Not authorized:
+
+```text
 full human-interaction integration implemented
 end-to-end EEG-driven mission execution implemented
-any reportable performance/safety improvement
-cross-subject generalization
-live EEG / physical robot / certified real-world safety
+any reportable improvement in task success, safety, calibration, intent inference, or shared autonomy
+cross-subject generalization claims
+live EEG / physical robot / certified real-world safety claims
 ```
 
 ---
@@ -196,9 +216,8 @@ live EEG / physical robot / certified real-world safety
 # 8. NEXT ACTION
 
 ```text
-Codex implements M5-T01 exactly as defined in CURRENT_TASK.md on a task branch from the current main.
-Implement only the deterministic human command / confirmation state layer.
-Run focused, adjacent-control, and full regression tests.
-Commit/push and stop for ChatGPT scientific/architectural review.
-Do not merge or begin the next M5 integration task automatically.
+No Codex task is currently authorized.
+Project Owner + ChatGPT must review and freeze the next narrow M5 integration contract before creating another CURRENT_TASK.md ticket.
+Do not automatically begin full-system EEG integration, UI, or experiments.
+Separately address the requirements.txt dependency-manifest gap through a narrow maintenance action when approved.
 ```
