@@ -7,7 +7,7 @@ through the approved planner, safety, and environment sequence.
 
 from __future__ import annotations
 
-from collections.abc import Collection, Mapping
+from collections.abc import Mapping, Set
 from dataclasses import dataclass
 from enum import Enum
 
@@ -117,7 +117,7 @@ class HumanInteractionController:
         self,
         command: HumanCommand,
         *,
-        valid_goals: Collection[object] | Mapping[object, object] | None = None,
+        valid_goals: Mapping[object, object] | Set[object] | None = None,
     ) -> CommandResult:
         """Consume one command and return its deterministic control-state outcome."""
         if not isinstance(command, HumanCommand):
@@ -232,7 +232,7 @@ class HumanInteractionController:
     def _handle_override(
         self,
         command: HumanCommand,
-        valid_goals: Collection[object] | Mapping[object, object] | None,
+        valid_goals: Mapping[object, object] | Set[object] | None,
     ) -> CommandResult:
         if not _goal_is_valid(command.goal, valid_goals):
             return self._result(
@@ -352,10 +352,18 @@ def _is_non_empty_identifier(value: object) -> bool:
 
 def _goal_is_valid(
     goal: object,
-    valid_goals: Collection[object] | Mapping[object, object] | None,
+    valid_goals: Mapping[object, object] | Set[object] | None,
 ) -> bool:
     if goal is None or valid_goals is None:
         return False
     if isinstance(valid_goals, Mapping):
-        return goal in valid_goals or goal in valid_goals.values()
-    return goal in valid_goals
+        try:
+            return goal in valid_goals or goal in valid_goals.values()
+        except TypeError:
+            return False
+    if isinstance(valid_goals, Set):
+        try:
+            return goal in valid_goals
+        except TypeError:
+            return False
+    return False

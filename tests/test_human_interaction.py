@@ -135,6 +135,18 @@ def test_invalid_override_goal_is_consumed_without_changing_state() -> None:
     assert controller.state.consumed_command_ids == frozenset({"command-1"})
 
 
+def test_override_rejects_bare_string_goal_container_without_substring_matching() -> None:
+    controller = HumanInteractionController()
+
+    result = controller.handle_command(
+        command("command-1", HumanCommandType.OVERRIDE, goal="victim"), valid_goals="victim_a"  # type: ignore[arg-type]
+    )
+
+    assert result.status is CommandStatus.INVALID_GOAL
+    assert result.approved_goal is None
+    assert not result.requires_fresh_execution
+
+
 def test_override_accepts_current_goal_values_from_a_mapping() -> None:
     controller = HumanInteractionController()
 
