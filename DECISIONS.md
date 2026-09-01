@@ -1620,6 +1620,84 @@ Do not substitute goals, relax blocked/prohibited safety constraints, invent sto
 
 ---
 
+## D-067 — Human Interaction Command Contract
+
+**Status:** APPROVED
+
+**Date:** 2026-09-01  
+**Supplements:** D-016, D-056, D-057, D-066
+
+**Decision:**
+
+```text
+CONFIRM
+- Every confirmation request has a unique request_id.
+- CONFIRM must reference the exact currently active request_id.
+- A stale/non-active request_id is rejected.
+- Repeating an already-consumed confirmation is an explicit duplicate / no-op and must never cause repeated approval or execution.
+- CONFIRM approves only the candidate goal attached to that active request; it cannot substitute another goal.
+
+OVERRIDE
+- OVERRIDE immediately invalidates/cancels any active confirmation request and any prior autonomous goal commitment for the current control state.
+- OVERRIDE must explicitly name a currently valid configured mission goal.
+- An unknown/non-configured goal is rejected.
+- A valid override becomes the new human-approved goal.
+- Autonomous movement toward the prior goal must stop before any execution toward the override goal.
+- Any future movement toward the override goal must re-enter the normal planner -> safety -> environment execution path.
+- The planner may not reinterpret or replace the overridden human-approved goal.
+
+PAUSE
+- PAUSE takes immediate precedence over autonomous motion.
+- Preserve current agent position, current human-approved goal, and relevant mission/control state.
+- No queued autonomous action may execute while paused.
+- Repeated PAUSE is idempotent and causes no repeated side effect.
+
+STOP
+- STOP is the strongest human command and terminates autonomous execution for the current episode/control session.
+- STOP cannot be bypassed by CONFIRM, OVERRIDE, RESUME, model confidence, planner output, or lower-level autonomous state.
+- Continuing after STOP requires an explicit reset/new episode; ordinary RESUME is not valid after STOP.
+
+RESUME
+- RESUME is supported and is valid only from PAUSED.
+- RESUME never replays a previously queued autonomous action.
+- Preserve the same current human-approved goal.
+- Navigation after RESUME must begin from the current state through a fresh planner/safety execution request.
+- If the environment changed while paused, use the already-approved D-066 controlled-replanning contract before movement.
+- RESUME after STOP is invalid.
+
+COMMAND ID / DUPLICATE PROTECTION
+- Every human command has a unique non-empty command_id.
+- A command_id may be consumed at most once.
+- Reuse of an already-consumed command_id returns an explicit duplicate / ALREADY_CONSUMED-style outcome and must not repeat the command effect.
+- M5 command handling is synchronous and deterministic; no background queue, retry worker, or asynchronous command processor is authorized.
+
+AUTHORITY PRECEDENCE
+STOP
+> PAUSE
+> OVERRIDE
+> CONFIRM / RESUME
+> shared-autonomy policy
+> planner
+> safety
+> environment execution
+
+Safety retains veto authority over low-level movement. Human OVERRIDE may change WHAT goal is approved, but it cannot force an unsafe low-level action or relax hard safety constraints.
+```
+
+**Context:** The shared-autonomy and human-authority specifications require explicit confirmation, override, pause, and stop behavior, while the human-interaction implementation also needs deterministic stale-request, duplicate-command, and resume semantics. These boundaries must be frozen before Codex implements an interaction state layer.
+
+**Alternatives considered:** confirmation without request identity; accepting stale confirmations; replaying queued movement on resume; treating STOP as equivalent to PAUSE; allowing override to bypass planner/safety; asynchronous/background command queues.
+
+**Rationale:** Request/command identity and deterministic state transitions prevent stale or duplicate human commands from causing repeated execution, while the precedence rules preserve the Project Owner-approved principle that the human controls WHAT objective and safety retains veto authority over HOW movement is executed.
+
+**Affected documents/modules:** `DECISIONS.md`, `CURRENT_TASK.md`, `PROJECT_STATE.md`, `docs/12_SHARED_AUTONOMY_AND_HUMAN_AI_INTERACTION.md`, `src/control/shared_autonomy.py`, future `src/control/human_interaction.py`, and corresponding tests/integration tasks when separately authorized.
+
+**Implementation consequence:** A separately authorized M5-T01 task may implement only the deterministic human-command/confirmation state layer under this contract. D-067 does not itself authorize full EEG-to-mission integration, UI callbacks, logging infrastructure, experiments, or any bypass of the accepted planner/safety/environment stack.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
