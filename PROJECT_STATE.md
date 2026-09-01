@@ -17,31 +17,28 @@ EEG decoding/calibration/Bayesian/shared-autonomy/adaptation through M1-T10 are 
 M4-T01 SAR Environment + Risk Map is accepted and merged.
 M4-T02 Risk-Aware A* Planner is accepted and merged.
 M4-T03 Safety Controller / Hard Constraint Enforcement is accepted and merged.
-M4-T04 Planner → Safety → Environment Execution Integration is authorized and not started.
+M4-T04 Planner → Safety → Environment Execution Integration is accepted and merged.
 
 Current module:
-Planner / Safety / Environment execution integration
+None — implementation paused at the next replanning/environment-change architecture boundary.
 
 Current task:
-M4-T04
+None
 
 Task status:
-ACTIVE / NOT STARTED
+NO ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
 
 Latest accepted task-branch software commit:
-6573ba90f96447081b3edfd5560d354fe2f69a6b
+1a7ccde578083b3386183a97ca876714afb68e30
 
 Latest accepted software task:
-M4-T03 — Safety Controller / Hard Constraint Enforcement
+M4-T04 — Planner → Safety → Environment Execution Integration
 
-Canonical M4-T03 merge commit:
-ef7e27dfd8bf6446ddb1f0c783800b13ebbdca71
-
-Latest task-authorization commit:
-4f367f07b475bb7537eb1eddd8c58aa00d0849a4
+Latest governance close commit:
+318f54804487e02cb69330b98f58637ec85e5dcc
 
 Latest approved scientific-decision commit:
 fdef1d5afaf7d13aaffb0e8d5b39379497ee7442
@@ -68,14 +65,15 @@ M1-T10 — Adaptation / Prior Personalization
 M4-T01 — 2D Search & Rescue Environment + Risk Map
 M4-T02 — Risk-Aware A* Planner
 M4-T03 — Safety Controller / Hard Constraint Enforcement
+M4-T04 — Planner → Safety → Environment Execution Integration
 ```
 
-M4-T03 accepted verification:
+M4-T04 accepted verification:
 
 ```text
-pytest tests/test_safety.py -> 20 passed
-pytest tests/test_environment.py tests/test_planner.py tests/test_safety.py -> 58 passed
-pytest -> 188 passed, 1 pre-existing non-failing PyTorch warning
+pytest tests/test_execution.py -> 13 passed
+pytest tests/test_environment.py tests/test_planner.py tests/test_safety.py tests/test_execution.py -> 71 passed
+pytest -> 201 passed, 1 pre-existing non-failing PyTorch warning
 ```
 
 The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, or human-subject result claim is authorized.
@@ -88,8 +86,8 @@ The project remains an **offline prerecorded EEG / simulated real-time BCI** sys
 SAR environment/risk map: PASS
 Risk-aware A*: PASS
 Hard safety controller: PASS
-Planner -> safety -> environment integration: AUTHORIZED / NOT STARTED
-Dynamic replanning loop: NOT STARTED
+Planner -> safety -> environment execution integration: PASS
+Dynamic replanning loop: NOT STARTED / awaiting runtime environment-change contract
 Offline EEG -> full-system execution: NOT STARTED
 UI: NOT STARTED
 ```
@@ -107,16 +105,47 @@ Manhattan A* on four-connected grid
 NO_SAFE_PATH never relaxes hard safety or substitutes another goal
 planner proposes; safety authorizes; environment executes only approved actions
 emergency stop and pause block execution
+successful planner output is structurally validated before execution
+malformed or substituted plans fail closed with zero movement
 ```
 
 ---
 
-# 4. CURRENT SCIENTIFIC BLOCKERS
+# 4. NEXT ARCHITECTURAL DECISION BOUNDARY
 
-Planning / safety:
+The implementation blueprint still expects replanning, but the accepted environment is intentionally static and M4-T04 intentionally does not implement map mutation or automatic retry loops.
+
+Before a replanning task is authorized, freeze the runtime contract for:
 
 ```text
-None currently unresolved for M4-T04.
+what qualifies as a relevant environment change
+how changed blocked/risk state is represented and validated
+whether replanning consumes a replacement environment snapshot or another explicit update structure
+how current position and the same human-approved goal are preserved
+which safety outcomes may request replanning
+when a replan is actually attempted
+whether retry attempts are bounded
+```
+
+D-065 already constrains the outcome:
+
+```text
+no route -> NO_SAFE_PATH / no movement
+no hard-constraint relaxation
+no silent goal substitution
+new planning only after relevant environment change or explicit human-approved goal/control change
+```
+
+No Codex implementation is authorized until this boundary is explicitly approved and written into a new task ticket.
+
+---
+
+# 5. CURRENT SCIENTIFIC BLOCKERS
+
+Planning / safety implementation:
+
+```text
+Runtime environment-change / replanning contract requires Project Owner approval before the next M4 implementation task.
 ```
 
 Experimental analysis remains unresolved:
@@ -127,13 +156,19 @@ U-035 — Robustness perturbation levels
 U-036 — Final inferential-statistics policy
 ```
 
-These do not block M4-T04 implementation but must be resolved before the corresponding reportable comparison/robustness/inferential experiments.
+These experimental decisions do not affect the accepted M4-T01 through M4-T04 software, but they must be resolved before the corresponding reportable comparison/robustness/inferential experiments.
 
 ---
 
-# 5. CLAIM STATUS
+# 6. CLAIM STATUS
 
-Authorized implementation claims include that the accepted EEG, Bayesian/shared-autonomy/adaptation modules and M4-T01 through M4-T03 software components have been implemented and unit/regression tested under their approved tickets.
+Authorized implementation claims include that the accepted EEG, Bayesian/shared-autonomy/adaptation modules and M4-T01 through M4-T04 software components have been implemented and unit/regression tested under their approved tickets.
+
+Authorized M4-T04 implementation claim:
+
+```text
+the current simulated execution layer enforces planner -> safety -> environment ordering for one fixed approved goal and fails closed on malformed planner output
+```
 
 Not authorized:
 
@@ -141,17 +176,17 @@ Not authorized:
 claims that any decoder is above chance in a reportable experiment
 claims that calibration/Bayesian/shared autonomy/adaptation improves outcomes
 claims that risk-aware planning or safety improves outcomes
+claims that dynamic replanning is implemented
 cross-subject generalization claims
 live EEG / physical robot / certified real-world safety claims
 ```
 
 ---
 
-# 6. NEXT ACTION
+# 7. NEXT ACTION
 
 ```text
-Codex implements M4-T04 exactly as defined in CURRENT_TASK.md on a task branch from current main.
-It must integrate accepted planner -> safety -> environment execution only.
-It must run focused integration tests, combined autonomy tests, and the full regression suite.
-It must commit/push and stop for ChatGPT scientific review.
+Project Owner + ChatGPT freeze the runtime environment-change / replanning contract.
+Then ChatGPT records the approved decision if needed and creates the next narrow CURRENT_TASK.md ticket.
+Codex must not begin another implementation module before that authorization.
 ```
