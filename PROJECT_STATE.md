@@ -31,13 +31,13 @@ GitHub is the canonical implementation/state source of truth.
 
 ```text
 Project Phase:
-EEG decoding, calibration, binary Bayesian goal inference, uncertainty/shared-autonomy policy, and prior personalization through M1-T10 are accepted and merged. M4-T01 2D SAR Environment + Risk Map is now accepted and merged. M4-T02 Risk-Aware A* Planner is authorized and not yet implemented.
+EEG decoding, calibration, Bayesian goal inference, uncertainty/shared-autonomy policy, and prior personalization through M1-T10 are accepted and merged. M4-T01 SAR Environment + Risk Map and M4-T02 Risk-Aware A* Planner are accepted and merged. M4-T03 Safety Controller is authorized and not yet implemented.
 
 Current Module:
-Risk-Aware A* Planner
+Safety Controller / Hard Constraint Enforcement
 
 Current Task ID:
-M4-T02
+M4-T03
 
 Task Status:
 ACTIVE / NOT STARTED
@@ -46,16 +46,16 @@ Canonical Branch:
 main
 
 Latest Accepted Software Commit:
-5310743539675744b284bafdf24789fc2025816d
+c224a4dfb3684d0d4555d7a606a90dc822571c11
 
 Latest Accepted Software Task:
-M4-T01 — 2D Search & Rescue Environment + Risk Map
+M4-T02 — Risk-Aware A* Planner
 
 Latest Approved Scientific-Decision Commit:
 fdef1d5afaf7d13aaffb0e8d5b39379497ee7442
 
 Latest Governance / Task-Authorization Commit:
-66300461f172ae7c9edf168a393e525e8829ae79
+622b441be6714b5acb2d596d75acc560c4bd54a3
 
 Latest Valid Experiment:
 None yet
@@ -68,7 +68,7 @@ Last Updated:
 
 # 2. ACCEPTED IMPLEMENTATION SEQUENCE
 
-Canonical `main` contains the accepted M1 implementation sequence:
+Canonical `main` contains accepted implementation through:
 
 ```text
 M1-T01 — PhysioNet EEGBCI Data Loader
@@ -81,29 +81,25 @@ M1-T07 — Probability Calibration
 M1-T08 — Bayesian Goal Inference
 M1-T09 — Uncertainty & Shared-Autonomy Policy
 M1-T10 — Adaptation / Prior Personalization
-```
-
-Canonical `main` now also contains:
-
-```text
 M4-T01 — 2D Search & Rescue Environment + Risk Map
+M4-T02 — Risk-Aware A* Planner
 ```
 
-Accepted M4-T01 canonical software commit:
+Accepted M4-T02 canonical software commit:
 
 ```text
-5310743539675744b284bafdf24789fc2025816d
+c224a4dfb3684d0d4555d7a606a90dc822571c11
 ```
 
 The current authorized task is:
 
 ```text
-M4-T02 — Risk-Aware A* Planner
+M4-T03 — Safety Controller / Hard Constraint Enforcement
 ```
 
-M4-T02 is authorized but has not yet been implemented, tested, reviewed, accepted, or merged.
+M4-T03 is authorized but has not yet been implemented, tested, reviewed, accepted, or merged.
 
-The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, or human-subject result claim is authorized.
+The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, human-subject result, or certified real-world safety claim is authorized.
 
 ---
 
@@ -125,35 +121,31 @@ Shared-autonomy / uncertainty decisions D-055 through D-057 remain operationaliz
 
 Adaptation decisions D-058 through D-060 remain operationalized by M1-T10.
 
-Planning / safety decisions D-061 through D-065 are approved. M4-T01 operationalizes the environment/risk representation portions; M4-T02 is authorized to operationalize the planner portions.
+Planning / safety decisions D-061 through D-065 are approved. M4-T01 operationalizes environment/risk representation; M4-T02 operationalizes risk-aware planning. M4-T03 is authorized to operationalize hard transition safety checks.
 
 ```text
 D-061:
-FREE 0.00
-LOW 0.25
-MODERATE 0.50
-HIGH 0.75
-PROHIBITED 1.00
+FREE 0.00 / LOW 0.25 / MODERATE 0.50 / HIGH 0.75 / PROHIBITED 1.00
 blocked cells remain separate hard obstacles
 
 D-062:
-fixed canonical risk semantics
-no per-map/adaptive normalization
-risk contribution is destination-cell risk
-path risk is additive over entered cells
+fixed risk semantics
+no map-dependent normalization
+destination-cell additive risk
+start cell not charged again
 
 D-063:
-primary A* lambda = 2.0
+lambda = 2.0
 step cost = 1.0 + 2.0 * risk(destination)
 Manhattan heuristic
 
 D-064:
-blocked cells and risk >= 1.00 are excluded from valid planner paths
-HIGH 0.75 remains traversable soft risk
-safety controller will later independently enforce hard transition authorization
+planner excludes and safety rejects risk >= 1.00
+HIGH 0.75 remains soft/traversable
+blocked cells independently prohibited
 
 D-065:
-no permitted route -> explicit NO_SAFE_PATH / UNREACHABLE
+no safe route -> explicit NO_SAFE_PATH
 no automatic constraint relaxation or goal substitution
 ```
 
@@ -174,87 +166,89 @@ no automatic constraint relaxation or goal substitution
 | Uncertainty / Shared-Autonomy Policy | PASS | `7fd4e4c5824199764567f4d8cc71127063a477be` | M1-T09 accepted |
 | Adaptation / Prior Personalization | PASS | `9aeb3477c0bb7304bca3ad2753eaa3a75a59511c` | M1-T10 accepted |
 | SAR Environment / Risk Map | PASS | `5310743539675744b284bafdf24789fc2025816d` | M4-T01 accepted and merged |
-| Risk-Aware A* Planner | AUTHORIZED / NOT STARTED | — | M4-T02 active |
-| Safety Controller | NOT STARTED | — | separate later task required |
-| Planner/Safety/Environment Integration | NOT STARTED | — | requires accepted planner and safety modules |
+| Risk-Aware A* Planner | PASS | `c224a4dfb3684d0d4555d7a606a90dc822571c11` | M4-T02 accepted and merged |
+| Safety Controller | AUTHORIZED / NOT STARTED | — | M4-T03 active |
+| Planner/Safety/Environment Integration | NOT STARTED | — | requires accepted M4-T03 |
 | Reportable Evaluation | NOT STARTED | — | no reportable experiment yet |
 
 ---
 
-# 5. M4-T01 VERIFIED SOFTWARE
+# 5. M4-T02 VERIFIED SOFTWARE
 
 Canonical accepted files:
 
 ```text
-src/autonomy/__init__.py
-src/autonomy/environment.py
-tests/test_environment.py
-requirements.txt includes gymnasium
+src/autonomy/planner.py
+tests/test_planner.py
 ```
 
 Accepted behavior:
 
 ```text
-deterministic 2D single-agent SAR mechanics
-(row, column) coordinate convention
-UP / DOWN / LEFT / RIGHT / WAIT
-Gymnasium Env interface
-Discrete(5) action space
-position observation space
-reset -> observation, info
-step -> observation, reward, terminated, truncated, info
-neutral reward 0.0
-truncated=False for static core environment
-named goals and goal termination
-blocked cells separate from risk
-risk values exactly 0.00 / 0.25 / 0.50 / 0.75 / 1.00
-PROHIBITED 1.00 exposed without folding future safety-controller authority into environment mechanics
-no planner or safety controller implemented in M4-T01
+deterministic four-connected A*
+fixed neighbor expansion order UP / DOWN / LEFT / RIGHT
+stable priority-queue tie breaking
+Manhattan heuristic
+explicit approved goal input
+blocked cells excluded from valid paths
+risk >= 1.00 excluded from valid paths
+HIGH 0.75 remains traversable soft risk
+lambda = 2.0
+step_cost = 1.0 + 2.0*risk(destination)
+start risk not double charged
+path and action reconstruction
+movement/risk/path cost decomposition
+SUCCESS / INVALID_START / INVALID_GOAL / NO_SAFE_PATH
+planner does not mutate environment state or call env.step()
+WAIT not used as an A* progress edge
 ```
 
 Final reviewed verification reported from the accepted branch:
 
 ```text
-pytest tests/test_environment.py -> 20 passed
-pytest -> 150 passed, 1 pre-existing PyTorch warning
-Gymnasium check_env -> passed
+pytest tests/test_planner.py -> 18 passed
+pytest tests/test_environment.py tests/test_planner.py -> 38 passed
+pytest -> 168 passed, 1 pre-existing non-failing PyTorch warning
 ```
 
-The PyTorch warning is pre-existing and non-failing.
+The PyTorch warning remains unchanged and non-failing.
 
 ---
 
-# 6. CURRENT M4-T02 AUTHORIZATION
+# 6. CURRENT M4-T03 AUTHORIZATION
 
-M4-T02 is authorized to implement only:
+M4-T03 is authorized to implement only:
 
 ```text
-deterministic four-connected A*
-Manhattan heuristic
-approved goal as fixed planner target
-blocked/risk>=1.00 exclusion from valid plans
-HIGH 0.75 as soft traversable risk
-step cost = 1.0 + 2.0*risk(destination)
-path/action reconstruction
-movement/risk/path cost decomposition
-explicit SUCCESS / INVALID_START / INVALID_GOAL / NO_SAFE_PATH outcomes
-deterministic tie-breaking
-planner tests and full regression execution
+separate safety-controller authority layer
+single proposed-action safety evaluation
+emergency-stop highest-priority halt
+pause halt
+fail-safe current-state validation
+invalid-action rejection
+out-of-bounds rejection
+blocked-cell rejection / replan-required flag
+prohibited-hazard rejection / replan-required flag
+HIGH 0.75 remains safety-permitted
+WAIT approval only when state/control permit
+explicit structured safety decisions
+no action substitution
+no env.step() execution
+no automatic replanning
+focused safety tests and full regression execution
 ```
 
-M4-T02 must not implement:
+M4-T03 must not implement:
 
 ```text
-safety controller
-action execution authorization
-human STOP/PAUSE execution logic
+full planner -> safety -> environment execution loop
+automatic replanning
 shared-autonomy integration
-replanning trigger loop
-dynamic hazards
 EEG/Bayesian integration
+OVERRIDE goal-selection logic
 UI
 reportable experiments
-lambda tuning or alternative production planners
+real-world safety claims
 ```
 
 The detailed active ticket is authoritative in `CURRENT_TASK.md`.
@@ -263,29 +257,10 @@ The detailed active ticket is authoritative in `CURRENT_TASK.md`.
 
 # 7. CURRENT SCIENTIFIC BLOCKERS
 
-## Bayesian / Goal Mapping
-
-```text
-None currently unresolved.
-```
-
-## Shared Autonomy / Uncertainty Policy
-
-```text
-None currently unresolved.
-```
-
-## Adaptation
-
-```text
-None currently unresolved.
-```
-
 ## Planning / Safety
 
 ```text
-No unresolved scientific parameter blocks M4-T02.
-Safety-controller implementation remains a later separate task after M4-T02 acceptance.
+None unresolved for M4-T03 primary hard-safety implementation.
 ```
 
 ## Experimental Analysis
@@ -296,7 +271,7 @@ U-035 — Robustness perturbation levels
 U-036 — Final inferential-statistics policy
 ```
 
-If preprocessing/QC produces an eligible cross-subject cohort other than 109, D-042 still requires reviewer decision before freezing a different final subject manifest.
+These experimental-analysis decisions do not block M4-T03 unit implementation.
 
 ---
 
@@ -318,8 +293,8 @@ Binary sequential Bayesian inference: PASS
 Bayesian posterior -> entropy/shared-autonomy policy: PASS
 Explicit-feedback prior personalization -> fresh Bayesian initial prior: PASS
 SAR environment/risk map: PASS
-Risk-aware A* planner: AUTHORIZED / NOT STARTED
-Safety controller: NOT STARTED
+Risk-aware A* planner: PASS
+Safety controller: AUTHORIZED / NOT STARTED
 Planner/safety/environment integration: NOT STARTED
 Offline replay -> full system: NOT STARTED
 ```
@@ -351,30 +326,28 @@ No empirical performance conclusion is currently authorized.
 Authorized implementation claims:
 
 ```text
-EEGBCI loader/inspection/preprocessing/split pipeline has been implemented and verified
-CSP+LDA baseline has been implemented and verified under approved leakage controls
-EEGNet baseline has been implemented and verified under approved leakage controls
-model-specific calibration has been implemented and verified under approved leakage controls
-binary goal-evidence mapping and bounded sequential Bayesian goal inference are implemented
-binary Shannon entropy and PROCEED/CONFIRM/DEFER policy are implemented
-human PAUSE/STOP/OVERRIDE precedence hooks exist at the non-executing policy layer
-subject/pair-specific bounded prior personalization is implemented
-M4-T01 deterministic Gymnasium-compatible 2D SAR environment and canonical risk map are implemented and verified
+EEGBCI loader/inspection/preprocessing/split pipeline implemented and verified
+CSP+LDA and EEGNet baselines implemented and verified under approved leakage controls
+model-specific calibration implemented and verified under approved leakage controls
+binary goal-evidence mapping and bounded sequential Bayesian inference implemented
+uncertainty/shared-autonomy policy implemented
+bounded explicit-feedback prior personalization implemented
+deterministic Gymnasium-compatible SAR environment implemented
+risk-aware A* planner implemented under D-061 through D-065
 ```
 
 Not authorized:
 
 ```text
 EEGNet outperforms CSP+LDA
-either decoder is above chance in a reportable experiment
 calibration improves reliability
-Bayesian inference improves intent inference or goal selection
+Bayesian inference improves goal inference
 shared autonomy improves task success or safety
-adaptation/personalization improves performance
-risk-aware A* is implemented or improves outcomes before M4-T02 acceptance
+adaptation improves performance
+risk-aware planning improves outcomes
 safety controller improves safety outcomes
 cross-subject generalization claims
-live EEG or physical-robot claims
+live EEG / physical robot / certified real-world safety claims
 ```
 
 ---
@@ -384,11 +357,10 @@ live EEG or physical-robot claims
 The current authorized next action is:
 
 ```text
-Codex creates a task branch from current main.
-Codex implements M4-T02 exactly as defined in CURRENT_TASK.md.
-Codex runs focused planner tests, environment+planner regression, and full pytest.
+Codex implements M4-T03 exactly as defined in CURRENT_TASK.md on a task branch from current main.
+Codex runs focused safety tests, combined autonomy tests, and full regression tests.
 Codex commits and pushes the task branch.
 Codex stops and reports for ChatGPT scientific review.
 ```
 
-Do not implement the safety-controller task until M4-T02 has been reviewed and accepted.
+Do not begin full planner/safety/environment integration until M4-T03 has been reviewed and accepted.
