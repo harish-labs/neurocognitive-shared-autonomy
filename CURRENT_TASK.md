@@ -4,9 +4,9 @@
 ### Current Codex Implementation Authority
 
 **Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.  
-**Current status:** NO ACTIVE IMPLEMENTATION TASK
+**Current status:** ACTIVE IMPLEMENTATION TASK
 **Current milestone:** Pre-M6 Audit Remediation
-**Task ID:** None
+**Task ID:** PRE-M6-R03
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
@@ -16,7 +16,34 @@
 
 ---
 
-# 1. CLOSED TASK RECORD — PRE-M6-R02
+# 1. ACTIVE TASK — PRE-M6-R03
+
+```text
+Task ID: PRE-M6-R03
+Task title: Environment Snapshot Immutability and Goal Registry Hardening
+Phase: Pre-M6 Audit Remediation
+Task branch: task/pre-m6-r03-environment-immutability
+Objective: Make EnvironmentConfig nested environment state defensively independent and immutable, and enforce D-071 goal-registry validity and uniqueness without redesigning planner, safety, navigation, or replanning semantics.
+```
+
+Authorized implementation files:
+
+```text
+src/autonomy/environment.py
+tests/test_environment.py
+```
+
+Optional test-only file, only if strictly necessary to demonstrate replacement-snapshot independence:
+
+```text
+tests/test_navigation_replanning.py
+```
+
+Forbidden scope includes navigation, interaction, planner, execution, replanning, safety, EEG/model/cognition modules, configuration/dependency files, UI, experiments, logging, PRE-M6-R04, and M6.
+
+---
+
+# 2. CLOSED TASK RECORD — PRE-M6-R02
 
 ```text
 Task ID: PRE-M6-R02

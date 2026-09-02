@@ -1984,6 +1984,37 @@ SYNCHRONOUS ONLY
 
 ---
 
+## D-071 — Environment Goal Registry Identity and Uniqueness Contract
+
+**Status:** APPROVED
+
+**Date:** 2026-09-02  
+**Supplements:** D-003, D-061, D-064, D-065, D-066, D-068, D-069, D-070
+
+**Decision:**
+
+```text
+Every configured mission goal must have a symbolic identifier that is a string containing at least one non-whitespace character.
+Empty-string and whitespace-only mission-goal identifiers are invalid configuration.
+Goal identifiers are validated but are not automatically trimmed, canonicalized, case-normalized, aliased, or otherwise rewritten.
+Exact symbolic identity remains authoritative under D-068 and D-069.
+
+Distinct symbolic mission goals must map to distinct terminal coordinates.
+Two or more different symbolic mission-goal identifiers may not share the same terminal coordinate.
+A duplicate terminal coordinate is invalid environment configuration and must fail during environment/configuration validation rather than relying on mapping insertion order or runtime goal selection.
+The environment must not resolve duplicate coordinates by first-match behavior, reverse lookup, goal substitution, planner preference, or another implicit tie-break rule.
+```
+
+**Context:** PRE-M6-R03 found that the environment accepts non-string, empty, whitespace-only, and duplicate-coordinate goal entries. Duplicate coordinates make terminal identity insertion-order dependent and can disagree with the human-approved symbolic goal across M4 and M5 paths.
+
+**Rationale:** Unique symbolic identifiers and terminal coordinates preserve deterministic one-to-one mission-goal identity across human authority, shared autonomy, navigation, planning, environment termination, replanning, and logging/evaluation. Validation without normalization makes configuration errors explicit.
+
+**Implementation consequence:** A separately authorized PRE-M6-R03 task may enforce goal-registry identifier validity, coordinate uniqueness, and immutable defensive environment configuration. It does not authorize changes to goal selection, human authority, planner/safety policy, blocked-goal policy, risk-1.0-goal policy, or replanning policy.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.

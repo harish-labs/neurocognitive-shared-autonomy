@@ -18,16 +18,16 @@ M4-T01 through M4-T05 accepted and merged.
 M5-T01 through M5-T04 accepted and merged.
 D-069 Interruptible Navigation Execution Contract approved and implemented through M5-T03.
 D-070 Stepwise Replacement-Snapshot Replanning Contract approved and implemented through M5-T04.
-Pre-M6 audit remediation remains in progress: PRE-M6-R01 and PRE-M6-R02 are complete.
+Pre-M6 audit remediation remains in progress: PRE-M6-R01 and PRE-M6-R02 are complete; PRE-M6-R03 is active.
 
 Current module:
-Pre-M6 remediation awaiting separately authorized remaining items
+PRE-M6-R03 — Environment Snapshot Immutability and Goal Registry Hardening
 
 Current task:
-None
+PRE-M6-R03 — Environment Snapshot Immutability and Goal Registry Hardening
 
 Task status:
-NO ACTIVE IMPLEMENTATION TASK
+ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
@@ -39,7 +39,7 @@ Latest accepted software task:
 PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction
 
 Latest approved scientific/architectural decision:
-D-070 — Stepwise Replacement-Snapshot Replanning Contract
+D-071 — Environment Goal Registry Identity and Uniqueness Contract
 
 Latest valid reportable experiment:
 None yet
@@ -173,7 +173,7 @@ PRE-M6-R01 — M4 Wrong-Terminal Route Protection: PASS / MERGED. The M4 whole-r
 
 PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction: PASS / MERGED. Human OVERRIDE accepts only non-empty exact symbolic goal identifiers; mapping coordinate values are rejected without reverse lookup or authorization. Interaction bridge, navigation runtime, replacement-snapshot replanning, and duplicate goal-coordinate policy remain unchanged. Pre-M6 remediation remains in progress overall; additional remediation items require separate authorization.
 
-No active implementation task is authorized. PRE-M6-R03 is not authorized. The next architectural review remains the offline EEG-to-full-system integration boundary. M6 is NOT STARTED and no M6 task is authorized yet.
+PRE-M6-R03 is active for environment snapshot immutability and D-071 goal-registry validation only. PRE-M6-R04 is not authorized. M6 is NOT STARTED and no M6 task is authorized yet.
 
 Before authorization, preserve at least:
 
