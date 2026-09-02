@@ -4,9 +4,9 @@
 ### Current Codex Implementation Authority
 
 **Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.  
-**Current status:** NO ACTIVE IMPLEMENTATION TASK  
-**Current milestone:** M5 — Shared Autonomy + Human Interaction  
-**Task ID:** None  
+**Current status:** ACTIVE IMPLEMENTATION TASK
+**Current milestone:** Pre-M6 Audit Remediation
+**Task ID:** PRE-M6-R01
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
@@ -77,15 +77,55 @@ The clean verification environment installed `pandas` and `scikit-learn` separat
 
 ---
 
-# 2. IMPLEMENTATION AUTHORITY NOW
+# 2. ACTIVE IMPLEMENTATION AUTHORITY
 
 ```text
-No Codex implementation task is currently authorized.
+Task ID: PRE-M6-R01
+Task title: M4 Wrong-Terminal Route Protection
+Phase: Pre-M6 Audit Remediation
+Task branch: task/m4-remediate-wrong-terminal-goal
 ```
 
-M5-T04 is complete and merged.
+Objective:
 
-Do not begin M6 automatically.
+```text
+Prevent the accepted M4 whole-route execution/replanning path from executing a route that reaches a different configured terminal goal before the human-approved goal.
+```
+
+Allowed implementation files:
+
+```text
+src/autonomy/execution.py
+tests/test_execution.py
+tests/test_replanning.py
+```
+
+Forbidden implementation changes:
+
+```text
+src/autonomy/environment.py
+src/autonomy/planner.py
+src/autonomy/safety.py
+src/control/navigation_runtime.py
+all EEG/model/calibration/Bayesian/adaptation modules
+config.yaml
+requirements.txt
+experiment/UI/dashboard code
+```
+
+Constraints:
+
+```text
+No M5 rewrite.
+No M6 work.
+No scientific parameter changes.
+No goal substitution.
+No planner-cost changes.
+No safety relaxation.
+No async/background behavior.
+```
+
+This authorization remains active until a separate Project Owner review closes it. Do not begin any later remediation item or M6 work.
 
 ---
 

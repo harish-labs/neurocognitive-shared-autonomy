@@ -18,15 +18,16 @@ M4-T01 through M4-T05 accepted and merged.
 M5-T01 through M5-T04 accepted and merged.
 D-069 Interruptible Navigation Execution Contract approved and implemented through M5-T03.
 D-070 Stepwise Replacement-Snapshot Replanning Contract approved and implemented through M5-T04.
+Pre-M6 audit remediation has begun: PRE-M6-R01 is active.
 
 Current module:
-M5 shared-autonomy / human-interaction integration complete through M5-T04
+Pre-M6 remediation: M4 wrong-terminal route protection
 
 Current task:
-None
+PRE-M6-R01 — M4 Wrong-Terminal Route Protection
 
 Task status:
-NO ACTIVE IMPLEMENTATION TASK
+ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
@@ -166,9 +167,9 @@ The warning is the known non-failing PyTorch `padding='same'` warning from the a
 
 # 7. CURRENT BLOCKERS / NEXT REVIEW
 
-No active implementation blocker exists because no implementation task is currently authorized.
+PRE-M6-R01 is the only active implementation task. It remediates M4 whole-route execution/replanning so a route that crosses a different configured terminal before the already-approved goal fails closed before safety or movement. The task must not be marked accepted or closed until separate review.
 
-The next architectural review is the offline EEG-to-full-system integration boundary. No M6 task is authorized yet.
+The next architectural review remains the offline EEG-to-full-system integration boundary. No M6 task is authorized yet.
 
 Before authorization, preserve at least:
 
