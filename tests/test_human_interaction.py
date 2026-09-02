@@ -127,12 +127,14 @@ def test_invalid_override_goal_is_consumed_without_changing_state() -> None:
     controller.open_confirmation_request("request-1", "victim_a")
 
     result = controller.handle_command(
-        command("command-1", HumanCommandType.OVERRIDE, goal="unknown"), valid_goals=VALID_GOALS
+        command("command-1", HumanCommandType.OVERRIDE, goal="unknown"),
+        valid_goals={"victim_a": (1, 2), "victim_b": (3, 4)},
     )
 
     assert result.status is CommandStatus.INVALID_GOAL
     assert result.approved_goal is None
     assert result.active_request_id == "request-1"
+    assert not result.requires_fresh_execution
     assert controller.state.consumed_command_ids == frozenset({"command-1"})
 
 
@@ -148,16 +150,50 @@ def test_override_rejects_bare_string_goal_container_without_substring_matching(
     assert not result.requires_fresh_execution
 
 
-def test_override_accepts_current_goal_values_from_a_mapping() -> None:
+def test_override_rejects_coordinate_mapping_value_without_state_mutation() -> None:
     controller = HumanInteractionController()
+    controller.open_confirmation_request("request-1", "victim_b")
 
     result = controller.handle_command(
         command("command-1", HumanCommandType.OVERRIDE, goal=(1, 2)),
         valid_goals={"victim_a": (1, 2)},
     )
 
+    assert result.status is CommandStatus.INVALID_GOAL
+    assert result.approved_goal is None
+    assert result.active_request_id == "request-1"
+    assert not result.requires_fresh_execution
+
+
+def test_override_accepts_exact_symbolic_mapping_key_and_cancels_confirmation() -> None:
+    controller = HumanInteractionController()
+    controller.open_confirmation_request("request-1", "victim_b")
+
+    result = controller.handle_command(
+        command("command-1", HumanCommandType.OVERRIDE, goal="victim_a"),
+        valid_goals={"victim_a": (1, 2), "victim_b": (3, 4)},
+    )
+
     assert result.status is CommandStatus.APPLIED
-    assert result.approved_goal == (1, 2)
+    assert result.approved_goal == "victim_a"
+    assert result.active_request_id is None
+    assert result.requires_fresh_execution
+    assert controller.state.closed_request_ids == frozenset({"request-1"})
+
+
+def test_override_rejects_empty_goal_without_state_mutation() -> None:
+    controller = HumanInteractionController()
+    controller.open_confirmation_request("request-1", "victim_a")
+
+    result = controller.handle_command(
+        command("command-1", HumanCommandType.OVERRIDE, goal=""),
+        valid_goals={"victim_a": (1, 2)},
+    )
+
+    assert result.status is CommandStatus.INVALID_GOAL
+    assert result.approved_goal is None
+    assert result.active_request_id == "request-1"
+    assert not result.requires_fresh_execution
 
 
 def test_override_while_paused_preserves_pause() -> None:

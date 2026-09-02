@@ -441,11 +441,11 @@ def _goal_is_valid(
     goal: object,
     valid_goals: Mapping[object, object] | Set[object] | None,
 ) -> bool:
-    if goal is None or valid_goals is None:
+    if not _is_non_empty_identifier(goal) or valid_goals is None:
         return False
     if isinstance(valid_goals, Mapping):
         try:
-            return goal in valid_goals or goal in valid_goals.values()
+            return goal in valid_goals
         except TypeError:
             return False
     if isinstance(valid_goals, Set):
