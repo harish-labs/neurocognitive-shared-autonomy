@@ -18,25 +18,25 @@ M4-T01 through M4-T05 accepted and merged.
 M5-T01 through M5-T04 accepted and merged.
 D-069 Interruptible Navigation Execution Contract approved and implemented through M5-T03.
 D-070 Stepwise Replacement-Snapshot Replanning Contract approved and implemented through M5-T04.
-Pre-M6 audit remediation has begun: PRE-M6-R01 is active.
+Pre-M6 audit remediation remains in progress: PRE-M6-R01 is complete.
 
 Current module:
-Pre-M6 remediation: M4 wrong-terminal route protection
+Pre-M6 remediation awaiting separately authorized remaining items
 
 Current task:
-PRE-M6-R01 — M4 Wrong-Terminal Route Protection
+None
 
 Task status:
-ACTIVE IMPLEMENTATION TASK
+NO ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
 
 Latest accepted task-branch software commit:
-12a5230c0e4c3adcf83a687dfe5e5155e4f446e1
+470106faee4dc6351a6826f7dd37b358941c1a13
 
 Latest accepted software task:
-M5-T04 — Stepwise Replacement-Snapshot Replanning Integration
+PRE-M6-R01 — M4 Wrong-Terminal Route Protection
 
 Latest approved scientific/architectural decision:
 D-070 — Stepwise Replacement-Snapshot Replanning Contract
@@ -71,9 +71,10 @@ M5-T01 — Human Command & Confirmation State Layer
 M5-T02 — Shared-Autonomy / Human-Interaction Authorization Bridge
 M5-T03 — Human-Authority-Aware Stepwise Navigation Runtime
 M5-T04 — Stepwise Replacement-Snapshot Replanning Integration
+PRE-M6-R01 — M4 Wrong-Terminal Route Protection: PASS / MERGED
 ```
 
-Total accepted implementation tasks: 19.
+Total accepted implementation tasks: 20.
 
 ---
 
@@ -167,9 +168,9 @@ The warning is the known non-failing PyTorch `padding='same'` warning from the a
 
 # 7. CURRENT BLOCKERS / NEXT REVIEW
 
-PRE-M6-R01 is the only active implementation task. It remediates M4 whole-route execution/replanning so a route that crosses a different configured terminal before the already-approved goal fails closed before safety or movement. The task must not be marked accepted or closed until separate review.
+PRE-M6-R01 — M4 Wrong-Terminal Route Protection: PASS / MERGED. The M4 whole-route executor and D-066 controlled replanning now fail closed before safety or movement when a route would cross another configured terminal before the approved goal. Pre-M6 remediation remains in progress overall; additional remediation items require separate authorization.
 
-The next architectural review remains the offline EEG-to-full-system integration boundary. No M6 task is authorized yet.
+No active implementation task is authorized. The next architectural review remains the offline EEG-to-full-system integration boundary. M6 is NOT STARTED and no M6 task is authorized yet.
 
 Before authorization, preserve at least:
 

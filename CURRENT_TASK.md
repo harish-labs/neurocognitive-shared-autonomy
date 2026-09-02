@@ -4,9 +4,9 @@
 ### Current Codex Implementation Authority
 
 **Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.  
-**Current status:** ACTIVE IMPLEMENTATION TASK
+**Current status:** NO ACTIVE IMPLEMENTATION TASK
 **Current milestone:** Pre-M6 Audit Remediation
-**Task ID:** PRE-M6-R01
+**Task ID:** None
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
@@ -77,55 +77,34 @@ The clean verification environment installed `pandas` and `scikit-learn` separat
 
 ---
 
-# 2. ACTIVE IMPLEMENTATION AUTHORITY
+# 2. CLOSED TASK RECORD — PRE-M6-R01
 
 ```text
 Task ID: PRE-M6-R01
 Task title: M4 Wrong-Terminal Route Protection
 Phase: Pre-M6 Audit Remediation
 Task branch: task/m4-remediate-wrong-terminal-goal
+Final status: PASS / SCIENTIFICALLY ACCEPTED / MERGED
+Accepted software commit:
+470106faee4dc6351a6826f7dd37b358941c1a13
+Canonical main/software SHA:
+470106faee4dc6351a6826f7dd37b358941c1a13
 ```
 
-Objective:
+Accepted behavior:
 
 ```text
-Prevent the accepted M4 whole-route execution/replanning path from executing a route that reaches a different configured terminal goal before the human-approved goal.
+PlannerSafetyEnvironmentExecutor rejects a structurally valid planner SUCCESS route when an intermediate coordinate is another configured terminal goal different from the approved goal coordinate.
+The check occurs after structural plan validation and before SafetyController.check() or environment.step().
+Rejection is INVALID_GOAL_OR_PLAN with zero movement, zero executed actions, zero safety decisions, unchanged non-terminated environment state, and unchanged approved goal coordinate.
+Valid multi-goal routes that do not cross another configured terminal remain executable.
+ControlledReplanningCoordinator inherits the corrected fail-closed behavior through the M4 executor while retaining D-066 event-consumption behavior.
+M5 NavigationRuntime, planner, risk, environment, and safety semantics were not modified.
 ```
 
-Allowed implementation files:
+Independent clean GitHub Actions verification used temporary workflow commit `d6dd594cde91c2d1f21adb465dc3a1cc08c04dd9`, whose parent was verified as the accepted candidate. Primary run `33600560760` / job `100153096772` and final evidence run `33601227845` / job `100155145125` both concluded successfully after focused, adjacent, and full pytest steps. `pandas` and `scikit-learn` were installed only in CI because the existing `requirements.txt` omission remains separately unauthorized.
 
-```text
-src/autonomy/execution.py
-tests/test_execution.py
-tests/test_replanning.py
-```
-
-Forbidden implementation changes:
-
-```text
-src/autonomy/environment.py
-src/autonomy/planner.py
-src/autonomy/safety.py
-src/control/navigation_runtime.py
-all EEG/model/calibration/Bayesian/adaptation modules
-config.yaml
-requirements.txt
-experiment/UI/dashboard code
-```
-
-Constraints:
-
-```text
-No M5 rewrite.
-No M6 work.
-No scientific parameter changes.
-No goal substitution.
-No planner-cost changes.
-No safety relaxation.
-No async/background behavior.
-```
-
-This authorization remains active until a separate Project Owner review closes it. Do not begin any later remediation item or M6 work.
+PRE-M6-R01 is complete. Do not begin PRE-M6-R02 automatically. Do not begin M6.
 
 ---
 
