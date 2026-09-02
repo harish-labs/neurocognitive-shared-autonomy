@@ -5,7 +5,7 @@
 
 **Purpose:** Authoritative live record of what is actually true now about the project.  
 **Workflow:** ChatGPT + Project Owner + Codex + Git/GitHub  
-**Last updated:** 2026-09-01
+**Last updated:** 2026-09-02
 
 ---
 
@@ -15,27 +15,26 @@
 Project phase:
 M1-T01 through M1-T10 accepted and merged.
 M4-T01 through M4-T05 accepted and merged.
-M5-T01 through M5-T02 accepted and merged.
-D-069 Interruptible Navigation Execution Contract approved.
-M5-T03 Human-Authority-Aware Stepwise Navigation Runtime authorized and not yet implemented.
+M5-T01 through M5-T03 accepted and merged.
+D-069 Interruptible Navigation Execution Contract approved and implemented through M5-T03.
 
 Current module:
-Human-authority-aware stepwise execution integration
+M5 shared-autonomy / human-interaction integration
 
 Current task:
-M5-T03
+None
 
 Task status:
-ACTIVE / NOT STARTED
+NO ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
 
 Latest accepted task-branch software commit:
-fb2e088d27f9e5513d5a63c162a7ab802ddf7f52
+c45ef7e36136007f79f2881a1ebbf7afd2fcbbc6
 
 Latest accepted software task:
-M5-T02 — Shared-Autonomy / Human-Interaction Authorization Bridge
+M5-T03 — Human-Authority-Aware Stepwise Navigation Runtime
 
 Latest approved scientific/architectural decision:
 D-069 — Interruptible Navigation Execution Contract
@@ -68,9 +67,10 @@ M4-T04 — Planner → Safety → Environment Execution Integration
 M4-T05 — Controlled Replanning After Environment Change
 M5-T01 — Human Command & Confirmation State Layer
 M5-T02 — Shared-Autonomy / Human-Interaction Authorization Bridge
+M5-T03 — Human-Authority-Aware Stepwise Navigation Runtime
 ```
 
-Total accepted implementation tasks: 17. M5-T03 is authorized but not accepted yet.
+Total accepted implementation tasks: 18.
 
 ---
 
@@ -80,15 +80,14 @@ Total accepted implementation tasks: 17. M5-T03 is authorized but not accepted y
 Shared-autonomy decision policy: PASS
 Human command / confirmation state layer: PASS
 Shared-autonomy -> human-interaction authorization bridge: PASS
-D-069 interruptible execution contract: APPROVED
-Fresh authorization -> stepwise navigation runtime: AUTHORIZED / NOT STARTED
+Fresh authorization -> human-authority-aware stepwise navigation runtime: PASS
 D-066 replacement-snapshot stepwise replanning integration: NOT STARTED
 Offline EEG -> full-system execution: NOT STARTED
 UI: NOT STARTED
 Reportable system experiments: NOT STARTED
 ```
 
-D-069 runtime boundary:
+Accepted D-069 runtime boundary:
 
 ```text
 fresh accepted authorization
@@ -108,75 +107,84 @@ at most one environment transition
 
 ---
 
-# 4. D-069 AUTHORITY SUMMARY
+# 4. M5-T03 ACCEPTED BEHAVIOR
 
 ```text
-one environment step maximum per advance call
 start_navigation performs zero movement
-new runtime layer; accepted M4 whole-route executor/replanner stay unchanged
-movement requires fresh accepted M5 authorization
-unique caller-supplied execution_id
+advance_one_step performs at most one safety-approved transition
+fresh accepted authorization required to begin navigation
+unique caller-supplied execution_id; consumed/closed IDs cannot replay
 exact symbolic key -> current environment coordinate only
-PAUSE invalidates old executable plan; RESUME replans fresh from current position
+wrong-terminal-goal paths fail closed
+PAUSE invalidates old executable plan; RESUME requires fresh plan/new execution ID
 STOP terminates current navigation session
-OVERRIDE invalidates old goal/path before any further movement
-active confirmation/HOLD prevents movement despite stored historical goal
-runtime never synthesizes/processes human commands
+OVERRIDE invalidates old goal/path before further movement
+active confirmation/HOLD blocks movement despite stored historical goal
+stale map/config/goal/position/terminal state fails closed
 safety checked immediately before every environment step
-safety requires_replan -> explicit hold; no unchanged-map retry
-hidden map mutation or unexpected state movement -> fail closed
-D-066 stepwise replacement-snapshot replanning reserved for later task
-synchronous deterministic control only
+REPLAN_REQUIRED returns explicit hold/replan state with zero movement and no unchanged-map retry
+no human-command synthesis/duplicate processing in runtime
+accepted M4 whole-route executor/replanner remain unchanged
 ```
 
 Accepted authority remains `STOP > PAUSE > OVERRIDE > CONFIRM/RESUME > shared-autonomy policy`; safety retains low-level movement veto.
 
 ---
 
-# 5. M5-T02 ACCEPTED VERIFICATION
+# 5. M5-T03 ACCEPTED VERIFICATION
+
+Independent exact-candidate verification:
 
 ```text
-focused -> 54 passed
-adjacent -> 100 passed
-full -> 256 passed, 1 known PyTorch warning
+focused -> 95 passed in 0.48s
+adjacent -> 133 passed in 0.34s
+full -> 271 passed, 1 warning in 29.66s
 ```
+
+The warning is the known non-failing PyTorch `padding='same'` warning from the accepted EEGNet/calibration path.
 
 ---
 
 # 6. KNOWN OPERATIONAL ISSUE
 
-`requirements.txt` currently omits `pandas` and `scikit-learn`, although accepted pre-M5 modules/tests require them. This remains separate maintenance and is not authorized in M5-T03.
+`requirements.txt` currently omits `pandas` and `scikit-learn`, although accepted pre-M5 modules/tests require them. Clean verification installed them only into the test environment. This dependency-manifest maintenance remains separately unauthorized.
 
 ---
 
-# 7. CURRENT BLOCKERS
+# 7. CURRENT BLOCKERS / NEXT REVIEW
 
-M5-T03:
+No active implementation blocker exists because no implementation task is currently authorized.
+
+The next architectural review is the D-066 replacement-snapshot + D-069 stepwise runtime integration boundary, likely a future M5-T04 only after Project Owner approval.
+
+Before authorization, freeze at least:
 
 ```text
-None under approved D-069 at authorization time.
+explicit environment-change event and immutable replacement snapshot semantics
+current-position and approved-goal preservation
+one replan maximum per supplied change event
+human authority precedence during/after replacement handling
+stale session/execution invalidation
+fresh planning against replacement snapshot only
+no unchanged-map retry
+no goal substitution or hard-safety relaxation
+execution/session identity across the replan boundary
 ```
 
-Implementation must STOP if accepted interfaces require modification or another authority decision emerges.
-
-M5-T04 remains deliberately unapproved. It will be the separately reviewed D-066 replacement-snapshot + human-aware stepwise replanning boundary after M5-T03 passes.
-
-Experimental unresolved items remain U-034 final A/B/C/D matrix, U-035 robustness perturbation levels, and U-036 inferential-statistics policy. They do not block M5-T03.
+Experimental unresolved items remain U-034 final A/B/C/D matrix, U-035 robustness perturbation levels, and U-036 inferential-statistics policy.
 
 ---
 
 # 8. CLAIM STATUS
 
-Authorized implementation claims remain limited to accepted work through M5-T02.
+Authorized implementation claims now extend through accepted M5-T03 stepwise human-authority-aware simulated navigation.
 
-M5-T03 is authorized but NOT implemented/verified yet. Do not claim runtime interruptible navigation exists until accepted code and tests are reviewed.
-
-No end-to-end EEG-driven mission execution, reportable system improvement, live EEG, physical robot, or certified real-world safety claim is authorized.
+Do not claim D-066 replacement-snapshot stepwise replanning integration, end-to-end EEG-driven mission execution, reportable system improvement, live EEG, physical robot, or certified real-world safety.
 
 ---
 
 # 9. NEXT ACTION
 
-Codex implements M5-T03 exactly as `CURRENT_TASK.md` on a new branch from current canonical `main`, runs focused/adjacent/full regressions, commits/pushes, and STOPS for ChatGPT review.
+ChatGPT + Project Owner review the exact D-066 replacement-snapshot / D-069 stepwise navigation transition contract before any M5-T04 implementation authorization.
 
-Do not merge automatically. Do not begin M5-T04, M6, UI, experiments, or dependency maintenance.
+Do not begin M5-T04, M6, UI, experiments, or dependency maintenance automatically.
