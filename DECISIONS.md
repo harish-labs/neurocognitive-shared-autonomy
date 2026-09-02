@@ -1872,7 +1872,7 @@ CONTROL CYCLE
 
 **Status:** APPROVED
 
-**Date:** 2026-09-02  
+**Date:** 2026-09-02
 **Supplements:** D-065, D-066, D-067, D-069
 
 **Decision:**
