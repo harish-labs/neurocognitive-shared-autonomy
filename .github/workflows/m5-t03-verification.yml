@@ -1,0 +1,31 @@
+name: M5-T03 Verification
+
+on:
+  push:
+    branches:
+      - ci/m5-t03-verification
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify exact task parent
+        run: |
+          test "$(git rev-parse HEAD^)" = "c45ef7e36136007f79f2881a1ebbf7afd2fcbbc6"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install pandas scikit-learn
+      - name: Focused tests
+        run: python -m pytest tests/test_navigation_runtime.py tests/test_interaction_bridge.py tests/test_human_interaction.py tests/test_planner.py tests/test_safety.py
+      - name: Adjacent regression
+        run: python -m pytest tests/test_navigation_runtime.py tests/test_interaction_bridge.py tests/test_human_interaction.py tests/test_planner.py tests/test_safety.py tests/test_execution.py tests/test_replanning.py tests/test_shared_autonomy.py
+      - name: Full regression
+        run: python -m pytest
