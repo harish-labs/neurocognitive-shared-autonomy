@@ -136,6 +136,57 @@ def test_raw_mechanics_do_not_apply_prohibited_risk_as_safety_policy() -> None:
     assert info["destination_risk"] == 1.0
 
 
+def test_config_defensively_copies_and_freezes_nested_collections() -> None:
+    goals = {"victim_a": (1, 2)}
+    risk_map = {(1, 1): 0.25}
+    blocked_cells = {(2, 1)}
+    config = environment.EnvironmentConfig(3, 4, (1, 1), goals, blocked_cells, risk_map)
+    env = environment.SearchRescueEnvironment(config)
+
+    goals["victim_a"] = (0, 0)
+    risk_map[(1, 1)] = 1.0
+    blocked_cells.add((0, 1))
+
+    assert env.config.goals["victim_a"] == (1, 2)
+    assert env.risk_at((1, 1)) == 0.25
+    assert isinstance(env.config.blocked_cells, frozenset)
+    assert env.config.blocked_cells == frozenset({(2, 1)})
+    with pytest.raises(TypeError):
+        env.config.goals["victim_a"] = (0, 0)  # type: ignore[index]
+    with pytest.raises(TypeError):
+        env.config.risk_map[(1, 1)] = 1.0  # type: ignore[index]
+    with pytest.raises(AttributeError):
+        env.config.blocked_cells.add((0, 1))  # type: ignore[attr-defined]
+
+
+@pytest.mark.parametrize("goal_id", (1, None, (1, 2), "", "   "))
+def test_invalid_goal_identifiers_are_rejected(goal_id: object) -> None:
+    config = environment.EnvironmentConfig(3, 4, (1, 1), {goal_id: (1, 2)})  # type: ignore[dict-item]
+
+    with pytest.raises(environment.EnvironmentError, match="Goal identifiers"):
+        environment.SearchRescueEnvironment(config)
+
+
+def test_goal_identifier_is_preserved_without_normalization() -> None:
+    env = environment.SearchRescueEnvironment(
+        environment.EnvironmentConfig(3, 4, (1, 1), {" victim_a ": (1, 2)})
+    )
+
+    assert tuple(env.config.goals) == (" victim_a ",)
+
+
+def test_duplicate_goal_coordinates_are_rejected_during_validation() -> None:
+    config = environment.EnvironmentConfig(
+        3,
+        4,
+        (1, 1),
+        {"victim_a": (1, 2), "victim_b": (1, 2)},
+    )
+
+    with pytest.raises(environment.EnvironmentError, match="distinct terminal coordinates"):
+        environment.SearchRescueEnvironment(config)
+
+
 @pytest.mark.parametrize(
     "config",
     (

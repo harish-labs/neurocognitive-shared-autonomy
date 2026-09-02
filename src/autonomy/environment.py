@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum, IntEnum
+from types import MappingProxyType
 from typing import Mapping
 
 import gymnasium as gym
@@ -51,6 +52,11 @@ class EnvironmentConfig:
     goals: Mapping[str, Coordinate]
     blocked_cells: frozenset[Coordinate] = field(default_factory=frozenset)
     risk_map: Mapping[Coordinate, float] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "goals", MappingProxyType(dict(self.goals)))
+        object.__setattr__(self, "blocked_cells", frozenset(self.blocked_cells))
+        object.__setattr__(self, "risk_map", MappingProxyType(dict(self.risk_map)))
 
 
 @dataclass(frozen=True)
@@ -185,7 +191,17 @@ def _validate_config(config: EnvironmentConfig) -> EnvironmentConfig:
     _require_coordinate(config.start, "Start")
     if not config.goals:
         raise EnvironmentError("At least one named goal is required.")
-    for label, coordinate in [("Start", config.start), *[(f"Goal {name!r}", value) for name, value in config.goals.items()]]:
+    goal_coordinates: set[Coordinate] = set()
+    for name, coordinate in config.goals.items():
+        if not isinstance(name, str) or not name.strip():
+            raise EnvironmentError("Goal identifiers must be strings containing at least one non-whitespace character.")
+        _require_coordinate(coordinate, f"Goal {name!r}")
+        if coordinate in goal_coordinates:
+            raise EnvironmentError("Distinct goals must use distinct terminal coordinates.")
+        goal_coordinates.add(coordinate)
+        if not _in_bounds(config.rows, config.columns, coordinate):
+            raise EnvironmentError(f"Goal {name!r} is outside the configured grid.")
+    for label, coordinate in [("Start", config.start)]:
         _require_coordinate(coordinate, label)
         if not _in_bounds(config.rows, config.columns, coordinate):
             raise EnvironmentError(f"{label} is outside the configured grid.")
