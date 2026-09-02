@@ -104,6 +104,17 @@ class PlannerSafetyEnvironmentExecutor:
                 environment,
                 "Planner SUCCESS result is structurally inconsistent with the execution request.",
             )
+        if _crosses_other_configured_goal(planning_result.path, approved_goal, environment):
+            return _result(
+                ExecutionStatus.INVALID_GOAL_OR_PLAN,
+                approved_goal,
+                planning_result,
+                (),
+                (start,),
+                (),
+                environment,
+                "Planner SUCCESS route crosses a different configured terminal before the approved goal.",
+            )
 
         executed_actions: list[Action] = []
         visited_positions: list[Coordinate] = [start]
@@ -213,6 +224,16 @@ def _is_consistent_success_plan(
         if (position[0] + delta[0], position[1] + delta[1]) != next_position:
             return False
     return True
+
+
+def _crosses_other_configured_goal(
+    path: tuple[Coordinate, ...],
+    approved_goal: Coordinate,
+    environment: SearchRescueEnvironment,
+) -> bool:
+    """Reject routes that would terminate at another configured goal before execution ends."""
+    other_goal_coordinates = set(environment.config.goals.values()) - {approved_goal}
+    return any(position in other_goal_coordinates for position in path[1:-1])
 
 
 def _is_coordinate(value: object) -> bool:

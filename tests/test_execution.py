@@ -194,6 +194,49 @@ def test_inconsistent_success_path_is_rejected_before_safety_or_execution(monkey
     assert step_calls == []
 
 
+def test_route_crossing_another_configured_terminal_is_rejected_before_safety_or_execution(monkeypatch) -> None:
+    env = SearchRescueEnvironment(
+        EnvironmentConfig(rows=1, columns=5, start=(0, 0), goals={"victim_a": (0, 2), "victim_b": (0, 4)})
+    )
+    safety = RecordingSafetyController()
+    planner = FixedActionPlanner(
+        goal=(0, 4),
+        path=((0, 0), (0, 1), (0, 2), (0, 3), (0, 4)),
+        actions=(Action.RIGHT, Action.RIGHT, Action.RIGHT, Action.RIGHT),
+    )
+    step_calls: list[object] = []
+    monkeypatch.setattr(env, "step", lambda action: step_calls.append(action))
+
+    result = PlannerSafetyEnvironmentExecutor(planner=planner, safety_controller=safety).execute(env, approved_goal=(0, 4))
+
+    assert result.status is ExecutionStatus.INVALID_GOAL_OR_PLAN
+    assert result.approved_goal == (0, 4)
+    assert result.executed_actions == result.safety_decisions == ()
+    assert result.visited_positions == ((0, 0),)
+    assert result.final_position == env.state.position == (0, 0)
+    assert not env.state.terminated
+    assert safety.decisions == []
+    assert step_calls == []
+
+
+def test_valid_multi_goal_route_that_avoids_other_terminal_executes() -> None:
+    env = SearchRescueEnvironment(
+        EnvironmentConfig(rows=2, columns=5, start=(0, 0), goals={"victim_a": (0, 2), "victim_b": (1, 4)})
+    )
+    planner = FixedActionPlanner(
+        goal=(1, 4),
+        path=((0, 0), (1, 0), (1, 1), (1, 2), (1, 3), (1, 4)),
+        actions=(Action.DOWN, Action.RIGHT, Action.RIGHT, Action.RIGHT, Action.RIGHT),
+    )
+
+    result = PlannerSafetyEnvironmentExecutor(planner=planner).execute(env, approved_goal=(1, 4))
+
+    assert result.status is ExecutionStatus.SUCCESS
+    assert result.approved_goal == (1, 4)
+    assert result.final_position == (1, 4)
+    assert result.terminated
+
+
 class RecordingSafetyController(SafetyController):
     def __init__(self) -> None:
         self.decisions = []

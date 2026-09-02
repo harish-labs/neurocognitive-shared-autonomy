@@ -6,7 +6,8 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.autonomy.environment import Action, EnvironmentConfig, SearchRescueEnvironment
-from src.autonomy.execution import ExecutionStatus
+from src.autonomy.execution import ExecutionStatus, PlannerSafetyEnvironmentExecutor
+from src.autonomy.planner import PlannerStatus, PlanningResult
 from src.autonomy.replanning import ControlledReplanningCoordinator, ReplanningStatus, ReplanTrigger
 from src.autonomy.safety import SafetyController, SafetyStatus
 
@@ -113,6 +114,54 @@ def test_replacement_requires_same_grid_and_named_goal_mapping() -> None:
     assert grid_result.status is goal_result.status is ReplanningStatus.INVALID_CHANGE
     assert not grid_result.replacement_environment_used
     assert not goal_result.replacement_environment_used
+
+
+def test_replacement_route_crossing_another_terminal_is_rejected_before_movement(monkeypatch) -> None:
+    goals = {"victim_a": (0, 2), "victim_b": (0, 4)}
+    current = SearchRescueEnvironment(EnvironmentConfig(rows=1, columns=5, start=(0, 0), goals=goals))
+    replacement = SearchRescueEnvironment(
+        EnvironmentConfig(rows=1, columns=5, start=(0, 0), goals=goals, risk_map={(0, 1): 0.25})
+    )
+    safety = RecordingSafetyController()
+    planner = FixedActionPlanner(
+        goal=(0, 4),
+        path=((0, 0), (0, 1), (0, 2), (0, 3), (0, 4)),
+        actions=(Action.RIGHT, Action.RIGHT, Action.RIGHT, Action.RIGHT),
+    )
+    step_calls: list[object] = []
+    monkeypatch.setattr(replacement, "step", lambda action: step_calls.append(action))
+    coordinator = ControlledReplanningCoordinator(
+        executor=PlannerSafetyEnvironmentExecutor(planner=planner, safety_controller=safety)
+    )
+
+    result = coordinator.replan(
+        current,
+        replacement,
+        event_id="wrong-terminal",
+        trigger=ReplanTrigger.ENVIRONMENT_CHANGED,
+        approved_goal=(0, 4),
+    )
+
+    assert result.status is ReplanningStatus.INVALID_GOAL_OR_PLAN
+    assert result.consumed_event
+    assert result.approved_goal == (0, 4)
+    assert result.execution_result.executed_actions == result.execution_result.safety_decisions == ()
+    assert replacement.state.position == (0, 0)
+    assert not replacement.state.terminated
+    assert safety.decisions == []
+    assert step_calls == []
+
+    duplicate = coordinator.replan(
+        current,
+        replacement,
+        event_id="wrong-terminal",
+        trigger=ReplanTrigger.ENVIRONMENT_CHANGED,
+        approved_goal=(0, 4),
+    )
+
+    assert duplicate.status is ReplanningStatus.ALREADY_CONSUMED
+    assert safety.decisions == []
+    assert step_calls == []
 
 
 def test_duplicate_event_is_consumed_after_one_executor_attempt(monkeypatch) -> None:
@@ -255,3 +304,40 @@ def test_prohibited_constraints_remain_enforced() -> None:
 
     assert result.status is ReplanningStatus.NO_SAFE_PATH
     assert replacement.state.position == (1, 0)
+
+
+class RecordingSafetyController(SafetyController):
+    def __init__(self) -> None:
+        self.decisions = []
+
+    def check(self, *args: object, **kwargs: object):
+        decision = super().check(*args, **kwargs)
+        self.decisions.append(decision)
+        return decision
+
+
+class FixedActionPlanner:
+    def __init__(
+        self,
+        *,
+        goal: tuple[int, int],
+        path: tuple[tuple[int, int], ...],
+        actions: tuple[Action, ...],
+    ) -> None:
+        self._goal = goal
+        self._path = path
+        self._actions = actions
+
+    def plan(self, environment: SearchRescueEnvironment, *, start: tuple[int, int], approved_goal: tuple[int, int]) -> PlanningResult:
+        return PlanningResult(
+            status=PlannerStatus.SUCCESS,
+            start=start,
+            goal=self._goal,
+            path=self._path,
+            actions=self._actions,
+            path_cost=1.0,
+            movement_cost=1.0,
+            cumulative_risk=0.0,
+            risk_cost=0.0,
+            expanded_nodes=1,
+        )
