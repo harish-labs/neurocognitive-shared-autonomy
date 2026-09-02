@@ -4,9 +4,9 @@
 ### Current Codex Implementation Authority
 
 **Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.  
-**Current status:** NO ACTIVE IMPLEMENTATION TASK
+**Current status:** ACTIVE IMPLEMENTATION TASK
 **Current milestone:** Pre-M6 Audit Remediation
-**Task ID:** None
+**Task ID:** PRE-M6-R02
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
@@ -16,7 +16,34 @@
 
 ---
 
-# 1. CLOSED TASK RECORD — M5-T04
+# 1. ACTIVE TASK — PRE-M6-R02
+
+```text
+Task ID: PRE-M6-R02
+Task title: Human OVERRIDE Symbolic Goal Identity Correction
+Phase: Pre-M6 Audit Remediation
+Task branch: task/pre-m6-r02-symbolic-override
+Objective: Require each human OVERRIDE target to be the exact configured symbolic goal identifier, consistent with D-067, D-068, and D-069.
+```
+
+Authorized implementation files:
+
+```text
+src/control/human_interaction.py
+tests/test_human_interaction.py
+```
+
+Optional test-only file, only if strictly required:
+
+```text
+tests/test_navigation_runtime.py
+```
+
+Forbidden scope includes navigation runtime, interaction bridge, environment, planner, safety, EEG, configuration and dependency files; no M5 redesign, coordinate reverse lookup, aliases, fuzzy matching, substitution, or M6 work is authorized.
+
+---
+
+# 2. CLOSED TASK RECORD — M5-T04
 
 ```text
 Task ID: M5-T04

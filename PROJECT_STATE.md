@@ -18,16 +18,16 @@ M4-T01 through M4-T05 accepted and merged.
 M5-T01 through M5-T04 accepted and merged.
 D-069 Interruptible Navigation Execution Contract approved and implemented through M5-T03.
 D-070 Stepwise Replacement-Snapshot Replanning Contract approved and implemented through M5-T04.
-Pre-M6 audit remediation remains in progress: PRE-M6-R01 is complete.
+Pre-M6 audit remediation remains in progress: PRE-M6-R01 is complete and PRE-M6-R02 is active.
 
 Current module:
-Pre-M6 remediation awaiting separately authorized remaining items
+PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction
 
 Current task:
-None
+PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction
 
 Task status:
-NO ACTIVE IMPLEMENTATION TASK
+ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
