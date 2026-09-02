@@ -18,25 +18,25 @@ M4-T01 through M4-T05 accepted and merged.
 M5-T01 through M5-T04 accepted and merged.
 D-069 Interruptible Navigation Execution Contract approved and implemented through M5-T03.
 D-070 Stepwise Replacement-Snapshot Replanning Contract approved and implemented through M5-T04.
-Pre-M6 audit remediation remains in progress: PRE-M6-R01 is complete and PRE-M6-R02 is active.
+Pre-M6 audit remediation remains in progress: PRE-M6-R01 and PRE-M6-R02 are complete.
 
 Current module:
-PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction
+Pre-M6 remediation awaiting separately authorized remaining items
 
 Current task:
-PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction
+None
 
 Task status:
-ACTIVE IMPLEMENTATION TASK
+NO ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
 
 Latest accepted task-branch software commit:
-470106faee4dc6351a6826f7dd37b358941c1a13
+3d6f4ab9dd153b7558cb2975db7442b1f1267af0
 
 Latest accepted software task:
-PRE-M6-R01 — M4 Wrong-Terminal Route Protection
+PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction
 
 Latest approved scientific/architectural decision:
 D-070 — Stepwise Replacement-Snapshot Replanning Contract
@@ -72,9 +72,10 @@ M5-T02 — Shared-Autonomy / Human-Interaction Authorization Bridge
 M5-T03 — Human-Authority-Aware Stepwise Navigation Runtime
 M5-T04 — Stepwise Replacement-Snapshot Replanning Integration
 PRE-M6-R01 — M4 Wrong-Terminal Route Protection: PASS / MERGED
+PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction: PASS / MERGED
 ```
 
-Total accepted implementation tasks: 20.
+Total accepted implementation tasks: 21.
 
 ---
 
@@ -168,9 +169,11 @@ The warning is the known non-failing PyTorch `padding='same'` warning from the a
 
 # 7. CURRENT BLOCKERS / NEXT REVIEW
 
-PRE-M6-R01 — M4 Wrong-Terminal Route Protection: PASS / MERGED. The M4 whole-route executor and D-066 controlled replanning now fail closed before safety or movement when a route would cross another configured terminal before the approved goal. Pre-M6 remediation remains in progress overall; additional remediation items require separate authorization.
+PRE-M6-R01 — M4 Wrong-Terminal Route Protection: PASS / MERGED. The M4 whole-route executor and D-066 controlled replanning now fail closed before safety or movement when a route would cross another configured terminal before the approved goal.
 
-No active implementation task is authorized. The next architectural review remains the offline EEG-to-full-system integration boundary. M6 is NOT STARTED and no M6 task is authorized yet.
+PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction: PASS / MERGED. Human OVERRIDE accepts only non-empty exact symbolic goal identifiers; mapping coordinate values are rejected without reverse lookup or authorization. Interaction bridge, navigation runtime, replacement-snapshot replanning, and duplicate goal-coordinate policy remain unchanged. Pre-M6 remediation remains in progress overall; additional remediation items require separate authorization.
+
+No active implementation task is authorized. PRE-M6-R03 is not authorized. The next architectural review remains the offline EEG-to-full-system integration boundary. M6 is NOT STARTED and no M6 task is authorized yet.
 
 Before authorization, preserve at least:
 

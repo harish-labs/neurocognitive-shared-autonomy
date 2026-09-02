@@ -4,9 +4,9 @@
 ### Current Codex Implementation Authority
 
 **Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.  
-**Current status:** ACTIVE IMPLEMENTATION TASK
+**Current status:** NO ACTIVE IMPLEMENTATION TASK
 **Current milestone:** Pre-M6 Audit Remediation
-**Task ID:** PRE-M6-R02
+**Task ID:** None
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
@@ -16,30 +16,40 @@
 
 ---
 
-# 1. ACTIVE TASK — PRE-M6-R02
+# 1. CLOSED TASK RECORD — PRE-M6-R02
 
 ```text
 Task ID: PRE-M6-R02
 Task title: Human OVERRIDE Symbolic Goal Identity Correction
 Phase: Pre-M6 Audit Remediation
 Task branch: task/pre-m6-r02-symbolic-override
-Objective: Require each human OVERRIDE target to be the exact configured symbolic goal identifier, consistent with D-067, D-068, and D-069.
+Final status: PASS / SCIENTIFICALLY ACCEPTED / MERGED
+Accepted software commit:
+3d6f4ab9dd153b7558cb2975db7442b1f1267af0
+Canonical merged software SHA:
+3d6f4ab9dd153b7558cb2975db7442b1f1267af0
 ```
 
-Authorized implementation files:
+Accepted files:
 
 ```text
 src/control/human_interaction.py
 tests/test_human_interaction.py
 ```
 
-Optional test-only file, only if strictly required:
+Accepted behavior:
 
 ```text
-tests/test_navigation_runtime.py
+Human OVERRIDE targets require a non-empty exact symbolic identifier.
+For mapping-based valid_goals, only exact mapping keys are valid; configured coordinate values are not identities and no coordinate-to-symbolic reverse lookup occurs.
+Unknown, empty, and non-symbolic OVERRIDE targets are rejected without changing the approved goal, closing a confirmation, or granting fresh execution authorization.
+Valid symbolic OVERRIDE remains APPLIED, stores the exact identifier, cancels the active confirmation, and requires fresh execution authorization.
+M5-T02 interaction bridge, M5-T03 navigation runtime, M5-T04 replacement-snapshot replanning, and duplicate goal-coordinate policy remain unchanged.
 ```
 
-Forbidden scope includes navigation runtime, interaction bridge, environment, planner, safety, EEG, configuration and dependency files; no M5 redesign, coordinate reverse lookup, aliases, fuzzy matching, substitution, or M6 work is authorized.
+Independent clean GitHub Actions verification used temporary workflow commit `12e403f06d26aad9f0d81eefb39409804037551b`, whose parent was exactly the accepted candidate. Run `33611808236` / job `100188463968` completed successfully for focused, adjacent, and full pytest steps. Raw logs did not expose exact pass counts; GitHub displayed one warning. `pandas` and `scikit-learn` were installed only in temporary CI because the dependency-manifest issue remains separately unauthorized.
+
+PRE-M6-R02 is complete. Do not begin PRE-M6-R03 automatically. Do not begin M6.
 
 ---
 
