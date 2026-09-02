@@ -31,6 +31,13 @@ class NavigationStatus(str, Enum):
     ALREADY_CONSUMED = "ALREADY_CONSUMED"
 
 
+class NavigationReplanTrigger(str, Enum):
+    """The two explicit D-070 replan trigger classes."""
+
+    ENVIRONMENT_CHANGED = "ENVIRONMENT_CHANGED"
+    SAFETY_REPLAN_REQUIRED = "SAFETY_REPLAN_REQUIRED"
+
+
 @dataclass(frozen=True)
 class EnvironmentSignature:
     """Structural map snapshot used to reject implicit runtime changes."""
@@ -78,6 +85,20 @@ class NavigationResult:
     reason: str
 
 
+@dataclass(frozen=True)
+class ReplanResult:
+    """Immutable audit record for one replacement-snapshot replan opportunity."""
+
+    status: NavigationStatus
+    event_id: object
+    source_execution_id: object
+    new_execution_id: object
+    planner_invoked: bool
+    replacement_session_created: bool
+    navigation_result: NavigationResult
+    reason: str
+
+
 class NavigationRuntime:
     """Start plans without movement and advance at most one safety-gated action."""
 
@@ -91,6 +112,7 @@ class NavigationRuntime:
         self._safety_controller = SafetyController() if safety_controller is None else safety_controller
         self._session: NavigationSession | None = None
         self._consumed_execution_ids: set[str] = set()
+        self._consumed_event_ids: set[str] = set()
 
     @property
     def session(self) -> NavigationSession | None:
@@ -480,6 +502,77 @@ class NavigationRuntime:
             reason="Exactly one planned action passed safety and was executed.",
         )
 
+    def replan_after_environment_change(
+        self,
+        source_environment: SearchRescueEnvironment,
+        replacement_environment: SearchRescueEnvironment,
+        controller: HumanInteractionController,
+        *,
+        source_execution_id: object,
+        event_id: object,
+        new_execution_id: object,
+        trigger: object,
+        prior_result: NavigationResult | None = None,
+        resume_result: CommandResult | None = None,
+    ) -> ReplanResult:
+        """Create a zero-movement replacement plan under the D-070 event contract."""
+        session = self._session
+        if not _is_non_empty_identifier(event_id):
+            return self._replan_result(NavigationStatus.INVALID_AUTHORIZATION, event_id, source_execution_id, new_execution_id, False, False, None, "event_id must be a non-empty string.")
+        if event_id in self._consumed_event_ids:
+            return self._replan_result(NavigationStatus.ALREADY_CONSUMED, event_id, source_execution_id, new_execution_id, False, False, None, "event_id has already been consumed by a planner invocation.")
+        if not isinstance(session, NavigationSession) or session.execution_id != source_execution_id:
+            return self._replan_result(NavigationStatus.INVALID_AUTHORIZATION, event_id, source_execution_id, new_execution_id, False, False, None, "source_execution_id does not identify the current source session.")
+        if not _is_non_empty_identifier(new_execution_id) or new_execution_id == source_execution_id:
+            return self._replan_result(NavigationStatus.INVALID_AUTHORIZATION, event_id, source_execution_id, new_execution_id, False, False, None, "new_execution_id must be unique and distinct from source_execution_id.")
+        if new_execution_id in self._consumed_execution_ids:
+            return self._replan_result(NavigationStatus.ALREADY_CONSUMED, event_id, source_execution_id, new_execution_id, False, False, None, "new_execution_id has already been consumed.")
+        if not isinstance(source_environment, SearchRescueEnvironment) or not isinstance(replacement_environment, SearchRescueEnvironment) or not isinstance(controller, HumanInteractionController):
+            return self._replan_result(NavigationStatus.INVALID_AUTHORIZATION, event_id, source_execution_id, new_execution_id, False, False, None, "Replan requires accepted source/replacement environments and controller.")
+        if controller.state.stopped:
+            return self._replan_result(NavigationStatus.STOPPED, event_id, source_execution_id, new_execution_id, False, False, None, "STOP prevents replanning before planner invocation.")
+        if controller.state.paused:
+            return self._replan_result(NavigationStatus.PAUSED, event_id, source_execution_id, new_execution_id, False, False, None, "PAUSE prevents replanning before planner invocation.")
+        if controller.state.active_confirmation is not None:
+            return self._replan_result(NavigationStatus.HOLD, event_id, source_execution_id, new_execution_id, False, False, None, "Active confirmation prevents replanning before planner invocation.")
+        if controller.state.approved_goal != session.symbolic_goal:
+            return self._replan_result(NavigationStatus.STALE_STATE, event_id, source_execution_id, new_execution_id, False, False, None, "Approved goal changed; old-goal replanning is forbidden.")
+        if not _valid_replan_trigger(trigger, prior_result, source_execution_id):
+            return self._replan_result(NavigationStatus.INVALID_AUTHORIZATION, event_id, source_execution_id, new_execution_id, False, False, None, "Replan trigger is not an explicit environment change or genuine safety replan request.")
+        if (
+            not session.active
+            and trigger is NavigationReplanTrigger.ENVIRONMENT_CHANGED
+            and not _valid_resume_for_replan(resume_result, controller, session.symbolic_goal)
+        ):
+            return self._replan_result(NavigationStatus.INVALID_AUTHORIZATION, event_id, source_execution_id, new_execution_id, False, False, None, "A closed source session requires an applied RESUME result for replacement replanning.")
+        if not _valid_source_state(source_environment, session):
+            return self._replan_result(NavigationStatus.STALE_STATE, event_id, source_execution_id, new_execution_id, False, False, None, "Source environment no longer matches the source navigation session.")
+        if not _valid_replacement_snapshot(source_environment, replacement_environment, session):
+            return self._replan_result(NavigationStatus.STALE_STATE, event_id, source_execution_id, new_execution_id, False, False, None, "Replacement snapshot violates the D-070 preservation and change contract.")
+
+        self._consumed_event_ids.add(event_id)
+        self._consumed_execution_ids.add(new_execution_id)
+        self._session = replace(session, active=False)
+        start = source_environment.state.position
+        planning = self._planner.plan(replacement_environment, start=start, approved_goal=session.goal_coordinate)
+        if planning.status is PlannerStatus.NO_SAFE_PATH:
+            result = _result(NavigationStatus.NO_SAFE_PATH, new_execution_id, session.symbolic_goal, session.goal_coordinate, (), None, None, start, start, False, False, True, False, 0, "Replacement planner reported no safe path.")
+            return self._replan_result(NavigationStatus.NO_SAFE_PATH, event_id, source_execution_id, new_execution_id, True, False, result, result.reason)
+        if not _is_consistent_success_plan(planning, start, session.goal_coordinate) or _crosses_another_goal(planning.path, session.symbolic_goal, replacement_environment.config.goals):
+            result = _result(NavigationStatus.INVALID_GOAL_OR_PLAN, new_execution_id, session.symbolic_goal, session.goal_coordinate, planning.path if isinstance(planning, PlanningResult) else (), None, None, start, start, False, False, True, False, 0, "Replacement planner output is malformed or crosses another terminal goal.")
+            return self._replan_result(NavigationStatus.INVALID_GOAL_OR_PLAN, event_id, source_execution_id, new_execution_id, True, False, result, result.reason)
+        if not planning.actions:
+            result = _result(NavigationStatus.INVALID_GOAL_OR_PLAN, new_execution_id, session.symbolic_goal, session.goal_coordinate, planning.path, None, None, start, start, False, False, True, False, 0, "Replacement zero-action plan cannot establish an environment goal-entry event.")
+            return self._replan_result(NavigationStatus.INVALID_GOAL_OR_PLAN, event_id, source_execution_id, new_execution_id, True, False, result, result.reason)
+
+        self._session = NavigationSession(new_execution_id, session.symbolic_goal, session.goal_coordinate, planning.path, planning.actions, 0, start, _environment_signature(replacement_environment), True)
+        result = _session_result(NavigationStatus.READY, self._session, position_before=start, position_after=start, moved=False, safety_decision=None, requires_replan=False, reason="Replacement snapshot produced a fresh zero-movement stepwise plan.")
+        return self._replan_result(NavigationStatus.READY, event_id, source_execution_id, new_execution_id, True, True, result, result.reason)
+
+    def _replan_result(self, status: NavigationStatus, event_id: object, source_execution_id: object, new_execution_id: object, planner_invoked: bool, replacement_session_created: bool, navigation_result: NavigationResult | None, reason: str) -> ReplanResult:
+        fallback = navigation_result or _result(status, new_execution_id, None, None, (), None, None, None, None, False, False, True, False, 0, reason)
+        return ReplanResult(status, event_id, source_execution_id, new_execution_id, planner_invoked, replacement_session_created, fallback, reason)
+
     def _close(
         self,
         status: NavigationStatus,
@@ -548,6 +641,77 @@ def _fresh_authorized_goal(authorization: object, controller: HumanInteractionCo
 
 def _is_exact_environment_goal(symbolic_goal: object, environment: SearchRescueEnvironment) -> bool:
     return isinstance(symbolic_goal, str) and bool(symbolic_goal) and symbolic_goal in environment.config.goals
+
+
+def _valid_replan_trigger(
+    trigger: object,
+    prior_result: NavigationResult | None,
+    source_execution_id: object,
+) -> bool:
+    if trigger is NavigationReplanTrigger.ENVIRONMENT_CHANGED:
+        return prior_result is None
+    if trigger is not NavigationReplanTrigger.SAFETY_REPLAN_REQUIRED or not isinstance(prior_result, NavigationResult):
+        return False
+    return (
+        prior_result.status is NavigationStatus.REPLAN_REQUIRED
+        and prior_result.execution_id == source_execution_id
+        and prior_result.requires_replan
+        and isinstance(prior_result.safety_decision, SafetyDecision)
+        and prior_result.safety_decision.requires_replan
+    )
+
+
+def _valid_resume_for_replan(
+    resume_result: CommandResult | None,
+    controller: HumanInteractionController,
+    symbolic_goal: str,
+) -> bool:
+    return (
+        isinstance(resume_result, CommandResult)
+        and resume_result.status is CommandStatus.APPLIED
+        and resume_result.command_type is HumanCommandType.RESUME
+        and resume_result.accepted
+        and resume_result.applied
+        and not resume_result.paused
+        and not resume_result.stopped
+        and resume_result.requires_fresh_execution
+        and resume_result.approved_goal == symbolic_goal
+        and controller.state.approved_goal == symbolic_goal
+    )
+
+
+def _valid_source_state(environment: SearchRescueEnvironment, session: NavigationSession) -> bool:
+    return (
+        _environment_signature(environment) == session.environment_signature
+        and environment.state.position == session.expected_position
+        and not environment.state.terminated
+    )
+
+
+def _valid_replacement_snapshot(
+    source: SearchRescueEnvironment,
+    replacement: SearchRescueEnvironment,
+    session: NavigationSession,
+) -> bool:
+    if replacement is source:
+        return False
+    source_config = source.config
+    replacement_config = replacement.config
+    if (replacement_config.rows, replacement_config.columns) != (source_config.rows, source_config.columns):
+        return False
+    if tuple(sorted(replacement_config.goals.items())) != tuple(sorted(source_config.goals.items())):
+        return False
+    if replacement_config.goals.get(session.symbolic_goal) != session.goal_coordinate:
+        return False
+    current_position = source.state.position
+    if replacement_config.start != current_position or replacement.state.position != current_position:
+        return False
+    if replacement.state.terminated or replacement.is_blocked(current_position) or replacement.is_prohibited(current_position):
+        return False
+    return (
+        replacement_config.blocked_cells != source_config.blocked_cells
+        or dict(replacement_config.risk_map) != dict(source_config.risk_map)
+    )
 
 
 def _is_consistent_success_plan(planning: object, start: Coordinate, goal: Coordinate) -> bool:
