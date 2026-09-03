@@ -2015,6 +2015,62 @@ The environment must not resolve duplicate coordinates by first-match behavior, 
 
 ---
 
+## D-072 — Central Runtime Configuration and Scientific Policy Lock Contract
+
+**Status:** APPROVED
+
+**Date:** 2026-09-03
+**Supplements:** Master Project Spec Module 0, D-031 through D-065, D-071
+
+**Decision:**
+
+```text
+CANONICAL EXTERNAL CONFIGURATION
+config.yaml remains the canonical external composition/runtime configuration file.
+Do not introduce a second replay-specific YAML/config file at this stage.
+
+VALIDATED TYPED BOUNDARY
+src/config.py is the approved validated typed configuration boundary. Its role is to load config.yaml, validate configuration, and expose typed configuration to future system-composition code.
+It must not replace or duplicate EnvironmentConfig, split manifests, fitted calibration objects, Bayesian episode state, navigation snapshots, or adaptation state.
+
+RUNTIME CONFIGURATION SCOPE
+External configuration may control operational/composition settings only, including dataset/cache paths, selected subject IDs, selected EEG runs, manifest path, model artifact path, calibrator artifact path, replay input path/source, output/result paths, device selection, environment/map selection, adaptation enabled/disabled mode, and reproducibility seed where operationally applicable.
+This list is illustrative, not authorization for unrelated implementation.
+
+SCIENTIFIC-POLICY LOCK
+Approved scientific-policy values are NOT ordinary runtime overrides. config.yaml, CLI arguments, environment variables, or other runtime mechanisms must not silently override D-approved scientific policy.
+This includes EEG preprocessing band/reference/epoch/artifact/sampling-rate policy; CSP crop/component-selection/CSP-LDA policy; EEGNet architecture/training policy; calibration policy; Bayesian prior/commitment threshold/evidence horizon; shared-autonomy thresholds/policy; adaptation update policy/warm-up/bounds; planner risk weight; hazard/prohibited-risk/no-safe-path policy; and safety policy.
+A change to an approved scientific value requires separate Project Owner/governance authorization, including for a separately approved experimental condition. Configuration is not scientific authority.
+
+NO DUPLICATE SCIENTIFIC SOURCE OF TRUTH
+Where an approved scientific value already has one canonical production owner, the central configuration layer must not create a second independently editable source of truth. src/config.py may validate compatibility with approved policy, but must not silently redefine it. Stale/null scientific-policy placeholders in config.yaml must not become competing runtime controls.
+
+PRECEDENCE
+For operational fields only: explicit CLI override, then config.yaml operational value, then a validated code default only where explicitly permitted. CLI must not override locked scientific-policy values.
+
+FAIL-CLOSED BEHAVIOR
+The central configuration layer must fail closed for unknown keys, invalid types, invalid operational values, unsupported settings, and attempts to override locked scientific policy. Invalid or unsupported configuration must raise an explicit configuration error rather than being silently ignored.
+
+ARTIFACT AUTHORITY AND COMPATIBILITY
+Runtime configuration may select split manifests, decoder/model artifacts, and calibrator artifacts, but must not rewrite or override embedded scientific provenance. Artifact-specific metadata remains authoritative for artifact identity/provenance. Compatibility between selected artifacts and requested runtime composition must be validated at the appropriate composition boundary.
+
+PROVENANCE BOUNDARY
+D-072 does not authorize experiment logging or full run-provenance infrastructure. The central configuration representation should be deterministic/serializable so a later separately authorized replay/logging task can record the effective operational configuration. PRE-M6-R05 must not expand into experiment-logging implementation merely because configuration will later need to be snapshotted.
+
+ENVIRONMENT-VARIABLE POLICY
+No environment-variable precedence layer is approved at this stage. Do not add environment-variable configuration support unless separately approved later.
+```
+
+**Context:** The Master Project Spec requires central configuration and prohibits scattered configuration. The current repository has partial local configuration mechanisms but lacks the required production central boundary.
+
+**Rationale:** The approved design improves M6 composition and reproducibility without turning governed scientific decisions into ordinary user-editable settings. Operational composition is externalized while approved scientific policy remains locked.
+
+**Implementation consequence:** Recording D-072 does not authorize PRE-M6-R05 implementation, creation of `src/config.py`, modification of `config.yaml`, CLI implementation, artifact persistence, model/calibrator compatibility implementation, run-provenance logging, M6 integration, or PRE-M6-R06. Each requires separate task authorization.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
