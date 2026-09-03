@@ -2,26 +2,26 @@ project:
   name: neurocognitive-shared-autonomy
 
 dataset:
-  name: eegbci
+  cache_path: data/raw
+  subjects: [1]
   runs: [4, 8, 12]
+  preload: true
 
-eeg:
-  sampling_frequency: 160
+artifacts:
+  split_manifest: null
+  decoder: null
+  calibrator: null
 
-preprocessing:
-  bandpass: null
-  reference: null
-  epoch_interval: null
+replay:
+  source: null
 
-calibration:
-  method: null
+runtime:
+  device: cpu
+  adaptation_enabled: false
+  seed: 42
 
-bayesian:
-  commitment_rule: null
+environment:
+  map: null
 
-shared_autonomy:
-  thresholds: null
-
-planner:
-  algorithm: astar
-  risk_lambda: null
+output:
+  directory: results
