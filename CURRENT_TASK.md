@@ -4,15 +4,43 @@
 ### Current Codex Implementation Authority
 
 **Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.  
-**Current status:** NO ACTIVE IMPLEMENTATION TASK
+**Current status:** ACTIVE IMPLEMENTATION TASK
 **Current milestone:** Pre-M6 Audit Remediation
-**Task ID:** None
+**Task ID:** PRE-M6-R05
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
 **Repository instructions:** `AGENTS.md`  
 **Canonical branch:** `main`  
-**Last updated:** 2026-09-02
+**Last updated:** 2026-09-03
+
+---
+
+# 1. ACTIVE TASK — PRE-M6-R05
+
+```text
+Task ID: PRE-M6-R05
+Task title: Central Runtime Composition Configuration
+Phase: Pre-M6 Audit Remediation
+Task branch: task/pre-m6-r05-runtime-config
+Status: ACTIVE IMPLEMENTATION TASK
+```
+
+Objective:
+
+```text
+Implement a validated typed central runtime/composition configuration boundary under D-072 while preserving existing scientific-policy owners and existing domain configuration/state contracts.
+```
+
+Authorized implementation files:
+
+```text
+config.yaml
+src/config.py
+tests/test_config.py
+```
+
+Do not begin PRE-M6-R06 or M6. Do not modify other production or test files.
 
 ---
 

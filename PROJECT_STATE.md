@@ -18,16 +18,16 @@ M4-T01 through M4-T05 accepted and merged.
 M5-T01 through M5-T04 accepted and merged.
 D-069 Interruptible Navigation Execution Contract approved and implemented through M5-T03.
 D-070 Stepwise Replacement-Snapshot Replanning Contract approved and implemented through M5-T04.
-Pre-M6 audit remediation remains in progress: PRE-M6-R01 through PRE-M6-R04 are complete.
+Pre-M6 audit remediation remains in progress: PRE-M6-R01 through PRE-M6-R04 are complete and PRE-M6-R05 is active.
 
 Current module:
-Pre-M6 remediation awaiting separately authorized remaining items
+PRE-M6-R05 — Central Runtime Composition Configuration
 
 Current task:
-None
+PRE-M6-R05
 
 Task status:
-NO ACTIVE IMPLEMENTATION TASK
+ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
@@ -39,7 +39,7 @@ Latest accepted software task:
 PRE-M6-R04 — Adaptation Disabled-State Mutation Correction
 
 Latest approved scientific/architectural decision:
-D-071 — Environment Goal Registry Identity and Uniqueness Contract
+D-072 — Central Runtime Configuration and Scientific Policy Lock Contract
 
 Latest valid reportable experiment:
 None yet
@@ -177,7 +177,7 @@ PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction: PASS / MERGED. 
 
 PRE-M6-R03 — Environment Snapshot Immutability and Goal Registry Hardening: PASS / SCIENTIFICALLY ACCEPTED / MERGED at `d5a20c0db8372b6e371b657207b3d04db17342af`. EnvironmentConfig now owns immutable defensive configuration state, and D-071 validates symbolic goal identity and unique terminal coordinates. Pre-M6 remediation remains in progress overall; additional remediation items require separate authorization.
 
-PRE-M6-R04 — Adaptation Disabled-State Mutation Correction: PASS / MERGED. No active implementation task is authorized. PRE-M6-R05 is not authorized. M6 is NOT STARTED and no M6 task is authorized.
+PRE-M6-R04 — Adaptation Disabled-State Mutation Correction: PASS / MERGED. PRE-M6-R05 — Central Runtime Composition Configuration is the active implementation task. PRE-M6-R06 is not authorized. M6 is NOT STARTED and no M6 task is authorized.
 
 Before authorization, preserve at least:
 
@@ -207,10 +207,8 @@ Do not claim end-to-end EEG-driven mission execution, reportable system improvem
 
 # 9. NEXT ACTION
 
-Continue Pre-M6 audit remediation one separately reviewed and explicitly authorized item at a time.
+Execute only the explicitly authorized PRE-M6-R05 central runtime composition configuration task.
 
-Before any remaining remediation implementation, ChatGPT + Project Owner must review the relevant audit finding and governing authority.
-
-Do not begin PRE-M6-R05 automatically.
+Do not begin PRE-M6-R06 automatically.
 
 Do not begin M6 until Pre-M6 remediation is explicitly completed and the Pre-M6 audit is explicitly passed.
