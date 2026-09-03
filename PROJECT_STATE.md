@@ -18,16 +18,16 @@ M4-T01 through M4-T05 accepted and merged.
 M5-T01 through M5-T04 accepted and merged.
 D-069 Interruptible Navigation Execution Contract approved and implemented through M5-T03.
 D-070 Stepwise Replacement-Snapshot Replanning Contract approved and implemented through M5-T04.
-Pre-M6 audit remediation remains in progress: PRE-M6-R01, PRE-M6-R02, and PRE-M6-R03 are complete.
+Pre-M6 audit remediation remains in progress: PRE-M6-R01 through PRE-M6-R03 are complete; PRE-M6-R04 is active.
 
 Current module:
-Pre-M6 remediation awaiting separately authorized remaining items
+PRE-M6-R04 — Adaptation Disabled-State Mutation Correction
 
 Current task:
-None
+PRE-M6-R04 — Adaptation Disabled-State Mutation Correction
 
 Task status:
-NO ACTIVE IMPLEMENTATION TASK
+ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main

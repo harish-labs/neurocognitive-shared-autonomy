@@ -4,9 +4,9 @@
 ### Current Codex Implementation Authority
 
 **Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.  
-**Current status:** NO ACTIVE IMPLEMENTATION TASK
+**Current status:** ACTIVE IMPLEMENTATION TASK
 **Current milestone:** Pre-M6 Audit Remediation
-**Task ID:** None
+**Task ID:** PRE-M6-R04
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
@@ -16,7 +16,25 @@
 
 ---
 
-# 1. CLOSED TASK RECORD — PRE-M6-R03
+# 1. ACTIVE TASK — PRE-M6-R04
+
+```text
+Task ID: PRE-M6-R04
+Task title: Adaptation Disabled-State Mutation Correction
+Phase: Pre-M6 Audit Remediation
+Task branch: task/pre-m6-r04-adaptation-off
+Objective: Ensure adaptation_enabled=False is a no-learning/no-personalization-state mode while preserving enabled D-058 through D-060 behavior.
+```
+
+Authorized implementation files:
+```text
+src/cognitive/adaptation.py
+tests/test_adaptation.py
+```
+
+---
+
+# 2. CLOSED TASK RECORD — PRE-M6-R03
 
 ```text
 Task ID: PRE-M6-R03
