@@ -30,7 +30,7 @@ def canonical_payload() -> dict[str, object]:
 
 def write_config(tmp_path: Path, payload: dict[str, object]) -> Path:
     path = tmp_path / "nested" / "runtime.yaml"
-    path.parent.mkdir()
+    path.parent.mkdir(exist_ok=True)
     path.write_text(yaml.safe_dump(payload, sort_keys=False), encoding="utf-8")
     return path
 
