@@ -2071,6 +2071,44 @@ No environment-variable precedence layer is approved at this stage. Do not add e
 
 ---
 
+## D-073 — YAML Parser Dependency Contract
+
+**Status:** APPROVED
+
+**Date:** 2026-09-03
+**Supplements:** D-072
+
+**Decision:**
+
+```text
+APPROVED PARSER
+PyYAML is the approved YAML parser for this project. The package dependency is PyYAML. The configuration loader must use yaml.safe_load(...) or an equivalently safe PyYAML loading API. Arbitrary Python-object YAML construction is not permitted.
+
+ARCHITECTURAL BOUNDARY
+PyYAML is an infrastructure dependency only. It does not redefine D-072, become a scientific-policy source, authorize new configuration semantics, make approved scientific policy runtime-editable, authorize environment-variable configuration, or authorize broad dependency changes.
+
+R05 DEPENDENCY PERMISSION
+PRE-M6-R05 may add PyYAML to requirements.txt. This is the only dependency-manifest modification authorized under R05. Do not use R05 to correct other dependency omissions. In particular, do not add or reconcile pandas, scikit-learn, matplotlib, streamlit, or any other dependency as part of this task.
+
+VERSION POLICY
+D-073 does not freeze an exact PyYAML version. Do not invent a version pin solely for R05 unless an existing repository-wide dependency policy already mandates one. Exact environment/version freezing remains separate reproducibility/dependency work.
+
+R05 RESUMPTION AND SCOPE
+Once D-073 is recorded and PRE-M6-R05 governance is amended, the existing PRE-M6-R05 — Central Runtime Composition Configuration task may resume on task/pre-m6-r05-runtime-config. Do not create a new remediation task solely for PyYAML.
+The authorized R05 implementation file set is exactly config.yaml, src/config.py, tests/test_config.py, and requirements.txt. requirements.txt may change only to add PyYAML. All other R05 scope constraints remain unchanged.
+
+NON-AUTHORIZATION
+D-073 does not authorize PRE-M6-R06, M6, general dependency reconciliation, requirements cleanup, dependency version freezing, environment creation, experiment logging, provenance logging, artifact persistence, decoder/calibrator persistence, or a unified decoder interface.
+```
+
+**Rationale:** D-072 requires a safe YAML configuration boundary, while the existing dependency manifest does not provide a declared YAML parser. Approving one narrow infrastructure dependency permits the authorized R05 boundary without broadening scientific policy or dependency-maintenance scope.
+
+**Implementation consequence:** A separately authorized active PRE-M6-R05 task may add only PyYAML to `requirements.txt` and use its safe-loading API while implementing the D-072 configuration boundary. No other dependency or implementation scope is authorized by this decision.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.

@@ -5,7 +5,7 @@
 
 **Purpose:** Authoritative live record of what is actually true now about the project.  
 **Workflow:** ChatGPT + Project Owner + Codex + Git/GitHub  
-**Last updated:** 2026-09-02
+**Last updated:** 2026-09-03
 
 ---
 
@@ -39,7 +39,7 @@ Latest accepted software task:
 PRE-M6-R04 — Adaptation Disabled-State Mutation Correction
 
 Latest approved scientific/architectural decision:
-D-072 — Central Runtime Configuration and Scientific Policy Lock Contract
+D-073 — YAML Parser Dependency Contract
 
 Latest valid reportable experiment:
 None yet

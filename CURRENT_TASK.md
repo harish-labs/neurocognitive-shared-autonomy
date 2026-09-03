@@ -38,7 +38,10 @@ Authorized implementation files:
 config.yaml
 src/config.py
 tests/test_config.py
+requirements.txt
 ```
+
+`requirements.txt` is authorized only for adding the PyYAML dependency approved by D-073. No other dependency maintenance is authorized.
 
 Do not begin PRE-M6-R06 or M6. Do not modify other production or test files.
 
