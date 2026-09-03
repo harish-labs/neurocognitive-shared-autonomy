@@ -177,7 +177,7 @@ PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction: PASS / MERGED. 
 
 PRE-M6-R03 — Environment Snapshot Immutability and Goal Registry Hardening: PASS / SCIENTIFICALLY ACCEPTED / MERGED at `d5a20c0db8372b6e371b657207b3d04db17342af`. EnvironmentConfig now owns immutable defensive configuration state, and D-071 validates symbolic goal identity and unique terminal coordinates. Pre-M6 remediation remains in progress overall; additional remediation items require separate authorization.
 
-No active implementation task is authorized. PRE-M6-R04 is not authorized. M6 is NOT STARTED and no M6 task is authorized yet.
+PRE-M6-R04 — Adaptation Disabled-State Mutation Correction: PASS / MERGED. No active implementation task is authorized. PRE-M6-R05 is not authorized. M6 is NOT STARTED and no M6 task is authorized.
 
 Before authorization, preserve at least:
 
@@ -207,6 +207,10 @@ Do not claim end-to-end EEG-driven mission execution, reportable system improvem
 
 # 9. NEXT ACTION
 
-ChatGPT + Project Owner review the exact offline EEG-to-full-system integration architecture before any M6 implementation authorization.
+Continue Pre-M6 audit remediation one separately reviewed and explicitly authorized item at a time.
 
-Do not begin M6, UI, experiments, logging infrastructure, hardware integration, or dependency maintenance automatically.
+Before any remaining remediation implementation, ChatGPT + Project Owner must review the relevant audit finding and governing authority.
+
+Do not begin PRE-M6-R05 automatically.
+
+Do not begin M6 until Pre-M6 remediation is explicitly completed and the Pre-M6 audit is explicitly passed.
