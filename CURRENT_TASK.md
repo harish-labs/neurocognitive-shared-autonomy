@@ -4,9 +4,9 @@
 ### Current Codex Implementation Authority
 
 **Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.  
-**Current status:** NO ACTIVE IMPLEMENTATION TASK
+**Current status:** ACTIVE IMPLEMENTATION TASK
 **Current milestone:** Pre-M6 Audit Remediation
-**Task ID:** None
+**Task ID:** PRE-M6-R06
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
@@ -16,7 +16,150 @@
 
 ---
 
-# 1. CLOSED TASK RECORD — PRE-M6-R05
+# 1. ACTIVE TASK — PRE-M6-R06
+
+```text
+Task ID: PRE-M6-R06
+Task title: Accepted-Code Dependency Manifest Reconciliation
+Phase: Pre-M6 Audit Remediation
+Task branch: task/pre-m6-r06-dependency-manifest
+Status: ACTIVE IMPLEMENTATION TASK
+Starting canonical main:
+eb5b8cd58c7a7e0a52d293e62d91870532559177
+```
+
+## Objective
+
+Audit dependencies actually imported by already accepted and merged production/test code through PRE-M6-R05 and reconcile `requirements.txt` so a clean project installation can run the accepted implementation/test suite without ad hoc manual dependency installs.
+
+This is dependency-manifest maintenance only. It must not change scientific behavior, runtime architecture, accepted configuration semantics, or production/test logic.
+
+## Read first
+
+```text
+1. MASTER_PROJECT_SPEC.md
+2. AGENTS.md
+3. PROJECT_STATE.md
+4. DECISIONS.md
+5. requirements.txt
+6. accepted production/test code imports as needed for the audit
+```
+
+If any dependency choice would require a new scientific, architectural, environment, packaging, or reproducibility policy decision, stop and report it instead of inventing one.
+
+## Authorized implementation files
+
+```text
+requirements.txt
+```
+
+No other production, test, governance, documentation, lockfile, environment, or workflow file is authorized for implementation under PRE-M6-R06.
+
+## Requirements
+
+1. Audit imports used by already accepted/merged code and tests through PRE-M6-R05.
+2. Add only missing direct third-party runtime/test dependencies required by that accepted code.
+3. At minimum, reconcile the already verified omissions:
+   ```text
+   pandas
+   scikit-learn
+   matplotlib
+   ```
+   if the audit confirms they remain direct requirements.
+4. Preserve existing declared dependencies unless the audit proves one is erroneous; removal is not authorized merely for cleanup.
+5. Do not add dependencies only because they are listed in the future approved technology stack.
+6. Do not add `streamlit` unless accepted code/tests already import and require it; UI is currently NOT STARTED.
+7. Do not add unrelated optional/development tooling.
+8. Do not freeze exact package versions or introduce a new pinning policy under this task.
+9. Do not create `requirements-dev.txt`, `pyproject.toml`, lockfiles, environment files, or packaging metadata.
+10. Do not modify code/tests to work around missing dependencies.
+11. Do not implement M6 or any end-to-end EEG replay/integration behavior.
+12. Do not add logging/provenance/artifact-persistence infrastructure or unified decoder/runtime interfaces.
+
+## Verification
+
+Codex must use a clean environment if available and report the exact commands actually executed.
+
+Minimum verification target:
+
+```text
+install dependencies from requirements.txt
+run full pytest suite
+```
+
+If full verification cannot be executed because of host/environment/network limitations, report `BLOCKED` or `PARTIAL` accurately and provide the exact failure. Do not fabricate pass counts.
+
+The audit report must also identify:
+
+```text
+all third-party imports reviewed
+which packages were already declared
+which packages were missing
+which package names differ from import names (for example sklearn -> scikit-learn)
+why each added dependency is required by accepted code/tests
+```
+
+## Acceptance criteria
+
+PRE-M6-R06 may be accepted only if:
+
+```text
+requirements.txt reflects direct third-party dependencies of accepted code/tests through PRE-M6-R05
++
+no future/unimplemented-module dependency is added merely in anticipation
++
+no new version-freezing/environment policy is invented
++
+no production/test behavior is changed
++
+verification is honestly reported
++
+M6 remains not started
+```
+
+## Stop conditions
+
+Stop and report instead of expanding scope if:
+
+- determining the correct dependency requires a new packaging/version/reproducibility policy;
+- dependency installation exposes a code defect requiring source/test modification;
+- an accepted module depends on an undeclared optional backend whose inclusion is scientifically/architecturally ambiguous;
+- clean verification requires modifying files outside `requirements.txt`;
+- implementation would begin M6 or any other remediation item.
+
+## Completion report
+
+Report:
+
+```text
+Status:
+Starting main SHA:
+Task branch:
+Files modified:
+Dependencies audited:
+Dependencies added:
+Dependencies intentionally not added:
+Exact install command:
+Tests executed:
+Test results:
+Known warnings:
+Known limitations:
+Open blockers:
+Candidate commit SHA:
+Suggested commit message:
+```
+
+After completing PRE-M6-R06:
+
+```text
+STOP
+```
+
+Do not begin another remediation item or M6 automatically.
+
+---
+
+# 2. CLOSED TASK RECORD — PRE-M6-R05
 
 ```text
 Task ID: PRE-M6-R05
@@ -44,209 +187,25 @@ requirements.txt
 
 Accepted dependency change: `requirements.txt` adds only the PyYAML dependency approved by D-073.
 
-PRE-M6-R05 is complete. PRE-M6-R06 is not authorized. M6 is not started.
+PRE-M6-R05 is complete. PRE-M6-R06 is separately authorized above. M6 is not started.
 
 ---
 
-# 1. CLOSED TASK RECORD — PRE-M6-R04
+# 3. CLOSED TASK SUMMARY
 
-```text
-Task ID: PRE-M6-R04
-Task title: Adaptation Disabled-State Mutation Correction
-Phase: Pre-M6 Audit Remediation
-Task branch: task/pre-m6-r04-adaptation-off
-Final status: PASS / SCIENTIFICALLY ACCEPTED / MERGED
-Accepted software commit:
-b9d34dc5a28bf91296647297113c4907e8c87e41
-```
+Accepted tasks before PRE-M6-R06 include M1-T01 through M1-T10, M4-T01 through M4-T05, M5-T01 through M5-T04, and PRE-M6-R01 through PRE-M6-R05.
 
-Accepted files:
-```text
-src/cognitive/adaptation.py
-tests/test_adaptation.py
-```
-
-Accepted behavior: adaptation_enabled=False is a no-learning mode. Disabled prior queries and valid feedback do not create or mutate personalization state, alpha/count/warm-up state, or update records; active-episode and malformed-feedback validation remains enforced, and enabled D-058 through D-060 behavior is unchanged.
-
-Verification: GitHub Actions run `33733560653`, job `100578799434`; focused adaptation, adjacent adaptation/Bayesian/shared-autonomy, and full pytest all succeeded.
-
-PRE-M6-R04 is complete. PRE-M6-R05 is not authorized. M6 is not started.
+The authoritative details of earlier closed tasks remain in Git history and `PROJECT_STATE.md`.
 
 ---
 
-# 2. CLOSED TASK RECORD — PRE-M6-R03
+# 4. NEXT ARCHITECTURAL BOUNDARY
 
-```text
-Task ID: PRE-M6-R03
-Task title: Environment Snapshot Immutability and Goal Registry Hardening
-Phase: Pre-M6 Audit Remediation
-Task branch: task/pre-m6-r03-environment-immutability
-Final status: PASS / SCIENTIFICALLY ACCEPTED / MERGED
-Accepted final software commit:
-d5a20c0db8372b6e371b657207b3d04db17342af
-```
+The next project boundary after all Pre-M6 remediation is accepted is offline EEG-to-full-system integration, but no M6 implementation is authorized by PRE-M6-R06.
 
-Accepted files:
+Before any M6 implementation ticket is created, ChatGPT and the Project Owner must review the exact end-to-end integration contract connecting the accepted offline EEG decoding / calibration / Bayesian inference / uncertainty-aware shared autonomy / human authorization layers to the accepted M5 stepwise navigation runtime.
 
-```text
-src/autonomy/environment.py
-tests/test_environment.py
-tests/test_navigation_runtime.py
-```
-
-Accepted behavior:
-
-```text
-EnvironmentConfig owns defensive immutable copies of goals, risk_map, and blocked_cells.
-Caller-owned construction inputs cannot mutate an existing environment configuration.
-D-071 goal identifiers require exact symbolic strings containing at least one non-whitespace character and are not normalized.
-Distinct symbolic goals require distinct terminal coordinates; duplicate-coordinate ambiguity is rejected during validation.
-Detached caller-map mutation does not create active-environment stale state, while real active-environment state changes remain NavigationRuntime STALE_STATE.
-Planner, safety, navigation production code, execution, and replanning implementations remain unchanged.
-```
-
-Independent temporary GitHub Actions verification: run `33729956933`, job `100567384198`. Focused environment tests, focused navigation tests, adjacent regression, and full pytest all succeeded. Exact pass counts were not fabricated because raw logs were unavailable; GitHub displayed one warning without attributable raw evidence.
-
-PRE-M6-R03 is complete. Do not begin PRE-M6-R04 automatically. Do not begin M6.
-
----
-
-# 2. CLOSED TASK RECORD — PRE-M6-R02
-
-```text
-Task ID: PRE-M6-R02
-Task title: Human OVERRIDE Symbolic Goal Identity Correction
-Phase: Pre-M6 Audit Remediation
-Task branch: task/pre-m6-r02-symbolic-override
-Final status: PASS / SCIENTIFICALLY ACCEPTED / MERGED
-Accepted software commit:
-3d6f4ab9dd153b7558cb2975db7442b1f1267af0
-Canonical merged software SHA:
-3d6f4ab9dd153b7558cb2975db7442b1f1267af0
-```
-
-Accepted files:
-
-```text
-src/control/human_interaction.py
-tests/test_human_interaction.py
-```
-
-Accepted behavior:
-
-```text
-Human OVERRIDE targets require a non-empty exact symbolic identifier.
-For mapping-based valid_goals, only exact mapping keys are valid; configured coordinate values are not identities and no coordinate-to-symbolic reverse lookup occurs.
-Unknown, empty, and non-symbolic OVERRIDE targets are rejected without changing the approved goal, closing a confirmation, or granting fresh execution authorization.
-Valid symbolic OVERRIDE remains APPLIED, stores the exact identifier, cancels the active confirmation, and requires fresh execution authorization.
-M5-T02 interaction bridge, M5-T03 navigation runtime, M5-T04 replacement-snapshot replanning, and duplicate goal-coordinate policy remain unchanged.
-```
-
-Independent clean GitHub Actions verification used temporary workflow commit `12e403f06d26aad9f0d81eefb39409804037551b`, whose parent was exactly the accepted candidate. Run `33611808236` / job `100188463968` completed successfully for focused, adjacent, and full pytest steps. Raw logs did not expose exact pass counts; GitHub displayed one warning. `pandas` and `scikit-learn` were installed only in temporary CI because the dependency-manifest issue remains separately unauthorized.
-
-PRE-M6-R02 is complete. Do not begin PRE-M6-R03 automatically. Do not begin M6.
-
----
-
-# 2. CLOSED TASK RECORD — M5-T04
-
-```text
-Task ID: M5-T04
-Task title: Stepwise Replacement-Snapshot Replanning Integration
-Final status: PASS / SCIENTIFICALLY ACCEPTED / MERGED
-Task branch: task/m5-t04-stepwise-replanning
-Accepted software commit:
-12a5230c0e4c3adcf83a687dfe5e5155e4f446e1
-```
-
-Accepted files:
-
-```text
-src/control/navigation_runtime.py
-tests/test_navigation_replanning.py
-```
-
-Accepted D-070 behavior:
-
-```text
-NavigationRuntime.replan_after_environment_change(...) integrates D-066 replacement-snapshot replanning into the accepted D-069 stepwise runtime
-replanning performs zero environment.step() calls and zero SafetyController.check() calls
-accepted triggers are explicit ENVIRONMENT_CHANGED or genuine prior REPLAN_REQUIRED plus a new validated changed snapshot
-caller-supplied event_id is unique and permits at most one actual planner invocation
-invalid pre-planner requests do not consume event_id
-once A* invocation begins, the event is consumed regardless of READY / NO_SAFE_PATH / INVALID_GOAL_OR_PLAN
-replacement route uses a distinct new execution_id; source execution cannot replay
-same exact human-approved symbolic goal is preserved across environment replanning
-replacement snapshot preserves grid dimensions, exact goal registry, approved-goal coordinate, and current position
-only blocked_cells and/or risk_map may change, and at least one must genuinely differ
-STOP, PAUSE, active confirmation, approved-goal change, stale source state, or invalid replacement prevent planner invocation
-changed-while-paused continuation requires valid RESUME semantics and never replays the old route
-safety REPLAN_REQUIRED alone cannot retry an unchanged map
-replacement planner output reuses D-069 integrity and wrong-terminal-goal checks
-NO_SAFE_PATH is stationary and cannot retry using the same consumed event
-successful replanning creates a zero-movement READY replacement NavigationSession
-all subsequent movement remains exclusively through advance_one_step()
-accepted M4 whole-route executor and ControlledReplanningCoordinator remain unchanged and are not invoked by the M5 stepwise replan path
-no async/background/event-bus/retry-worker behavior was added
-```
-
-Independent exact-candidate verification was run in a clean GitHub Actions environment whose workflow parent was explicitly verified as the accepted task commit:
-
-```text
-python -m pytest tests/test_navigation_runtime.py tests/test_navigation_replanning.py tests/test_human_interaction.py tests/test_interaction_bridge.py tests/test_planner.py tests/test_safety.py
--> 105 passed in 0.52s
-
-python -m pytest tests/test_navigation_runtime.py tests/test_navigation_replanning.py tests/test_human_interaction.py tests/test_interaction_bridge.py tests/test_planner.py tests/test_safety.py tests/test_execution.py tests/test_replanning.py tests/test_shared_autonomy.py
--> 143 passed in 0.36s
-
-python -m pytest
--> 281 passed, 1 warning in 26.83s
-```
-
-The warning is the already-known non-failing PyTorch `padding='same'` warning from the accepted EEGNet/calibration path.
-
-The clean verification environment installed `pandas` and `scikit-learn` separately because `requirements.txt` still omits those pre-existing dependencies. M5-T04 did not modify `requirements.txt`.
-
----
-
-# 2. CLOSED TASK RECORD — PRE-M6-R01
-
-```text
-Task ID: PRE-M6-R01
-Task title: M4 Wrong-Terminal Route Protection
-Phase: Pre-M6 Audit Remediation
-Task branch: task/m4-remediate-wrong-terminal-goal
-Final status: PASS / SCIENTIFICALLY ACCEPTED / MERGED
-Accepted software commit:
-470106faee4dc6351a6826f7dd37b358941c1a13
-Canonical main/software SHA:
-470106faee4dc6351a6826f7dd37b358941c1a13
-```
-
-Accepted behavior:
-
-```text
-PlannerSafetyEnvironmentExecutor rejects a structurally valid planner SUCCESS route when an intermediate coordinate is another configured terminal goal different from the approved goal coordinate.
-The check occurs after structural plan validation and before SafetyController.check() or environment.step().
-Rejection is INVALID_GOAL_OR_PLAN with zero movement, zero executed actions, zero safety decisions, unchanged non-terminated environment state, and unchanged approved goal coordinate.
-Valid multi-goal routes that do not cross another configured terminal remain executable.
-ControlledReplanningCoordinator inherits the corrected fail-closed behavior through the M4 executor while retaining D-066 event-consumption behavior.
-M5 NavigationRuntime, planner, risk, environment, and safety semantics were not modified.
-```
-
-Independent clean GitHub Actions verification used temporary workflow commit `d6dd594cde91c2d1f21adb465dc3a1cc08c04dd9`, whose parent was verified as the accepted candidate. Primary run `33600560760` / job `100153096772` and final evidence run `33601227845` / job `100155145125` both concluded successfully after focused, adjacent, and full pytest steps. `pandas` and `scikit-learn` were installed only in CI because the existing `requirements.txt` omission remains separately unauthorized.
-
-PRE-M6-R01 is complete. Do not begin PRE-M6-R02 automatically. Do not begin M6.
-
----
-
-# 3. NEXT ARCHITECTURAL BOUNDARY
-
-The next project boundary is offline EEG-to-full-system integration after separate review and explicit Project Owner approval.
-
-Before any M6 implementation ticket is created, ChatGPT and the Project Owner must review the exact end-to-end integration contract connecting the already accepted offline EEG decoding / calibration / Bayesian inference / uncertainty-aware shared autonomy / human authorization layers to the accepted M5 stepwise navigation runtime.
-
-The review must preserve at least:
+Preserve at least:
 
 ```text
 offline prerecorded EEG / simulated real-time BCI only
@@ -258,14 +217,14 @@ human WHAT authority and confirmation/override/pause/stop precedence remain unch
 fresh execution authorization remains required before navigation
 D-069 stepwise movement and D-070 replacement-snapshot replanning remain authoritative
 safety veto before every movement
-no automatic scope expansion into UI, reportable experiments, logging infrastructure, or dependency maintenance
+no automatic scope expansion into UI, reportable experiments, logging infrastructure, or unrelated dependency maintenance
 ```
 
 ---
 
-# 4. UNRESOLVED EXPERIMENTAL DECISIONS
+# 5. UNRESOLVED EXPERIMENTAL DECISIONS
 
-The following remain unresolved and are not authorized by this close:
+The following remain unresolved and are not authorized by this task:
 
 ```text
 U-034 — final A/B/C/D component matrix
