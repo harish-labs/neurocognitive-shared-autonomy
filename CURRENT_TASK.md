@@ -4,9 +4,9 @@
 ### Current Codex Implementation Authority
 
 **Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.  
-**Current status:** ACTIVE IMPLEMENTATION TASK
+**Current status:** NO ACTIVE IMPLEMENTATION TASK
 **Current milestone:** Pre-M6 Audit Remediation
-**Task ID:** PRE-M6-R05
+**Task ID:** None
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
@@ -16,14 +16,15 @@
 
 ---
 
-# 1. ACTIVE TASK — PRE-M6-R05
+# 1. CLOSED TASK RECORD — PRE-M6-R05
 
 ```text
 Task ID: PRE-M6-R05
 Task title: Central Runtime Composition Configuration
 Phase: Pre-M6 Audit Remediation
 Task branch: task/pre-m6-r05-runtime-config
-Status: ACTIVE IMPLEMENTATION TASK
+Final status: PASS / SCIENTIFICALLY ACCEPTED / MERGED
+Canonical software SHA: 2ccb665cf20666d1af7abb931a481a27d402d7e6
 ```
 
 Objective:
@@ -32,7 +33,7 @@ Objective:
 Implement a validated typed central runtime/composition configuration boundary under D-072 while preserving existing scientific-policy owners and existing domain configuration/state contracts.
 ```
 
-Authorized implementation files:
+Accepted implementation files:
 
 ```text
 config.yaml
@@ -41,9 +42,9 @@ tests/test_config.py
 requirements.txt
 ```
 
-`requirements.txt` is authorized only for adding the PyYAML dependency approved by D-073. No other dependency maintenance is authorized.
+Accepted dependency change: `requirements.txt` adds only the PyYAML dependency approved by D-073.
 
-Do not begin PRE-M6-R06 or M6. Do not modify other production or test files.
+PRE-M6-R05 is complete. PRE-M6-R06 is not authorized. M6 is not started.
 
 ---
 

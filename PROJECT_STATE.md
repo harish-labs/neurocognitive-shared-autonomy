@@ -18,25 +18,25 @@ M4-T01 through M4-T05 accepted and merged.
 M5-T01 through M5-T04 accepted and merged.
 D-069 Interruptible Navigation Execution Contract approved and implemented through M5-T03.
 D-070 Stepwise Replacement-Snapshot Replanning Contract approved and implemented through M5-T04.
-Pre-M6 audit remediation remains in progress: PRE-M6-R01 through PRE-M6-R04 are complete and PRE-M6-R05 is active.
+Pre-M6 audit remediation remains in progress: PRE-M6-R01 through PRE-M6-R05 are complete.
 
 Current module:
-PRE-M6-R05 — Central Runtime Composition Configuration
+Pre-M6 remediation awaiting separately authorized remaining items
 
 Current task:
-PRE-M6-R05
+None
 
 Task status:
-ACTIVE IMPLEMENTATION TASK
+NO ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
 
 Latest accepted task-branch software commit:
-b9d34dc5a28bf91296647297113c4907e8c87e41
+2ccb665cf20666d1af7abb931a481a27d402d7e6
 
 Latest accepted software task:
-PRE-M6-R04 — Adaptation Disabled-State Mutation Correction
+PRE-M6-R05 — Central Runtime Composition Configuration
 
 Latest approved scientific/architectural decision:
 D-073 — YAML Parser Dependency Contract
@@ -75,9 +75,10 @@ PRE-M6-R01 — M4 Wrong-Terminal Route Protection: PASS / MERGED
 PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction: PASS / MERGED
 PRE-M6-R03 — Environment Snapshot Immutability and Goal Registry Hardening: PASS / MERGED
 PRE-M6-R04 — Adaptation Disabled-State Mutation Correction: PASS / MERGED
+PRE-M6-R05 — Central Runtime Composition Configuration: PASS / MERGED
 ```
 
-Total accepted implementation tasks: 23.
+Total accepted implementation tasks: 24.
 
 ---
 
@@ -177,7 +178,9 @@ PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction: PASS / MERGED. 
 
 PRE-M6-R03 — Environment Snapshot Immutability and Goal Registry Hardening: PASS / SCIENTIFICALLY ACCEPTED / MERGED at `d5a20c0db8372b6e371b657207b3d04db17342af`. EnvironmentConfig now owns immutable defensive configuration state, and D-071 validates symbolic goal identity and unique terminal coordinates. Pre-M6 remediation remains in progress overall; additional remediation items require separate authorization.
 
-PRE-M6-R04 — Adaptation Disabled-State Mutation Correction: PASS / MERGED. PRE-M6-R05 — Central Runtime Composition Configuration is the active implementation task. PRE-M6-R06 is not authorized. M6 is NOT STARTED and no M6 task is authorized.
+PRE-M6-R04 — Adaptation Disabled-State Mutation Correction: PASS / MERGED.
+
+PRE-M6-R05 — Central Runtime Composition Configuration: PASS / SCIENTIFICALLY ACCEPTED / MERGED at `2ccb665cf20666d1af7abb931a481a27d402d7e6`. The project now has a validated immutable operational configuration boundary under D-072/D-073; approved scientific policy remains locked in its existing owners. Pre-M6 remediation remains in progress overall. PRE-M6-R06 is not authorized. M6 is NOT STARTED and no M6 task is authorized.
 
 Before authorization, preserve at least:
 
@@ -207,7 +210,7 @@ Do not claim end-to-end EEG-driven mission execution, reportable system improvem
 
 # 9. NEXT ACTION
 
-Execute only the explicitly authorized PRE-M6-R05 central runtime composition configuration task.
+Continue Pre-M6 audit remediation one separately reviewed and explicitly authorized item at a time.
 
 Do not begin PRE-M6-R06 automatically.
 
