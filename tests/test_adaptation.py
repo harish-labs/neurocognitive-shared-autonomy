@@ -47,11 +47,32 @@ def test_new_state_is_symmetric_and_has_uniform_prior() -> None:
     assert personalizer.initial_prior_for_new_episode("subject-001", "goal-a", "goal-b") == (0.5, 0.5)
 
 
-def test_adaptation_off_always_returns_uniform_prior_despite_history() -> None:
+def test_adaptation_off_returns_uniform_prior_without_initializing_state() -> None:
     personalizer = adaptation.PriorPersonalizer(adaptation_enabled=False)
-    add_a_feedback(personalizer, 4)
 
     assert personalizer.initial_prior_for_new_episode("subject-001", "goal-a", "goal-b") == (0.5, 0.5)
+    assert personalizer._states == {}
+    assert personalizer.update_records == ()
+
+
+def test_adaptation_off_feedback_does_not_create_state_or_prewarm_later_enablement() -> None:
+    personalizer = adaptation.PriorPersonalizer(adaptation_enabled=False)
+    add_a_feedback(personalizer, 3)
+
+    assert personalizer._states == {}
+    assert personalizer.update_records == ()
+    personalizer.adaptation_enabled = True
+    assert personalizer.initial_prior_for_new_episode("subject-001", "goal-a", "goal-b") == (0.5, 0.5)
+    assert personalizer.state_for("subject-001", "goal-a", "goal-b").alpha_by_candidate == (1, 1)
+
+
+def test_adaptation_off_preserves_active_episode_and_malformed_feedback_validation() -> None:
+    personalizer = adaptation.PriorPersonalizer(adaptation_enabled=False)
+    with pytest.raises(adaptation.AdaptationError, match="active Bayesian"):
+        personalizer.record_explicit_feedback(observation(adaptation.FeedbackAction.CONFIRM, "goal-a", between_episodes=False))
+    with pytest.raises(adaptation.AdaptationError, match="source observation"):
+        personalizer.record_explicit_feedback(observation(adaptation.FeedbackAction.CONFIRM, "goal-a", source_id=""))
+    assert personalizer._states == {}
 
 
 def test_warm_up_keeps_uniform_prior_until_third_valid_event() -> None:

@@ -106,8 +106,10 @@ class PriorPersonalizer:
         """Return only a future episode's A/B prior; never mutate active Bayes state."""
         if episode_is_active:
             raise AdaptationError("Adaptation may supply a prior only before a new Bayesian episode starts.")
+        if not self.adaptation_enabled:
+            return UNIFORM_PRIOR
         state = self.state_for(subject_id, candidate_a_id, candidate_b_id)
-        if not self.adaptation_enabled or state.update_count < WARM_UP_EVENTS:
+        if state.update_count < WARM_UP_EVENTS:
             return UNIFORM_PRIOR
         raw = self._raw_prior(state, candidate_a_id, candidate_b_id)
         bounded_a = float(np.clip(raw[0], PRIOR_LOWER_BOUND, PRIOR_UPPER_BOUND))
@@ -126,11 +128,13 @@ class PriorPersonalizer:
             return None
         if not observation.source_observation_id or observation.approved_goal_id is None:
             raise AdaptationError("Accepted feedback requires a source observation ID and explicit approved goal.")
-
-        state = self.state_for(observation.subject_id, observation.candidate_a_id, observation.candidate_b_id)
+        key = self._key(observation.subject_id, observation.candidate_a_id, observation.candidate_b_id)
         approved_goal = str(observation.approved_goal_id)
-        if approved_goal not in state.candidate_pair.candidate_ids:
+        if approved_goal not in key[1].candidate_ids:
             raise AdaptationError("Explicit approved goal must belong to the active candidate pair.")
+        if not self.adaptation_enabled:
+            return None
+        state = self.state_for(observation.subject_id, observation.candidate_a_id, observation.candidate_b_id)
         index = state.candidate_pair.candidate_ids.index(approved_goal)
         alphas = list(state.alpha_by_candidate)
         alphas[index] += 1
