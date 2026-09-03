@@ -240,21 +240,28 @@ def test_resume_requires_new_execution_id_and_fresh_plan_from_current_position()
     assert restarted.path[0] == environment.state.position == (1, 1)
 
 
-def test_map_mutation_and_external_position_change_fail_closed_before_next_step() -> None:
+def test_caller_owned_goal_mutation_is_isolated_from_active_navigation() -> None:
     goals = {"victim_a": (1, 4), "victim_b": (0, 2)}
     environment = make_environment(goals=goals)
     runtime, controller, _ = start_ready(environment)
     goals["new_goal"] = (2, 4)
 
-    changed_map = runtime.advance_one_step(environment, controller)
+    advanced = runtime.advance_one_step(environment, controller)
 
-    second_environment = make_environment()
-    second_runtime, second_controller, _ = start_ready(second_environment)
-    second_environment.step(Action.RIGHT)
-    changed_position = second_runtime.advance_one_step(second_environment, second_controller)
+    assert "new_goal" not in environment.config.goals
+    assert advanced.status is NavigationStatus.STEP_EXECUTED
+    assert advanced.moved
 
-    assert changed_map.status is changed_position.status is NavigationStatus.STALE_STATE
-    assert not changed_map.moved and not changed_position.moved
+
+def test_external_active_environment_position_change_fails_closed_before_next_step() -> None:
+    environment = make_environment()
+    runtime, controller, _ = start_ready(environment)
+    environment.step(Action.RIGHT)
+
+    changed_position = runtime.advance_one_step(environment, controller)
+
+    assert changed_position.status is NavigationStatus.STALE_STATE
+    assert not changed_position.moved
 
 
 def test_safety_rejection_and_replan_required_hold_without_movement_or_retry() -> None:
