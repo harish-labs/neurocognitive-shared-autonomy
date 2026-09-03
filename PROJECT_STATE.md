@@ -18,25 +18,25 @@ M4-T01 through M4-T05 accepted and merged.
 M5-T01 through M5-T04 accepted and merged.
 D-069 Interruptible Navigation Execution Contract approved and implemented through M5-T03.
 D-070 Stepwise Replacement-Snapshot Replanning Contract approved and implemented through M5-T04.
-Pre-M6 audit remediation remains in progress: PRE-M6-R01 through PRE-M6-R03 are complete; PRE-M6-R04 is active.
+Pre-M6 audit remediation remains in progress: PRE-M6-R01 through PRE-M6-R04 are complete.
 
 Current module:
-PRE-M6-R04 — Adaptation Disabled-State Mutation Correction
+Pre-M6 remediation awaiting separately authorized remaining items
 
 Current task:
-PRE-M6-R04 — Adaptation Disabled-State Mutation Correction
+None
 
 Task status:
-ACTIVE IMPLEMENTATION TASK
+NO ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
 
 Latest accepted task-branch software commit:
-d5a20c0db8372b6e371b657207b3d04db17342af
+b9d34dc5a28bf91296647297113c4907e8c87e41
 
 Latest accepted software task:
-PRE-M6-R03 — Environment Snapshot Immutability and Goal Registry Hardening
+PRE-M6-R04 — Adaptation Disabled-State Mutation Correction
 
 Latest approved scientific/architectural decision:
 D-071 — Environment Goal Registry Identity and Uniqueness Contract
@@ -74,9 +74,10 @@ M5-T04 — Stepwise Replacement-Snapshot Replanning Integration
 PRE-M6-R01 — M4 Wrong-Terminal Route Protection: PASS / MERGED
 PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction: PASS / MERGED
 PRE-M6-R03 — Environment Snapshot Immutability and Goal Registry Hardening: PASS / MERGED
+PRE-M6-R04 — Adaptation Disabled-State Mutation Correction: PASS / MERGED
 ```
 
-Total accepted implementation tasks: 22.
+Total accepted implementation tasks: 23.
 
 ---
 
