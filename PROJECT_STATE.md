@@ -16,15 +16,16 @@ Project phase:
 M1-T01 through M1-T10 accepted and merged.
 M4-T01 through M4-T05 accepted and merged.
 M5-T01 through M5-T04 accepted and merged.
-D-069 Interruptible Navigation Execution Contract approved and implemented through M5-T03.
-D-070 Stepwise Replacement-Snapshot Replanning Contract approved and implemented through M5-T04.
-Pre-M6 audit remediation is complete through PRE-M6-R06. PRE-M6-R07 documentation reconciliation is active.
+PRE-M6-R01 through PRE-M6-R06 accepted and merged.
+Final Pre-M6 audit found widespread stale decision-state documentation contradictions.
+PRE-M6-R07 was authorized for documentation reconciliation and stopped correctly when the change-controlled Master Specification was found to contain stale unresolved-state claims.
+PRE-M6-R07A — Master Authority Reconciliation is now active.
 
 Current module:
-PRE-M6-R07 — Governance and Decision-State Documentation Reconciliation
+PRE-M6-R07A — Master Authority Reconciliation
 
 Current task:
-PRE-M6-R07
+PRE-M6-R07A
 
 Task status:
 ACTIVE IMPLEMENTATION TASK
@@ -32,28 +33,26 @@ ACTIVE IMPLEMENTATION TASK
 Canonical branch:
 main
 
-PRE-M6-R07 authorization base:
-7fdb8d914458551c287a3e19c03135228c5c123b
+R07 parent authorization state before R07A amendment:
+b3f506bdaf44072dcccccfc575822bbd5e654fab
 
 Latest accepted task-branch software commit:
 23196b8c11ccc800728a077a9ea4203b6be9ae7b
 
-Final merged software commit:
+Final merged software commit through accepted R06:
 f66dba3b78dc91abedaff1b24a3597c7748426df
 
 Latest accepted software task:
 PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation
 
-Latest approved scientific/architectural decision:
+Latest approved scientific/architectural decision register entry:
 D-073 — YAML Parser Dependency Contract
 
 Latest valid reportable experiment:
 None yet
 ```
 
-The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, or human-subject result claim is authorized.
-
-PRE-M6-R07 is documentation/governance-state reconciliation only. It does not authorize production-code changes, new scientific decisions, M6 implementation, UI, experiments, logging/provenance infrastructure, or artifact persistence.
+The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, human-subject result, or end-to-end EEG-driven mission-execution claim is authorized.
 
 ---
 
@@ -89,79 +88,38 @@ PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation: PASS / MERGED
 
 Total accepted implementation tasks: 25.
 
-PRE-M6-R07 is active but is documentation-only and is not yet accepted.
+PRE-M6-R07/R07A are governance/documentation remediation and are not accepted implementation tasks yet.
 
 ---
 
-# 3. CURRENT M5 STATE
+# 3. CURRENT ACCEPTED RUNTIME STATE
 
 ```text
-Shared-autonomy decision policy: PASS
-Human command / confirmation state layer: PASS
-Shared-autonomy -> human-interaction authorization bridge: PASS
-Fresh authorization -> human-authority-aware stepwise navigation runtime: PASS
-D-066 replacement-snapshot stepwise replanning integration: PASS
+EEG loader/preprocessing/splits: PASS
+CSP+LDA baseline: PASS
+EEGNet / compact CNN: PASS
+Probability calibration: PASS
+Bayesian goal inference: PASS
+Uncertainty/shared-autonomy policy: PASS
+Adaptation / prior personalization: PASS
+2D SAR environment + risk-aware A*: PASS
+Safety controller: PASS
+Planner -> safety -> environment integration: PASS
+Controlled replanning: PASS
+Human command/confirmation state: PASS
+Shared-autonomy -> human authorization bridge: PASS
+Fresh authorization -> stepwise navigation runtime: PASS
+Replacement-snapshot stepwise replanning: PASS
 Offline EEG -> full-system execution: NOT STARTED
 UI: NOT STARTED
 Reportable system experiments: NOT STARTED
 ```
 
-Accepted runtime boundary now includes:
-
-```text
-fresh accepted authorization
-        ↓
-exact current symbolic goal resolution
-        ↓
-fresh A* plan, zero movement at start
-        ↓
-one-step control cycle
-        ↓
-current human authority check
-        ↓
-safety check
-        ↓
-at most one environment transition
-        ↓
-explicit changed replacement snapshot when D-066/D-070 replanning is needed
-        ↓
-zero-movement fresh replacement plan
-        ↓
-new execution identity
-        ↓
-resume ordinary one-step authority + safety gating
-```
+Accepted authority remains `STOP > PAUSE > OVERRIDE > CONFIRM/RESUME > shared-autonomy policy`; safety retains veto before every environment transition. D-069 stepwise execution and D-070 replacement-snapshot replanning remain authoritative.
 
 ---
 
-# 4. M5-T04 ACCEPTED BEHAVIOR
-
-```text
-NavigationRuntime provides stepwise replacement-snapshot replanning under D-070
-replan itself performs zero environment movement and zero safety checks
-accepted triggers are explicit ENVIRONMENT_CHANGED or genuine REPLAN_REQUIRED plus a new changed snapshot
-event_id is caller-supplied, replay-protected, and permits at most one actual planner invocation
-invalid pre-planner requests do not consume the event
-once planner invocation begins, the event remains consumed regardless of planning outcome
-replacement route uses a new execution_id and cannot resurrect the old route
-same exact human-approved symbolic goal is preserved
-replacement snapshot preserves grid size, goal registry, approved-goal coordinate, and current agent position
-only blocked_cells and/or risk_map may change and at least one must genuinely differ
-STOP, PAUSE, active confirmation, changed approved goal, stale source state, and invalid snapshots fail closed before planning
-changed-while-paused continuation requires valid RESUME semantics and never replays queued old movement
-safety REPLAN_REQUIRED cannot retry an unchanged map
-NO_SAFE_PATH is explicit and stationary with no same-event retry
-replacement planner output preserves D-069 integrity and wrong-terminal-goal protection
-successful replan creates a zero-movement READY replacement NavigationSession
-movement after replanning occurs only through advance_one_step()
-accepted M4 whole-route executor/replanner remain unchanged and are not invoked by the M5 stepwise replan path
-```
-
-Accepted authority remains `STOP > PAUSE > OVERRIDE > CONFIRM/RESUME > shared-autonomy policy`; safety retains low-level movement veto.
-
----
-
-# 5. ACCEPTED VERIFICATION STATE
+# 4. ACCEPTED VERIFICATION STATE
 
 M5-T04 independent verification:
 
@@ -179,15 +137,15 @@ full pytest suite: 327 passed, 1 warning
 warning: pre-existing PyTorch convolution padding warning
 ```
 
+R07A is documentation-only; production test execution is not required unless an unexpected validation hook requires it.
+
 ---
 
-# 6. CURRENT PRE-M6-R07 REMEDIATION
+# 5. PRE-M6-R07 AUDIT FINDING
 
-Final Pre-M6 audit after PRE-M6-R06 found stale current-state/blocker statements in implementation-facing documentation. In particular, `AGENTS.md`, `TODO.md`, `RESEARCH_LOG.md`, and `docs/15_IMPLEMENTATION_BLUEPRINT.md` still present multiple already-approved decisions as unresolved or blocked even though `DECISIONS.md` contains the approved resolutions.
+The final Pre-M6 audit after R06 found material stale decision-state claims in implementation-facing documentation.
 
-PRE-M6-R07 is explicitly authorized to reconcile only those stale decision-state/documentation claims against canonical approved decisions and accepted project state.
-
-Authorized files:
+Original R07 scope covered:
 
 ```text
 AGENTS.md
@@ -196,30 +154,59 @@ RESEARCH_LOG.md
 docs/15_IMPLEMENTATION_BLUEPRINT.md
 ```
 
-Scope is intentionally narrow:
+Codex correctly stopped because materially stale contradictions were also discovered outside that scope, including:
 
 ```text
-documentation/governance-state reconciliation only
-no MASTER_PROJECT_SPEC.md changes
-no DECISIONS.md changes
-no production code or tests
-no scientific or architectural redesign
-no M6 integration contract
-no UI or experiments
-no logging/provenance/artifact-persistence work
+MASTER_PROJECT_SPEC.md
+README.md
+docs/01_PROJECT_CONCEPT_AND_PROBLEM.md
+docs/02_OBJECTIVES_SCOPE_AND_RESEARCH_QUESTIONS.md
+docs/03_SEARCH_AND_RESCUE_SCENARIO.md
+docs/04_SYSTEM_ARCHITECTURE.md
+docs/05_TECHNOLOGY_STACK.md
+docs/06_DATASET_AND_DATA_PIPELINE.md
+docs/07_NEUROSCIENCE_AND_BCI_FOUNDATIONS.md
+docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md
+docs/09_PROBABILITY_CALIBRATION_AND_UNCERTAINTY.md
+docs/10_BAYESIAN_GOAL_INFERENCE.md
+docs/11_COGNITIVE_AND_ADAPTIVE_MODEL.md
+docs/12_SHARED_AUTONOMY_AND_HUMAN_AI_INTERACTION.md
+docs/13_AUTONOMOUS_PLANNING_AND_CONTROL.md
+docs/14_SAFETY_CRITICAL_CONTROL.md
+docs/17_EXPERIMENTAL_DESIGN.md
+docs/19_TESTING_AND_VERIFICATION.md
+docs/20_LIMITATIONS_ETHICS_AND_VALIDITY.md
+docs/23_RESULTS_AND_ANALYSIS.md
+docs/25_FUTURE_WORK.md
 ```
 
-If another file outside this set contains a material contradiction that must be fixed for final Pre-M6 close, PRE-M6-R07 must stop and report it for separate approval rather than expanding automatically.
+No R07 candidate was committed or pushed from that stopped attempt. Its four authorized files may contain local uncommitted edits in the Codex workspace, but those edits are not accepted repository state.
 
 ---
 
-# 7. CURRENT BLOCKERS / NEXT REVIEW
+# 6. CURRENT PRE-M6-R07A REMEDIATION
 
-PRE-M6-R01 through PRE-M6-R06 are PASS / MERGED.
+The Project Owner explicitly approved:
 
-PRE-M6-R07 — Governance and Decision-State Documentation Reconciliation is ACTIVE and separately authorized by the Project Owner.
+```text
+PRE-M6-R07A — Master Authority Reconciliation
+using only already-approved decisions
+with no new scientific or architectural changes
+```
 
-The only genuinely unresolved scientific decisions currently recorded in `DECISIONS.md` are experimental-analysis items:
+Authorized implementation file:
+
+```text
+MASTER_PROJECT_SPEC.md
+```
+
+Purpose:
+
+Reconcile stale transfer-era/unresolved-state statements in the Master Specification with decisions already approved in `DECISIONS.md`, while preserving the Master as the project constitution rather than converting it into a live implementation-state file.
+
+R07A may reflect already-approved decisions through D-073 where the Master currently contradicts them. It may not change decision semantics or create new ones.
+
+The genuinely unresolved experimental decisions remain:
 
 ```text
 U-034 — final A/B/C/D component matrix
@@ -227,36 +214,41 @@ U-035 — robustness perturbation levels
 U-036 — inferential-statistics policy
 ```
 
-Those items do not authorize experiments and must remain unresolved until separately approved.
+R07B — Secondary Documentation Reconciliation is NOT AUTHORIZED YET and may be defined only after R07A is reviewed and merged.
 
-Before final Pre-M6 close, preserve at least:
+---
+
+# 7. CLAIM / SCOPE BOUNDARIES
+
+Preserve at least:
 
 ```text
 public prerecorded EEG / offline replay / simulated real-time BCI only
-accepted decoder, calibration, Bayesian, uncertainty, shared-autonomy, adaptation, planning, safety, and human-command semantics
-binary EEG evidence must not be silently converted into a fabricated direct multi-goal decoder
-human WHAT authority remains explicit
+no live EEG or hardware claim
+human determines WHAT; AI determines HOW
+accepted binary EEG evidence semantics; no fabricated direct K-goal decoder
+accepted calibration/Bayesian/uncertainty/shared-autonomy/adaptation semantics
 fresh navigation authorization remains required
 D-069 stepwise navigation remains authoritative
 D-070 event-bounded replacement-snapshot replanning remains authoritative
 safety veto remains mandatory before every environment transition
-no UI, reportable experiments, logging infrastructure, hardware integration, or unrelated work without separate authorization
+no UI, reportable experiments, logging infrastructure, hardware integration, or M6 implementation without separate authorization
 ```
 
 ---
 
-# 8. CLAIM STATUS
+# 8. NEXT ACTION
 
-Authorized implementation claims remain limited to accepted work through PRE-M6-R06 and M5-T04. PRE-M6-R07 is documentation-only and not yet accepted.
+Execute only PRE-M6-R07A on its separately authorized task branch after that branch is created from the amended governance state.
 
-Do not claim end-to-end EEG-driven mission execution, reportable system improvement, live EEG, physical robot, human-subject results, or certified real-world safety.
+After R07A candidate implementation:
 
----
+```text
+review exact MASTER_PROJECT_SPEC.md diff
+verify only already-approved decisions were reflected
+verify U-034/U-035/U-036 remain unresolved
+merge only after ChatGPT review/acceptance
+then define R07B separately
+```
 
-# 9. NEXT ACTION
-
-Execute only PRE-M6-R07 — Governance and Decision-State Documentation Reconciliation on its task branch from the recorded authorization base.
-
-After implementation, review the exact documentation diff before acceptance and merge.
-
-Do not close Pre-M6 or begin M6 automatically. Final Pre-M6 close still requires explicit audit pass after PRE-M6-R07 is accepted.
+Do not close Pre-M6 or begin M6 automatically.
