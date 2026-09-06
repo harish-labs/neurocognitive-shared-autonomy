@@ -4,29 +4,47 @@
 ### Current Codex Implementation Authority
 
 **Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.  
-**Current status:** ACTIVE IMPLEMENTATION TASK
-**Current milestone:** Pre-M6 Audit Remediation
-**Task ID:** PRE-M6-R06
+**Current status:** NO ACTIVE IMPLEMENTATION TASK
+**Current milestone:** Pre-M6 Audit Remediation — PRE-M6-R06 closed
+**Task ID:** NONE
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
 **Repository instructions:** `AGENTS.md`  
 **Canonical branch:** `main`  
-**Last updated:** 2026-09-03
+**Last updated:** 2026-09-06
 
 ---
 
-# 1. ACTIVE TASK — PRE-M6-R06
+# 1. CLOSED TASK — PRE-M6-R06
 
 ```text
 Task ID: PRE-M6-R06
 Task title: Accepted-Code Dependency Manifest Reconciliation
 Phase: Pre-M6 Audit Remediation
 Task branch: task/pre-m6-r06-dependency-manifest
-Status: ACTIVE IMPLEMENTATION TASK
+Status: PASS / ACCEPTED / MERGED
 Starting canonical main:
 eb5b8cd58c7a7e0a52d293e62d91870532559177
 ```
+
+Final candidate commit:
+23196b8c11ccc800728a077a9ea4203b6be9ae7b
+
+Final merged software commit:
+f66dba3b78dc91abedaff1b24a3597c7748426df
+
+Merge commit:
+f66dba3b78dc91abedaff1b24a3597c7748426df
+
+Verification:
+
+- `requirements.txt` adds exactly `pandas`, `scikit-learn`, and `matplotlib`.
+- Installation from `requirements.txt` succeeded.
+- Full suite: `327 passed, 1 warning`.
+- Warning: pre-existing PyTorch convolution padding warning.
+
+PRE-M6-R06 is complete and accepted. No implementation task is currently authorized.
 
 ## Objective
 

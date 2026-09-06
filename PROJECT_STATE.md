@@ -5,7 +5,7 @@
 
 **Purpose:** Authoritative live record of what is actually true now about the project.  
 **Workflow:** ChatGPT + Project Owner + Codex + Git/GitHub  
-**Last updated:** 2026-09-03
+**Last updated:** 2026-09-06
 
 ---
 
@@ -18,16 +18,16 @@ M4-T01 through M4-T05 accepted and merged.
 M5-T01 through M5-T04 accepted and merged.
 D-069 Interruptible Navigation Execution Contract approved and implemented through M5-T03.
 D-070 Stepwise Replacement-Snapshot Replanning Contract approved and implemented through M5-T04.
-Pre-M6 audit remediation remains in progress: PRE-M6-R01 through PRE-M6-R05 are complete and PRE-M6-R06 is active.
+Pre-M6 audit remediation is complete through PRE-M6-R06. No implementation task is currently authorized.
 
 Current module:
-PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation
+None — no active implementation task
 
 Current task:
-PRE-M6-R06
+None
 
 Task status:
-ACTIVE IMPLEMENTATION TASK
+NO ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
@@ -36,10 +36,13 @@ PRE-M6-R06 authorization base:
 eb5b8cd58c7a7e0a52d293e62d91870532559177
 
 Latest accepted task-branch software commit:
-2ccb665cf20666d1af7abb931a481a27d402d7e6
+23196b8c11ccc800728a077a9ea4203b6be9ae7b
+
+Final merged software commit:
+f66dba3b78dc91abedaff1b24a3597c7748426df
 
 Latest accepted software task:
-PRE-M6-R05 — Central Runtime Composition Configuration
+PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation
 
 Latest approved scientific/architectural decision:
 D-073 — YAML Parser Dependency Contract
@@ -79,11 +82,12 @@ PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction: PASS / MERGED
 PRE-M6-R03 — Environment Snapshot Immutability and Goal Registry Hardening: PASS / MERGED
 PRE-M6-R04 — Adaptation Disabled-State Mutation Correction: PASS / MERGED
 PRE-M6-R05 — Central Runtime Composition Configuration: PASS / MERGED
+PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation: PASS / MERGED
 ```
 
-Total accepted implementation tasks: 24.
+Total accepted implementation tasks: 25.
 
-PRE-M6-R06 is authorized but not yet accepted; it is therefore not included in the accepted-task count.
+No implementation task is currently active. PRE-M6-R07 and later tasks require separate authorization.
 
 ---
 
@@ -171,9 +175,9 @@ The warning is the known non-failing PyTorch `padding='same'` warning from the a
 
 # 6. CURRENT PRE-M6-R06 REMEDIATION
 
-The dependency manifest remains incomplete for already accepted code. Canonical `requirements.txt` currently omits direct dependencies already used by accepted modules/tests, including the previously verified `pandas`, `scikit-learn`, and `matplotlib` requirements.
+PRE-M6-R06 reconciled the dependency manifest for already accepted code. The accepted merge added `pandas`, `scikit-learn`, and `matplotlib` to `requirements.txt`.
 
-PRE-M6-R06 is now explicitly authorized to audit and reconcile `requirements.txt` against direct third-party imports of accepted code/tests through PRE-M6-R05.
+PRE-M6-R06 is complete and accepted after audit, installation, full-suite verification, and merge.
 
 Scope is intentionally narrow:
 
@@ -188,15 +192,21 @@ no production/test behavior changes
 no M6 implementation
 ```
 
-The task is not yet accepted. Codex must implement, install from the reconciled manifest in a clean environment where available, run the full test suite, and report actual evidence before scientific/engineering review and merge acceptance.
+Verification result:
+
+```text
+installation from requirements.txt: PASS
+full pytest suite: 327 passed, 1 warning
+warning: pre-existing PyTorch convolution padding warning
+```
 
 ---
 
 # 7. CURRENT BLOCKERS / NEXT REVIEW
 
-PRE-M6-R01 through PRE-M6-R05 are PASS / MERGED.
+PRE-M6-R01 through PRE-M6-R06 are PASS / MERGED.
 
-PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation is ACTIVE and separately authorized by the Project Owner. Its authorization does not alter D-073's R05-specific historical scope; it creates a new narrow remediation task for dependency reconciliation.
+PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation is PASS / MERGED. Its acceptance does not authorize any subsequent remediation or M6 work.
 
 Before any later authorization, preserve at least:
 
@@ -218,7 +228,7 @@ Experimental unresolved items remain U-034 final A/B/C/D matrix, U-035 robustnes
 
 # 8. CLAIM STATUS
 
-Authorized implementation claims remain limited to accepted work through PRE-M6-R05 and M5-T04. PRE-M6-R06 is maintenance authorization only and is not yet accepted.
+Authorized implementation claims remain limited to accepted work through PRE-M6-R06 and M5-T04. PRE-M6-R07, M6, UI, full offline EEG integration, and experiments are not automatically authorized.
 
 Do not claim end-to-end EEG-driven mission execution, reportable system improvement, live EEG, physical robot, human-subject results, or certified real-world safety.
 
@@ -226,9 +236,11 @@ Do not claim end-to-end EEG-driven mission execution, reportable system improvem
 
 # 9. NEXT ACTION
 
-Execute only PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation on its task branch from the recorded canonical authorization base.
+NO ACTIVE IMPLEMENTATION TASK.
 
-After implementation, run/verify/review before acceptance.
+PRE-M6-R07, M6, UI, full offline EEG integration, and experiments require separate explicit authorization. Do not begin any subsequent task automatically.
+
+PRE-M6-R06 implementation, verification, review, merge, and governance close are complete.
 
 Do not begin another remediation item automatically.
 
