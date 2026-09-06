@@ -4,9 +4,10 @@
 ### Current Codex Implementation Authority
 
 **Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.  
-**Current status:** NO ACTIVE IMPLEMENTATION TASK
+**Current status:** ACTIVE DOCUMENTATION-ONLY TASK
 **Current milestone:** Pre-M6 Audit Remediation
-**Task ID:** None
+**Task ID:** PRE-M6-R07B
+**Task title:** Secondary Documentation Reconciliation
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
@@ -19,10 +20,11 @@
 # 1. CURRENT AUTHORITY
 
 ```text
-NO ACTIVE IMPLEMENTATION TASK
+PRE-M6-R07B - Secondary Documentation Reconciliation
+Documentation-only task; no code, tests, configuration, dependencies, or M6 work.
 ```
 
-Codex is not authorized to begin another remediation item or M6 without a separately reviewed and explicitly approved task authorization.
+Codex is authorized to reconcile only the approved secondary documentation scope for PRE-M6-R07B. No other task or M6 work is authorized.
 
 ---
 

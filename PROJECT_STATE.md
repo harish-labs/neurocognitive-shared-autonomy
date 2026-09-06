@@ -20,17 +20,17 @@ PRE-M6-R01 through PRE-M6-R06 accepted and merged.
 Final Pre-M6 audit found widespread stale decision-state documentation contradictions.
 PRE-M6-R07 was authorized for documentation reconciliation and stopped correctly when the change-controlled Master Specification was found to contain stale unresolved-state claims.
 PRE-M6-R07A — Master Authority Reconciliation: PASS / ACCEPTED / MERGED.
-PRE-M6-R07B — Secondary Documentation Reconciliation: NOT AUTHORIZED.
+PRE-M6-R07B - Secondary Documentation Reconciliation: AUTHORIZED / ACTIVE.
 Final Pre-M6 audit remains open pending R07B.
 
 Current module:
-NO ACTIVE IMPLEMENTATION TASK
+PRE-M6-R07B - Secondary Documentation Reconciliation
 
 Current task:
-None
+PRE-M6-R07B
 
 Task status:
-NO ACTIVE IMPLEMENTATION TASK
+ACTIVE DOCUMENTATION-ONLY TASK
 
 Canonical branch:
 main
@@ -94,7 +94,7 @@ PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation: PASS / MERGED
 Total accepted implementation tasks: 25.
 
 PRE-M6-R07A is accepted governance/documentation remediation and is not an implementation task.
-PRE-M6-R07B remains NOT AUTHORIZED.
+PRE-M6-R07B is authorized as a documentation-only reconciliation task. It may update only the approved secondary documentation scope and may not modify `MASTER_PROJECT_SPEC.md` or `DECISIONS.md`, change scientific semantics, resolve U-034/U-035/U-036, invent results, write the M6 integration contract, or start M6.
 
 ---
 
@@ -209,7 +209,7 @@ U-035 — robustness perturbation levels
 U-036 — inferential-statistics policy
 ```
 
-PRE-M6-R07B — Secondary Documentation Reconciliation is NOT AUTHORIZED. The final Pre-M6 audit remains open pending separately reviewed and explicitly authorized R07B work.
+PRE-M6-R07B - Secondary Documentation Reconciliation is AUTHORIZED / ACTIVE. The final Pre-M6 audit remains open pending R07B.
 
 ---
 
