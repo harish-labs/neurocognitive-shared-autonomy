@@ -19,22 +19,27 @@ M5-T01 through M5-T04 accepted and merged.
 PRE-M6-R01 through PRE-M6-R06 accepted and merged.
 Final Pre-M6 audit found widespread stale decision-state documentation contradictions.
 PRE-M6-R07 was authorized for documentation reconciliation and stopped correctly when the change-controlled Master Specification was found to contain stale unresolved-state claims.
-PRE-M6-R07A — Master Authority Reconciliation is now active.
+PRE-M6-R07A — Master Authority Reconciliation: PASS / ACCEPTED / MERGED.
+PRE-M6-R07B — Secondary Documentation Reconciliation: NOT AUTHORIZED.
+Final Pre-M6 audit remains open pending R07B.
 
 Current module:
-PRE-M6-R07A — Master Authority Reconciliation
+NO ACTIVE IMPLEMENTATION TASK
 
 Current task:
-PRE-M6-R07A
+None
 
 Task status:
-ACTIVE IMPLEMENTATION TASK
+NO ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
 
-R07 parent authorization state before R07A amendment:
-b3f506bdaf44072dcccccfc575822bbd5e654fab
+PRE-M6-R07A accepted task-branch commit:
+94611b858984e10b89849930be698416db871007
+
+PRE-M6-R07A merge commit:
+8b919c04553b1f3ccd55647fa02a9543e2efe9d7
 
 Latest accepted task-branch software commit:
 23196b8c11ccc800728a077a9ea4203b6be9ae7b
@@ -88,7 +93,8 @@ PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation: PASS / MERGED
 
 Total accepted implementation tasks: 25.
 
-PRE-M6-R07/R07A are governance/documentation remediation and are not accepted implementation tasks yet.
+PRE-M6-R07A is accepted governance/documentation remediation and is not an implementation task.
+PRE-M6-R07B remains NOT AUTHORIZED.
 
 ---
 
@@ -137,7 +143,7 @@ full pytest suite: 327 passed, 1 warning
 warning: pre-existing PyTorch convolution padding warning
 ```
 
-R07A is documentation-only; production test execution is not required unless an unexpected validation hook requires it.
+R07A was documentation-only; production test execution was not required.
 
 ---
 
@@ -184,29 +190,18 @@ No R07 candidate was committed or pushed from that stopped attempt. Its four aut
 
 ---
 
-# 6. CURRENT PRE-M6-R07A REMEDIATION
+# 6. PRE-M6-R07 GOVERNANCE STATUS
 
-The Project Owner explicitly approved:
-
-```text
-PRE-M6-R07A — Master Authority Reconciliation
-using only already-approved decisions
-with no new scientific or architectural changes
-```
-
-Authorized implementation file:
+PRE-M6-R07A is PASS / ACCEPTED / MERGED. It reconciled `MASTER_PROJECT_SPEC.md` with already-approved decisions through D-073 without new scientific or architectural decisions.
 
 ```text
-MASTER_PROJECT_SPEC.md
+Accepted task-branch commit:
+94611b858984e10b89849930be698416db871007
+Merge commit:
+8b919c04553b1f3ccd55647fa02a9543e2efe9d7
 ```
 
-Purpose:
-
-Reconcile stale transfer-era/unresolved-state statements in the Master Specification with decisions already approved in `DECISIONS.md`, while preserving the Master as the project constitution rather than converting it into a live implementation-state file.
-
-R07A may reflect already-approved decisions through D-073 where the Master currently contradicts them. It may not change decision semantics or create new ones.
-
-The genuinely unresolved experimental decisions remain:
+The genuinely unresolved experimental-analysis decisions remain:
 
 ```text
 U-034 — final A/B/C/D component matrix
@@ -214,7 +209,7 @@ U-035 — robustness perturbation levels
 U-036 — inferential-statistics policy
 ```
 
-R07B — Secondary Documentation Reconciliation is NOT AUTHORIZED YET and may be defined only after R07A is reviewed and merged.
+PRE-M6-R07B — Secondary Documentation Reconciliation is NOT AUTHORIZED. The final Pre-M6 audit remains open pending separately reviewed and explicitly authorized R07B work.
 
 ---
 
@@ -239,16 +234,6 @@ no UI, reportable experiments, logging infrastructure, hardware integration, or 
 
 # 8. NEXT ACTION
 
-Execute only PRE-M6-R07A on its separately authorized task branch after that branch is created from the amended governance state.
+No implementation task is currently authorized. Continue Pre-M6 audit remediation only one separately reviewed and explicitly authorized item at a time.
 
-After R07A candidate implementation:
-
-```text
-review exact MASTER_PROJECT_SPEC.md diff
-verify only already-approved decisions were reflected
-verify U-034/U-035/U-036 remain unresolved
-merge only after ChatGPT review/acceptance
-then define R07B separately
-```
-
-Do not close Pre-M6 or begin M6 automatically.
+Do not begin PRE-M6-R07B automatically. Do not begin M6 until Pre-M6 remediation is explicitly completed and the final Pre-M6 audit explicitly passes.
