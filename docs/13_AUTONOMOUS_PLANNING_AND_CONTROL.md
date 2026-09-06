@@ -484,31 +484,17 @@ where:
 
 ---
 
-# 19. RISK MODEL — UNRESOLVED
+# 19. RISK MODEL - APPROVED POLICY
 
-The project has not yet locked:
-
-- hazard categories;
-- numerical risk scale;
-- whether risk applies on entry or occupancy;
-- whether risk is additive;
-- whether risk is normalized;
-- whether risk depends on time;
-- whether some hazards are hard forbidden.
+D-061 through D-065 govern the current risk and safety policy: canonical risk values are fixed on [0,1], destination-cell exposure is additive without extra normalization, lambda is 2.0 for primary risk-aware A*, risk >= 1.00 is prohibited, and no-safe-path handling is a safety veto.
 
 Risk representation is governed by D-061 through D-065 and must not become an ordinary runtime scientific-policy override under D-072.
 
 ---
 
-# 20. RISK WEIGHT \(\lambda\) — UNRESOLVED
+# 20. RISK WEIGHT - APPROVED POLICY
 
-The exact value of:
-
-\[
-\lambda
-\]
-
-is not approved.
+D-063 fixes the primary risk-aware A* weight at lambda = 2.0.
 
 It controls the trade-off between:
 
@@ -1168,13 +1154,13 @@ FORBIDDEN
 
 or a numerical scale.
 
-No final category system is currently locked.
+D-061 and D-064 fix the current risk categories: LOW = 0.25, MEDIUM = 0.50, HIGH = 0.75, and PROHIBITED = 1.00.
 
 ---
 
-# 58. RISK NORMALIZATION — UNRESOLVED
+# 58. RISK NORMALIZATION - APPROVED POLICY
 
-The risk scale may need normalization if:
+D-062 fixes the normalization and aggregation policy: D-061 values are already canonical on [0,1], with no per-map or adaptive rescaling.
 
 ```text
 distance cost
@@ -1553,7 +1539,7 @@ planner:
   algorithm: astar
   heuristic: manhattan
   movement_cost: 1.0
-  risk_lambda: TBD
+  risk_lambda: 2.0
   tie_breaking: TBD
 ```
 
@@ -1567,12 +1553,12 @@ Conceptually:
 
 ```yaml
 risk:
-  policy_id: TBD
-  scale: TBD
-  forbidden_threshold: TBD
+  policy_id: D-061-D-065
+  scale: [0,1]
+  forbidden_threshold: 1.00
 ```
 
-No final values are approved.
+D-061 through D-065 fix these primary risk-policy values; other schema details remain configuration concerns.
 
 ---
 
