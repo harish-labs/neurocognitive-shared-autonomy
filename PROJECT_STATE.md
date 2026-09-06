@@ -18,22 +18,22 @@ M4-T01 through M4-T05 accepted and merged.
 M5-T01 through M5-T04 accepted and merged.
 D-069 Interruptible Navigation Execution Contract approved and implemented through M5-T03.
 D-070 Stepwise Replacement-Snapshot Replanning Contract approved and implemented through M5-T04.
-Pre-M6 audit remediation is complete through PRE-M6-R06. No implementation task is currently authorized.
+Pre-M6 audit remediation is complete through PRE-M6-R06. PRE-M6-R07 documentation reconciliation is active.
 
 Current module:
-None — no active implementation task
+PRE-M6-R07 — Governance and Decision-State Documentation Reconciliation
 
 Current task:
-None
+PRE-M6-R07
 
 Task status:
-NO ACTIVE IMPLEMENTATION TASK
+ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
 
-PRE-M6-R06 authorization base:
-eb5b8cd58c7a7e0a52d293e62d91870532559177
+PRE-M6-R07 authorization base:
+7fdb8d914458551c287a3e19c03135228c5c123b
 
 Latest accepted task-branch software commit:
 23196b8c11ccc800728a077a9ea4203b6be9ae7b
@@ -52,6 +52,8 @@ None yet
 ```
 
 The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, or human-subject result claim is authorized.
+
+PRE-M6-R07 is documentation/governance-state reconciliation only. It does not authorize production-code changes, new scientific decisions, M6 implementation, UI, experiments, logging/provenance infrastructure, or artifact persistence.
 
 ---
 
@@ -87,7 +89,7 @@ PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation: PASS / MERGED
 
 Total accepted implementation tasks: 25.
 
-No implementation task is currently active. PRE-M6-R07 and later tasks require separate authorization.
+PRE-M6-R07 is active but is documentation-only and is not yet accepted.
 
 ---
 
@@ -159,9 +161,9 @@ Accepted authority remains `STOP > PAUSE > OVERRIDE > CONFIRM/RESUME > shared-au
 
 ---
 
-# 5. M5-T04 ACCEPTED VERIFICATION
+# 5. ACCEPTED VERIFICATION STATE
 
-Independent exact-candidate verification in GitHub Actions:
+M5-T04 independent verification:
 
 ```text
 focused -> 105 passed in 0.52s
@@ -169,30 +171,7 @@ adjacent -> 143 passed in 0.36s
 full -> 281 passed, 1 warning in 26.83s
 ```
 
-The warning is the known non-failing PyTorch `padding='same'` warning from the accepted EEGNet/calibration path.
-
----
-
-# 6. CURRENT PRE-M6-R06 REMEDIATION
-
-PRE-M6-R06 reconciled the dependency manifest for already accepted code. The accepted merge added `pandas`, `scikit-learn`, and `matplotlib` to `requirements.txt`.
-
-PRE-M6-R06 is complete and accepted after audit, installation, full-suite verification, and merge.
-
-Scope is intentionally narrow:
-
-```text
-requirements.txt only
-accepted-code direct dependencies only
-no future-only dependencies
-no automatic Streamlit addition while UI is unimplemented
-no dependency version freezing
-no new packaging/environment/lockfile policy
-no production/test behavior changes
-no M6 implementation
-```
-
-Verification result:
+PRE-M6-R06 verification:
 
 ```text
 installation from requirements.txt: PASS
@@ -202,33 +181,73 @@ warning: pre-existing PyTorch convolution padding warning
 
 ---
 
+# 6. CURRENT PRE-M6-R07 REMEDIATION
+
+Final Pre-M6 audit after PRE-M6-R06 found stale current-state/blocker statements in implementation-facing documentation. In particular, `AGENTS.md`, `TODO.md`, `RESEARCH_LOG.md`, and `docs/15_IMPLEMENTATION_BLUEPRINT.md` still present multiple already-approved decisions as unresolved or blocked even though `DECISIONS.md` contains the approved resolutions.
+
+PRE-M6-R07 is explicitly authorized to reconcile only those stale decision-state/documentation claims against canonical approved decisions and accepted project state.
+
+Authorized files:
+
+```text
+AGENTS.md
+TODO.md
+RESEARCH_LOG.md
+docs/15_IMPLEMENTATION_BLUEPRINT.md
+```
+
+Scope is intentionally narrow:
+
+```text
+documentation/governance-state reconciliation only
+no MASTER_PROJECT_SPEC.md changes
+no DECISIONS.md changes
+no production code or tests
+no scientific or architectural redesign
+no M6 integration contract
+no UI or experiments
+no logging/provenance/artifact-persistence work
+```
+
+If another file outside this set contains a material contradiction that must be fixed for final Pre-M6 close, PRE-M6-R07 must stop and report it for separate approval rather than expanding automatically.
+
+---
+
 # 7. CURRENT BLOCKERS / NEXT REVIEW
 
 PRE-M6-R01 through PRE-M6-R06 are PASS / MERGED.
 
-PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation is PASS / MERGED. Its acceptance does not authorize any subsequent remediation or M6 work.
+PRE-M6-R07 — Governance and Decision-State Documentation Reconciliation is ACTIVE and separately authorized by the Project Owner.
 
-Before any later authorization, preserve at least:
+The only genuinely unresolved scientific decisions currently recorded in `DECISIONS.md` are experimental-analysis items:
+
+```text
+U-034 — final A/B/C/D component matrix
+U-035 — robustness perturbation levels
+U-036 — inferential-statistics policy
+```
+
+Those items do not authorize experiments and must remain unresolved until separately approved.
+
+Before final Pre-M6 close, preserve at least:
 
 ```text
 public prerecorded EEG / offline replay / simulated real-time BCI only
-accepted decoder, calibration, Bayesian, uncertainty, shared-autonomy, and human-command semantics
+accepted decoder, calibration, Bayesian, uncertainty, shared-autonomy, adaptation, planning, safety, and human-command semantics
 binary EEG evidence must not be silently converted into a fabricated direct multi-goal decoder
 human WHAT authority remains explicit
 fresh navigation authorization remains required
 D-069 stepwise navigation remains authoritative
 D-070 event-bounded replacement-snapshot replanning remains authoritative
 safety veto remains mandatory before every environment transition
-no UI, reportable experiments, logging infrastructure, hardware integration, or unrelated dependency/packaging work without separate authorization
+no UI, reportable experiments, logging infrastructure, hardware integration, or unrelated work without separate authorization
 ```
-
-Experimental unresolved items remain U-034 final A/B/C/D matrix, U-035 robustness perturbation levels, and U-036 inferential-statistics policy.
 
 ---
 
 # 8. CLAIM STATUS
 
-Authorized implementation claims remain limited to accepted work through PRE-M6-R06 and M5-T04. PRE-M6-R07, M6, UI, full offline EEG integration, and experiments are not automatically authorized.
+Authorized implementation claims remain limited to accepted work through PRE-M6-R06 and M5-T04. PRE-M6-R07 is documentation-only and not yet accepted.
 
 Do not claim end-to-end EEG-driven mission execution, reportable system improvement, live EEG, physical robot, human-subject results, or certified real-world safety.
 
@@ -236,12 +255,8 @@ Do not claim end-to-end EEG-driven mission execution, reportable system improvem
 
 # 9. NEXT ACTION
 
-NO ACTIVE IMPLEMENTATION TASK.
+Execute only PRE-M6-R07 — Governance and Decision-State Documentation Reconciliation on its task branch from the recorded authorization base.
 
-PRE-M6-R07, M6, UI, full offline EEG integration, and experiments require separate explicit authorization. Do not begin any subsequent task automatically.
+After implementation, review the exact documentation diff before acceptance and merge.
 
-PRE-M6-R06 implementation, verification, review, merge, and governance close are complete.
-
-Do not begin another remediation item automatically.
-
-Do not begin M6 until Pre-M6 remediation is explicitly completed and the Pre-M6 audit is explicitly passed.
+Do not close Pre-M6 or begin M6 automatically. Final Pre-M6 close still requires explicit audit pass after PRE-M6-R07 is accepted.
