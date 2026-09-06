@@ -4,10 +4,9 @@
 ### Current Codex Implementation Authority
 
 **Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.  
-**Current status:** ACTIVE DOCUMENTATION-ONLY TASK
+**Current status:** NO ACTIVE IMPLEMENTATION TASK
 **Current milestone:** Pre-M6 Audit Remediation
-**Task ID:** PRE-M6-R07B
-**Task title:** Secondary Documentation Reconciliation
+**Task ID:** None
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
@@ -20,11 +19,10 @@
 # 1. CURRENT AUTHORITY
 
 ```text
-PRE-M6-R07B - Secondary Documentation Reconciliation
-Documentation-only task; no code, tests, configuration, dependencies, or M6 work.
+NO ACTIVE IMPLEMENTATION TASK
 ```
 
-Codex is authorized to reconcile only the approved secondary documentation scope for PRE-M6-R07B. No other task or M6 work is authorized.
+Codex is not authorized to begin another remediation item or M6 without a separately reviewed and explicitly approved task authorization.
 
 ---
 
@@ -50,15 +48,31 @@ U-036 — inferential-statistics policy
 
 ---
 
-# 3. PRE-M6-R07 STATUS
+# 3. CLOSED REMEDIATION - PRE-M6-R07B
 
-PRE-M6-R07 remains staged. PRE-M6-R07B — Secondary Documentation Reconciliation is **NOT AUTHORIZED**.
+```text
+Task ID: PRE-M6-R07B
+Task title: Secondary Documentation Reconciliation
+Status: PASS / ACCEPTED / MERGED
+Accepted task-branch commit:
+1807273a3a3ef7495d32ecd0723d75ac36ba6c83
+Merge commit:
+37925d19f5d36d4ddb17a6990b745f27843926d0
+```
 
-The final Pre-M6 audit remains open pending separately reviewed and explicitly authorized R07B work. Do not begin R07B automatically.
+PRE-M6-R07B reconciled the authorized secondary documentation against the approved decision state without changing scientific or architectural semantics. U-034, U-035, and U-036 remain unresolved.
 
 ---
 
-# 4. M6 BOUNDARY
+# 4. PRE-M6-R07 STATUS
+
+PRE-M6-R07 documentation reconciliation is complete: R07A and R07B are PASS / ACCEPTED / MERGED.
+
+The final Pre-M6 audit remains open and is the next action. It has not been declared passed.
+
+---
+
+# 5. M6 BOUNDARY
 
 M6 remains **NOT STARTED** and **NOT AUTHORIZED**.
 
