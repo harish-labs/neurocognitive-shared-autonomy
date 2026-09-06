@@ -1154,7 +1154,15 @@ FORBIDDEN
 
 or a numerical scale.
 
-D-061 and D-064 fix the current risk categories: LOW = 0.25, MEDIUM = 0.50, HIGH = 0.75, and PROHIBITED = 1.00.
+D-061 and D-064 fix the current risk categories:
+
+```ini
+FREE = 0.00
+LOW = 0.25
+MODERATE = 0.50
+HIGH = 0.75
+PROHIBITED = 1.00
+```
 
 ---
 
