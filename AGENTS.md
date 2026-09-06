@@ -413,23 +413,13 @@ full eligible 109-subject cohort: 76 train / 16 validation / 17 final test
 no subject, original-trial, or derived-window leakage across protected partitions
 ```
 
-Currently unresolved or change-controlled items include:
+Resolved project policy through D-073 includes CSP (D-043/D-044), EEGNet (D-045 through D-047), calibration (D-048 through D-050), binary candidate A/B and likelihood semantics (D-051/D-052), Bayesian/shared-autonomy policy (D-053 through D-057), adaptation (D-058 through D-060), planning/safety (D-061 through D-066), runtime authority/replanning (D-067 through D-071), and central configuration/YAML policy (D-072/D-073).
 
-1. final CSP settings;
-2. final EEGNet architecture/hyperparameters;
-3. calibration method;
-4. calibration fitting partition;
-5. calibration binning;
-6. Bayesian goal-evidence likelihood construction;
-7. binary EEG-to-multiple-goal interaction protocol;
-8. Bayesian stopping/commitment rule;
-9. confidence thresholds;
-10. exact adaptation mechanism;
-11. environmental risk scale;
-12. risk weight \(\lambda\);
-13. prohibited-hazard threshold;
-14. final A/B/C/D component matrix;
-15. final statistical-analysis policy.
+Only the following project-level experimental-analysis items remain unresolved:
+
+1. U-034 — final A/B/C/D component matrix;
+2. U-035 — robustness perturbation levels;
+3. U-036 — inferential-statistics policy.
 
 If required:
 
@@ -546,24 +536,7 @@ Do not describe entropy as a complete decomposition of uncertainty.
 
 # 19. CALIBRATION
 
-Calibration is required conceptually.
-
-Candidate methods include:
-
-```text
-temperature scaling
-Platt / sigmoid scaling
-isotonic regression
-```
-
-The final method remains subject to explicit approval.
-
-Before method approval, it is safe to implement:
-
-- reliability-bin computation;
-- ECE;
-- Brier Score;
-- identity/no-calibration interface.
+Calibration policy is governed by D-048 through D-050: EEGNet uses temperature scaling, CSP+LDA uses sigmoid/Platt-style calibration, and an identity baseline is preserved. Calibrators fit on the approved validation partition; reliability uses 10 equal-width ECE bins and Brier Score.
 
 ---
 
@@ -579,7 +552,7 @@ PAUSE
 STOP
 ```
 
-Exact confidence/entropy thresholds must remain configurable and unresolved until approved.
+Confidence/entropy policy is governed by D-055 through D-057; do not reuse old illustrative numbers outside that approved policy.
 
 Do not reuse old illustrative numbers as final constants.
 
@@ -598,22 +571,13 @@ PAUSE
 STOP
 ```
 
-Priority:
+Human command precedence before planning is:
 
 ```text
-Emergency Stop
-    highest
-
-Human Override / Pause
-
-Safety Controller
-
-Shared-Autonomy Policy
-
-Planner / Execution
+STOP > PAUSE > OVERRIDE > CONFIRM/RESUME > shared-autonomy policy > planner
 ```
 
-High confidence must never override human stop or hard safety constraints.
+Human authority selects WHAT mission objective is approved; safety retains a low-level veto before every environment transition. OVERRIDE cannot relax hard safety constraints, and high confidence cannot override a human stop or hard safety constraint.
 
 ---
 
@@ -690,9 +654,9 @@ The exact:
 - hazard categories;
 - \(\lambda\);
 
-remain unresolved until approved.
+are governed by D-061 through D-065.
 
-Keep them external/configurable.
+These approved scientific-policy values are governed by D-061 through D-065 and may change only through separately approved scientific or experimental governance, never through ordinary runtime configuration (D-072).
 
 ---
 

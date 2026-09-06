@@ -11,6 +11,8 @@
 
 ---
 
+> **R07B current decision state:** D-043 through D-073 govern resolved methodology and control contracts. Only U-034, U-035, and U-036 remain unresolved. All result tables remain templates: no reportable experimental results or end-to-end EEG mission result exists.
+
 # 0. PURPOSE
 
 This document defines how project results must be:

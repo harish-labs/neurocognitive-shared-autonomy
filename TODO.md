@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** EEG decoding, calibration, Bayesian inference, uncertainty/shared-autonomy policy, and prior personalization through M1-T10 accepted and merged; no active task authorized  
+**Current stage:** M1, M4, and M5 accepted and merged; PRE-M6-R07B is the active documentation-only reconciliation task
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -126,7 +126,7 @@ Potential next work must be scientifically narrowed and explicitly approved befo
 
 ```text
 [ ] Decide the next single implementation task
-[ ] Resolve U-029 through U-033 before freezing final planning/safety behavior where those decisions apply
+[x] U-029 through U-033 resolved by D-061 through D-065
 [ ] Build the 2D Search & Rescue environment only under an approved narrow ticket
 [ ] Build A* / risk-aware planning only under approved planning decisions and task scope
 [ ] Build explicit safety-controller behavior only under approved safety decisions and task scope
@@ -167,11 +167,11 @@ Do not infer authorization from this list.
 ## Planning / safety
 
 ```text
-[ ] U-029 — Define environmental risk values
-[ ] U-030 — Define risk normalization
-[ ] U-031 — Select risk weight lambda
-[ ] U-032 — Define prohibited-hazard threshold
-[ ] U-033 — Define final no-safe-path behavior
+[x] U-029 — Environmental risk values resolved by D-061
+[x] U-030 — Risk normalization resolved by D-062
+[x] U-031 — Risk weight lambda resolved by D-063
+[x] U-032 — Prohibited-hazard threshold resolved by D-064
+[x] U-033 — No-safe-path behavior resolved by D-065
 ```
 
 ## Experiments
@@ -261,7 +261,7 @@ D-058 through D-060 are operationalized by M1-T10. This does not establish that 
 [ ] Safety logs
 ```
 
-Risk-aware planning and prohibited-hazard behavior remain blocked where U-029 through U-033 apply.
+Risk-aware planning and prohibited-hazard behavior are governed by D-061 through D-065 and implemented only under separately authorized task scope.
 
 ---
 

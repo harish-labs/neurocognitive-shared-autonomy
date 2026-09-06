@@ -6,7 +6,7 @@
 **Document ID:** F-02  
 **Document class:** Mathematics & Cognition / Cognitive & Adaptive Model Specification  
 **Authority level:** Subordinate to the Master Authority Documents and all previously approved scenario, architecture, data, neuroscience, EEG/ML, calibration/uncertainty, and Bayesian-inference specifications  
-**Status:** Authoritative cognitive/adaptation baseline; the exact adaptation mechanism remains explicitly unresolved  
+**Status:** Authoritative cognitive/adaptation baseline reconciled with D-053 through D-060; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---
@@ -51,7 +51,7 @@ This document must not silently convert the project into:
 
 The current project uses a **limited computational cognitive abstraction**.
 
-The exact adaptation mechanism remains unresolved and must not be selected without explicit approval.
+The adaptation mechanism is governed by D-058 through D-060 and must not be redefined without separate approval.
 
 ---
 

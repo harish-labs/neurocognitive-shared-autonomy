@@ -6,7 +6,7 @@
 **Document ID:** G-02  
 **Document class:** Autonomy & Control / Planning Specification  
 **Authority level:** Subordinate to the Master Authority Documents and all previously approved scenario, architecture, data, neuroscience, EEG/ML, calibration/uncertainty, Bayesian, cognitive/adaptive, and shared-autonomy specifications  
-**Status:** Authoritative planning/control baseline; the exact hazard-risk model and risk-weight parameter remain explicitly unresolved  
+**Status:** Authoritative planning/control baseline reconciled with D-061 through D-066 and D-069/D-070; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---
@@ -484,31 +484,17 @@ where:
 
 ---
 
-# 19. RISK MODEL — UNRESOLVED
+# 19. RISK MODEL - APPROVED POLICY
 
-The project has not yet locked:
+D-061 through D-065 govern the current risk and safety policy: canonical risk values are fixed on [0,1], destination-cell exposure is additive without extra normalization, lambda is 2.0 for primary risk-aware A*, risk >= 1.00 is prohibited, and no-safe-path handling is a safety veto.
 
-- hazard categories;
-- numerical risk scale;
-- whether risk applies on entry or occupancy;
-- whether risk is additive;
-- whether risk is normalized;
-- whether risk depends on time;
-- whether some hazards are hard forbidden.
-
-Therefore the planner must keep risk representation configurable.
+Risk representation is governed by D-061 through D-065 and must not become an ordinary runtime scientific-policy override under D-072.
 
 ---
 
-# 20. RISK WEIGHT \(\lambda\) — UNRESOLVED
+# 20. RISK WEIGHT - APPROVED POLICY
 
-The exact value of:
-
-\[
-\lambda
-\]
-
-is not approved.
+D-063 fixes the primary risk-aware A* weight at lambda = 2.0.
 
 It controls the trade-off between:
 
@@ -1168,13 +1154,21 @@ FORBIDDEN
 
 or a numerical scale.
 
-No final category system is currently locked.
+D-061 and D-064 fix the current risk categories:
+
+```ini
+FREE = 0.00
+LOW = 0.25
+MODERATE = 0.50
+HIGH = 0.75
+PROHIBITED = 1.00
+```
 
 ---
 
-# 58. RISK NORMALIZATION — UNRESOLVED
+# 58. RISK NORMALIZATION - APPROVED POLICY
 
-The risk scale may need normalization if:
+D-062 fixes the normalization and aggregation policy: D-061 values are already canonical on [0,1], with no per-map or adaptive rescaling.
 
 ```text
 distance cost
@@ -1188,7 +1182,7 @@ risk cost
 
 differ greatly in magnitude.
 
-Exact normalization remains unresolved.
+Risk normalization is governed by D-062.
 
 ---
 
@@ -1553,7 +1547,7 @@ planner:
   algorithm: astar
   heuristic: manhattan
   movement_cost: 1.0
-  risk_lambda: TBD
+  risk_lambda: 2.0
   tie_breaking: TBD
 ```
 
@@ -1567,12 +1561,12 @@ Conceptually:
 
 ```yaml
 risk:
-  policy_id: TBD
-  scale: TBD
-  forbidden_threshold: TBD
+  policy_id: D-061-D-065
+  scale: [0,1]
+  forbidden_threshold: 1.00
 ```
 
-No final values are approved.
+D-061 through D-065 fix these primary risk-policy values; other schema details remain configuration concerns.
 
 ---
 

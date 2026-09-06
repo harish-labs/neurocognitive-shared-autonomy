@@ -6,7 +6,7 @@
 **Document ID:** B-01  
 **Document class:** Application / Scenario Specification  
 **Authority level:** Subordinate to `MASTER_PROJECT_SPEC.md`, `01_PROJECT_CONCEPT_AND_PROBLEM.md`, and `02_OBJECTIVES_SCOPE_AND_RESEARCH_QUESTIONS.md`  
-**Status:** Authoritative scenario baseline with unresolved design choices explicitly preserved  
+**Status:** Authoritative scenario baseline reconciled with D-051/D-052 and D-061 through D-065; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---

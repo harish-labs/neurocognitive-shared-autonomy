@@ -11,6 +11,8 @@
 
 ---
 
+> **R07B current decision state:** D-043 through D-073 control matters previously described below as open methodology. Only U-034, U-035, and U-036 remain unresolved. This does not authorize M6, live EEG, hardware, experiments, or end-to-end mission claims.
+
 # 0. AUTHORITY AND NON-INTERPRETATION RULE
 
 This document defines **what the project is trying to achieve, what questions it will investigate, what is inside and outside scope, and what counts as successful completion**.
@@ -170,7 +172,7 @@ where:
 - \(E_t\) represents the current EEG-derived evidence;
 - and the posterior is updated sequentially over observations.
 
-The exact mapping from binary EEG output to Search & Rescue goals remains unresolved and is explicitly preserved as an open decision.
+The binary candidate A/B interaction protocol is governed by D-051; it does not authorize a direct K-goal EEG decoder.
 
 ---
 

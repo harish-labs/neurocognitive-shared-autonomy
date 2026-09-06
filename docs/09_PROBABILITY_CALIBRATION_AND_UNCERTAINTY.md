@@ -6,7 +6,7 @@
 **Document ID:** E-02  
 **Document class:** Machine Learning / Probabilistic Decision Methodology  
 **Authority level:** Subordinate to the Master Authority Documents, Scenario Specification, System Architecture, Technology Stack, Dataset/Data Pipeline Specification, Neuroscience/BCI Foundations, and EEG Signal Processing & ML Methodology  
-**Status:** Authoritative calibration/uncertainty baseline; the exact calibration method and autonomy thresholds remain explicitly unresolved  
+**Status:** Authoritative calibration/uncertainty baseline reconciled with D-048 through D-057; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---
@@ -341,15 +341,15 @@ final test data
 → untouched evaluation
 ```
 
-The exact calibration split remains unresolved.
+The calibration fitting partition is governed by D-049.
 
 ---
 
-# 11. POSSIBLE CALIBRATION-PARTITION STRATEGIES
+# 11. APPROVED CALIBRATION PARTITION AND HISTORICAL ALTERNATIVES
 
-The project has not yet approved one strategy.
+The approved primary calibration-fitting partition is the existing validation partition under D-049; the alternatives below are historical alternatives considered.
 
-Valid candidates may include:
+Historical alternatives considered include:
 
 ## Strategy A — Dedicated calibration split
 
@@ -399,15 +399,15 @@ Cost:
 
 - more implementation complexity.
 
-No strategy is currently locked.
+The approved primary calibration policy is model-specific under D-048; the alternatives below are historical alternatives considered.
 
 ---
 
-# 12. CALIBRATION METHODS — CANDIDATES ONLY
+# 12. APPROVED CALIBRATION METHODS AND HISTORICAL ALTERNATIVES
 
-The exact method remains unresolved.
+D-048 governs the current model-specific calibration policy: temperature scaling for EEGNet, sigmoid / Platt-style calibration for CSP+LDA, with identity / no-calibration preserved as the experimental baseline.
 
-Possible candidates include:
+Historical alternatives considered include:
 
 ## 12.1 Temperature scaling
 
@@ -551,7 +551,7 @@ Potential binning approaches include:
 - equal-width bins;
 - equal-frequency/adaptive bins.
 
-The exact binning method is not yet locked.
+D-050 fixes the primary reliability-diagram and ECE rule at 10 equal-width confidence bins over [0,1], with Brier Score reported alongside ECE.
 
 The final methodology must record:
 
@@ -924,7 +924,7 @@ Their purpose is to drive different behaviors.
 
 However:
 
-> **The exact number of categories and numerical thresholds are not yet locked.**
+> **D-055 through D-057 fix the current uncertainty and shared-autonomy policy: PROCEED at leading posterior >= 0.90, CONFIRM at update 5 for [0.75, 0.90), and DEFER below 0.75, with human authority and safe fallback preserved.**
 
 ---
 
@@ -1017,7 +1017,7 @@ Potential methods may include:
 - minimizing wrong commitment under a bounded confirmation cost;
 - sensitivity analysis across several thresholds.
 
-Exact method remains unresolved.
+D-048 governs the current model-specific calibration policy: temperature scaling for EEGNet, sigmoid / Platt-style calibration for CSP+LDA, with identity / no-calibration preserved as the experimental baseline.
 
 ---
 
@@ -1491,7 +1491,7 @@ Adaptation asks:
 
 Do not merge adaptation into calibration.
 
-A future adaptation module may use calibration statistics, but its mechanism remains unresolved.
+Adaptation is governed by D-058 through D-060; calibration remains separate from the approved prior-personalization mechanism.
 
 ---
 
@@ -1924,7 +1924,7 @@ Using synthetic posterior distributions first.
 
 ## Step 7 — Implement confidence-policy interface
 
-Keep thresholds configurable/TBD until approved.
+Use the approved D-055 through D-057 policy; do not treat it as an ordinary runtime override.
 
 ## Step 8 — Connect to Bayesian inference
 
@@ -2463,7 +2463,7 @@ until the next Bayesian module is actually implemented.
 
 # 106. CURRENT CALIBRATION & UNCERTAINTY SUMMARY
 
-The NeuroCognitive Shared Autonomy project does not treat EEG classifier softmax/probability output as inherently trustworthy. Raw CSP+LDA or EEGNet class probabilities must first be evaluated for statistical reliability and, if the approved methodology supports it, transformed through a separately fitted calibration layer. Calibration is evaluated using at least reliability diagrams, Expected Calibration Error, and Brier Score, with calibration parameters fitted only on non-test data. The exact calibration method remains unresolved. After calibrated EEG evidence is converted into the appropriate goal-hypothesis representation and processed by sequential Bayesian goal inference, the system computes posterior uncertainty using Shannon entropy as the approved initial measure. That uncertainty must influence shared-autonomy behavior through configurable confidence states such as proceed, confirm, or defer. Exact numerical thresholds remain unresolved and must be selected through a defensible validation procedure rather than copied from earlier examples. Calibration quality, posterior uncertainty, wrong-goal commitment, deferral, human intervention, task latency, and safety outcomes must ultimately be evaluated together so that the system's confidence handling is assessed both statistically and behaviorally.
+The NeuroCognitive Shared Autonomy project does not treat EEG classifier softmax/probability output as inherently trustworthy. Raw CSP+LDA or EEGNet class probabilities must first be evaluated for statistical reliability and, if the approved methodology supports it, transformed through a separately fitted calibration layer. Calibration is evaluated using at least reliability diagrams, Expected Calibration Error, and Brier Score, with calibration parameters fitted only on non-test data. The current calibration method is fixed by D-048 as a model-specific policy. After calibrated EEG evidence is converted into the appropriate goal-hypothesis representation and processed by sequential Bayesian goal inference, the system computes posterior uncertainty using Shannon entropy as the approved initial measure. That uncertainty must influence shared-autonomy behavior through configurable confidence states such as proceed, confirm, or defer. D-055 through D-057 fix the current numerical posterior thresholds and fallback policy; later experiments may evaluate behavior without changing the approved policy. Calibration quality, posterior uncertainty, wrong-goal commitment, deferral, human intervention, task latency, and safety outcomes must ultimately be evaluated together so that the system's confidence handling is assessed both statistically and behaviorally.
 
 ---
 

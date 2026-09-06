@@ -6,7 +6,7 @@
 **Document ID:** G-01  
 **Document class:** Autonomy & Human–AI Interaction / Shared-Autonomy Specification  
 **Authority level:** Subordinate to the Master Authority Documents and all previously approved scenario, architecture, data, neuroscience, EEG/ML, calibration/uncertainty, Bayesian, and cognitive/adaptive specifications  
-**Status:** Authoritative shared-autonomy baseline; confidence thresholds and the binary EEG-to-multiple-goal interaction protocol remain explicitly unresolved  
+**Status:** Authoritative shared-autonomy baseline reconciled with D-051 and D-055 through D-070; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---

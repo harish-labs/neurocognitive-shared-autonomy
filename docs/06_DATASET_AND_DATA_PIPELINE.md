@@ -6,7 +6,7 @@
 **Document ID:** D-01  
 **Document class:** Data & Neuroscience / Dataset Specification  
 **Authority level:** Subordinate to the Master Authority Documents, Search & Rescue Scenario Specification, System Architecture, and Technology Stack  
-**Status:** Authoritative dataset baseline; approved initial M1 preprocessing choices and remaining unresolved evaluation choices are explicitly preserved
+**Status:** Authoritative dataset baseline reconciled with approved decisions through D-073; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---
@@ -1602,7 +1602,7 @@ The dataset pipeline should therefore remain **application-agnostic** beyond the
 
 Calibration requires its own valid fitting/evaluation logic.
 
-The exact calibration method is unresolved.
+The calibration method is governed by D-048.
 
 Regardless of method:
 
