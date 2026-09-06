@@ -6,7 +6,7 @@
 **Document ID:** G-03  
 **Document class:** Autonomy & Control / Safety Specification  
 **Authority level:** Subordinate to the Master Authority Documents and all previously approved scenario, architecture, data, neuroscience, EEG/ML, calibration/uncertainty, Bayesian, cognitive/adaptive, shared-autonomy, and planning specifications  
-**Status:** Authoritative safety-control baseline; exact hazard thresholds and final risk values remain unresolved  
+**Status:** Authoritative safety-control baseline reconciled with D-064/D-065 and D-069/D-070; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---

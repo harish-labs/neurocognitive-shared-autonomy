@@ -11,6 +11,8 @@
 
 ---
 
+> **R07B current decision state:** D-043 through D-073 control matters previously described below as open methodology. Only U-034, U-035, and U-036 remain unresolved. This does not authorize M6, live EEG, hardware, experiments, or end-to-end mission claims.
+
 # 0. AUTHORITY AND NON-INTERPRETATION RULE
 
 This document defines **what the project is trying to achieve, what questions it will investigate, what is inside and outside scope, and what counts as successful completion**.

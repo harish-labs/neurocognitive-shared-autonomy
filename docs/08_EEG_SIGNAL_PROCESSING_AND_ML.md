@@ -6,7 +6,7 @@
 **Document ID:** E-01  
 **Document class:** Machine Learning / EEG Methodology Specification  
 **Authority level:** Subordinate to the Master Authority Documents, Scenario Specification, System Architecture, Technology Stack, Dataset/Data Pipeline Specification, and Neuroscience/BCI Foundations  
-**Status:** Authoritative methodology baseline with approved initial M1 preprocessing choices and remaining unresolved model/evaluation choices explicitly preserved
+**Status:** Authoritative methodology baseline reconciled with D-043 through D-050; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---

@@ -6,7 +6,7 @@
 **Document ID:** H-01  
 **Document class:** Implementation / Engineering Blueprint  
 **Authority level:** Subordinate to all Master Authority, Scenario, Architecture, Data, Neuroscience, ML, Bayesian, Shared-Autonomy, Planning, and Safety specifications  
-**Status:** Authoritative implementation blueprint; unresolved scientific decisions remain blocked until explicitly approved  
+**Status:** Authoritative implementation blueprint reconciled with approved decisions through D-073; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---
@@ -323,22 +323,15 @@ Module 17 Dashboard
 
 ---
 
-# 8. BLOCKED SCIENTIFIC DECISIONS
+# 8. RESOLVED AND REMAINING SCIENTIFIC DECISIONS
 
-The following must not be silently solved during implementation:
+D-043 through D-073 govern the previously blocked CSP, EEGNet, calibration, interaction, Bayesian, autonomy, adaptation, planning, safety, runtime, and configuration boundaries. They must not be silently redefined during implementation.
 
-1. Binary Left/Right EEG → multi-goal Search & Rescue mapping.
-2. Exact mapping from `P(class | EEG)` to Bayesian likelihood `P(E | G)`.
-3. Exact calibration method.
-4. Calibration fitting partition.
-5. Final cross-subject protocol.
-6. Confidence thresholds.
-7. Bayesian stopping/commitment rule.
-8. Adaptation mechanism.
-9. Hazard-risk scale.
-10. Risk weight \(\lambda\).
-11. Prohibited-hazard threshold.
-12. Final A/B/C/D experimental semantics.
+Only the following remain unresolved:
+
+1. U-034 — final A/B/C/D component matrix.
+2. U-035 — robustness perturbation levels.
+3. U-036 — inferential-statistics policy.
 
 Initial M1 preprocessing decisions that were previously on this blocker list are now resolved by D-031 through D-039: filter band, EEG reference, epoch timing/CSP crop, baseline correction, artifact policy, T0 handling, channel policy, resampling policy, and processed-data representation.
 
@@ -367,7 +360,7 @@ tests/
 requirements.txt
 ```
 
-The final Codex instruction filename must be standardized separately.
+`AGENTS.md` is the permanent Codex instruction file under D-025.
 
 ## Inputs
 
@@ -1022,9 +1015,9 @@ H(P)=-\sum_i p_i\log p_i
 
 Implement entropy and optional normalized-entropy utility.
 
-## Blocker
+## Approved policy
 
-Final confidence-state thresholds are unresolved.
+D-055 through D-057 govern confidence-state thresholds and behavior.
 
 ## Tests
 
@@ -1053,7 +1046,7 @@ src/cognition/adaptation.py
 
 ## Status
 
-**Mechanism unresolved.**
+**Mechanism governed by D-058 through D-060.**
 
 ## Candidate targets
 
@@ -1210,7 +1203,7 @@ Final:
 - \(\lambda\);
 - forbidden-hazard policy
 
-remain unresolved.
+are governed by D-061 through D-065.
 
 ## Tests
 

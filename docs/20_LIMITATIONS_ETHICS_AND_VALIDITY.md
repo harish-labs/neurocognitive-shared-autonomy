@@ -6,7 +6,7 @@
 **Document ID:** J-01  
 **Document class:** Scientific Validity / Ethics / Limitations  
 **Authority level:** Subordinate to all Master Authority, Scenario, Architecture, Data, Neuroscience, ML, Bayesian, Shared-Autonomy, Planning, Safety, Implementation, Experimental Design, Metrics, and Testing documents  
-**Status:** Authoritative limitations/ethics/validity baseline; unresolved scientific decisions remain unresolved  
+**Status:** Authoritative limitations/ethics/validity baseline reconciled with approved decisions through D-073; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---

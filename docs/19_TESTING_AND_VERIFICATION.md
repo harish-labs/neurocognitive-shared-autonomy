@@ -6,7 +6,7 @@
 **Document ID:** I-03  
 **Document class:** Experiments & Evaluation / Testing & Verification Specification  
 **Authority level:** Subordinate to all Master Authority, Scenario, Architecture, Data, Neuroscience, ML, Bayesian, Shared-Autonomy, Planning, Safety, Implementation, Repository, Experimental Design, and Metrics documents  
-**Status:** Authoritative testing and verification baseline; unresolved scientific parameters remain unresolved  
+**Status:** Authoritative testing and verification baseline reconciled with approved decisions through D-073; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---

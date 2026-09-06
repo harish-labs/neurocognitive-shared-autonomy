@@ -6,7 +6,7 @@
 **Document ID:** C-01  
 **Document class:** System Design / Technical Architecture  
 **Authority level:** Subordinate to the Master Authority Documents and the approved Search & Rescue Scenario Specification  
-**Status:** Authoritative architecture baseline with unresolved choices explicitly preserved  
+**Status:** Authoritative architecture baseline reconciled with approved decisions through D-073; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---

@@ -6,7 +6,7 @@
 **Document ID:** E-02  
 **Document class:** Machine Learning / Probabilistic Decision Methodology  
 **Authority level:** Subordinate to the Master Authority Documents, Scenario Specification, System Architecture, Technology Stack, Dataset/Data Pipeline Specification, Neuroscience/BCI Foundations, and EEG Signal Processing & ML Methodology  
-**Status:** Authoritative calibration/uncertainty baseline; the exact calibration method and autonomy thresholds remain explicitly unresolved  
+**Status:** Authoritative calibration/uncertainty baseline reconciled with D-048 through D-057; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---

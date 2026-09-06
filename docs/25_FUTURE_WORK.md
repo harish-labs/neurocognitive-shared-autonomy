@@ -11,6 +11,8 @@
 
 ---
 
+> **R07B current decision state:** D-043 through D-073 supersede legacy lists of future methodology decisions. Only U-034, U-035, and U-036 remain unresolved; M6 and end-to-end EEG mission integration are future work, not completed capability.
+
 # 0. PURPOSE
 
 This document defines possible future extensions after the core project is completed and validated.

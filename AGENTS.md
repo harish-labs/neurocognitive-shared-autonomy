@@ -413,23 +413,13 @@ full eligible 109-subject cohort: 76 train / 16 validation / 17 final test
 no subject, original-trial, or derived-window leakage across protected partitions
 ```
 
-Currently unresolved or change-controlled items include:
+Resolved project policy through D-073 includes CSP (D-043/D-044), EEGNet (D-045 through D-047), calibration (D-048 through D-050), binary candidate A/B and likelihood semantics (D-051/D-052), Bayesian/shared-autonomy policy (D-053 through D-057), adaptation (D-058 through D-060), planning/safety (D-061 through D-066), runtime authority/replanning (D-067 through D-071), and central configuration/YAML policy (D-072/D-073).
 
-1. final CSP settings;
-2. final EEGNet architecture/hyperparameters;
-3. calibration method;
-4. calibration fitting partition;
-5. calibration binning;
-6. Bayesian goal-evidence likelihood construction;
-7. binary EEG-to-multiple-goal interaction protocol;
-8. Bayesian stopping/commitment rule;
-9. confidence thresholds;
-10. exact adaptation mechanism;
-11. environmental risk scale;
-12. risk weight \(\lambda\);
-13. prohibited-hazard threshold;
-14. final A/B/C/D component matrix;
-15. final statistical-analysis policy.
+Only the following project-level experimental-analysis items remain unresolved:
+
+1. U-034 — final A/B/C/D component matrix;
+2. U-035 — robustness perturbation levels;
+3. U-036 — inferential-statistics policy.
 
 If required:
 
@@ -579,7 +569,7 @@ PAUSE
 STOP
 ```
 
-Exact confidence/entropy thresholds must remain configurable and unresolved until approved.
+Confidence/entropy policy is governed by D-055 through D-057; do not reuse old illustrative numbers outside that approved policy.
 
 Do not reuse old illustrative numbers as final constants.
 
@@ -690,7 +680,7 @@ The exact:
 - hazard categories;
 - \(\lambda\);
 
-remain unresolved until approved.
+are governed by D-061 through D-065.
 
 Keep them external/configurable.
 

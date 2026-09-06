@@ -6,7 +6,7 @@
 **Document ID:** F-01  
 **Document class:** Mathematics & Cognition / Bayesian Inference Specification  
 **Authority level:** Subordinate to the Master Authority Documents and all previously approved scenario, architecture, data, neuroscience, EEG/ML, and calibration/uncertainty specifications  
-**Status:** Authoritative Bayesian-inference baseline with the EEG-to-goal evidence mapping and several decision-policy details explicitly unresolved  
+**Status:** Authoritative Bayesian-inference baseline reconciled with D-051 through D-054; only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---

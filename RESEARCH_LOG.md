@@ -171,7 +171,7 @@ rather than falsely claiming exact reproduction.
 
 ## R-004 — Calibration
 
-**Status:** DECISION REQUIRED
+**Status:** REVIEWED / RESOLVED BY D-048 THROUGH D-050
 
 Core observation:
 
@@ -202,19 +202,19 @@ Open questions:
 - how reliability bins are defined;
 - how cross-subject calibration is handled.
 
-Linked unresolved decisions:
+Historical linked decisions, resolved by:
 
 ```text
-U-016
-U-017
-U-018
+D-048 — Final Calibration Method
+D-049 — Calibration Fitting Partition
+D-050 — Reliability-Diagram Binning
 ```
 
 ---
 
 ## R-005 — Decoder Probability vs Bayesian Likelihood
 
-**Status:** DECISION REQUIRED
+**Status:** REVIEWED / RESOLVED BY D-052
 
 Critical distinction:
 
@@ -238,10 +238,10 @@ A Goal-Evidence Adapter must define the semantics.
 
 Potential approaches require explicit modeling and should not be invented during coding.
 
-Linked unresolved decision:
+Historical linked decision, resolved by:
 
 ```text
-U-020
+D-052 — Decoder Posterior → Goal Likelihood Construction
 ```
 
 ---
@@ -302,7 +302,7 @@ A confidently wrong posterior remains a critical failure mode.
 
 ## R-008 — Binary EEG to Multi-Goal SAR
 
-**Status:** DECISION REQUIRED
+**Status:** REVIEWED / RESOLVED BY D-051
 
 Problem:
 
@@ -322,17 +322,17 @@ D. later multiclass EEG
 
 Do not permanently hard-code T1/T2 to specific victims without an approved interaction protocol.
 
-Linked unresolved decision:
+Historical linked decision, resolved by:
 
 ```text
-U-019
+D-051 — Binary EEG → Multi-Goal Interaction Protocol
 ```
 
 ---
 
 ## R-009 — Shared-Autonomy Thresholds
 
-**Status:** DECISION REQUIRED
+**Status:** REVIEWED / RESOLVED BY D-055 THROUGH D-057
 
 Conceptual modes:
 
@@ -354,19 +354,19 @@ Open questions:
 - prolonged ambiguity;
 - confirmation burden.
 
-Linked decisions:
+Historical linked decisions, resolved by:
 
 ```text
-U-023
-U-024
-U-025
+D-055 — Confidence / Entropy Thresholds
+D-056 — Exact PROCEED / CONFIRM / DEFER Policy
+D-057 — Prolonged-Uncertainty Fallback
 ```
 
 ---
 
 ## R-010 — Adaptation
 
-**Status:** DECISION REQUIRED
+**Status:** REVIEWED / RESOLVED BY D-058 THROUGH D-060
 
 Potential bounded targets:
 
@@ -454,7 +454,7 @@ emergency stop
 prohibited hazards
 ```
 
-The prohibited-hazard policy remains unresolved.
+Historical note: the prohibited-hazard policy is resolved by D-064.
 
 ---
 
@@ -507,7 +507,7 @@ grouped K-fold
 fixed held-out subject groups
 ```
 
-The final protocol is unresolved.
+Historical note: the final cross-subject protocol is resolved by D-041/D-042.
 
 ---
 

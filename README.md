@@ -8,6 +8,8 @@ A software-only research prototype that investigates whether uncertain EEG-based
 
 ---
 
+> **R07B current decision state:** Any legacy text below that describes matters now governed by D-043 through D-073 as unresolved, blocked, or future is historical context only. The current controlling authority is `DECISIONS.md`; only U-034, U-035, and U-036 remain unresolved. M6 and end-to-end EEG mission integration remain unimplemented and unauthorized.
+
 ## Project Status
 
 ```text

@@ -6,7 +6,7 @@
 **Document ID:** C-02  
 **Document class:** System Design / Technology Specification  
 **Authority level:** Subordinate to `MASTER_PROJECT_SPEC.md`, `01_PROJECT_CONCEPT_AND_PROBLEM.md`, `02_OBJECTIVES_SCOPE_AND_RESEARCH_QUESTIONS.md`, `03_SEARCH_AND_RESCUE_SCENARIO.md`, and `04_SYSTEM_ARCHITECTURE.md`  
-**Status:** Authoritative technology baseline; exact package versions remain to be frozen after environment validation  
+**Status:** Authoritative technology baseline; D-073 governs YAML parsing and only U-034/U-035/U-036 remain unresolved
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---

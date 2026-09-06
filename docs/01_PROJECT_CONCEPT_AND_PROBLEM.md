@@ -11,6 +11,8 @@
 
 ---
 
+> **R07B current decision state:** Historical discussion below is superseded where D-043 through D-073 resolved the referenced project parameter or runtime contract. Only U-034, U-035, and U-036 remain unresolved; M6 integration and reportable results remain future work.
+
 # 0. AUTHORITY AND INTERPRETATION RULE
 
 This document elaborates the project concept defined in `MASTER_PROJECT_SPEC.md`.
@@ -1022,4 +1024,3 @@ The unresolved binary-EEG-to-multiple-goal mapping must remain unresolved until 
 This document was consolidated from the transferred project context and the current master project specification. It intentionally preserves the newer EEG-based Search & Rescue direction as authoritative while retaining only non-conflicting conceptual reasoning from the earlier CoSA-U shared-autonomy research blueprint.
 
 No external research findings, new algorithms, new datasets, new hardware requirements, or new project objectives have been added in this document.
-
