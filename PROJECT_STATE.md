@@ -21,7 +21,7 @@ Final Pre-M6 audit found widespread stale decision-state documentation contradic
 PRE-M6-R07 was authorized for documentation reconciliation and stopped correctly when the change-controlled Master Specification was found to contain stale unresolved-state claims.
 PRE-M6-R07A — Master Authority Reconciliation: PASS / ACCEPTED / MERGED.
 PRE-M6-R07B - Secondary Documentation Reconciliation: PASS / ACCEPTED / MERGED.
-PRE-M6-R07 documentation reconciliation is complete. Final Pre-M6 audit remains open and has not been declared passed.
+PRE-M6-R01 through PRE-M6-R07 are complete. Final Pre-M6 audit: PASS / CLOSED, approved by the Project Owner.
 
 Current module:
 NO ACTIVE IMPLEMENTATION TASK
@@ -209,7 +209,7 @@ U-035 — robustness perturbation levels
 U-036 — inferential-statistics policy
 ```
 
-PRE-M6-R07B - Secondary Documentation Reconciliation is PASS / ACCEPTED / MERGED. The final Pre-M6 audit remains open and has not been declared passed.
+PRE-M6-R07B - Secondary Documentation Reconciliation is PASS / ACCEPTED / MERGED. Final Pre-M6 audit: PASS / CLOSED, approved by the Project Owner.
 
 ---
 
@@ -234,6 +234,6 @@ no UI, reportable experiments, logging infrastructure, hardware integration, or 
 
 # 8. NEXT ACTION
 
-No implementation task is currently authorized. The next action is the final Pre-M6 audit, not M6 implementation.
+No implementation task is currently authorized. The next authorized governance activity is M6 contract definition and review only; do not authorize or implement M6 yet.
 
-Do not begin M6 or create the M6 contract. The final Pre-M6 audit must be separately performed and explicitly passed before any M6 authorization.
+Do not authorize or implement M6. M6 contract definition and review is the next governance activity only; no M6 implementation branch or ticket is authorized.

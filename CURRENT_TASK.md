@@ -66,9 +66,9 @@ PRE-M6-R07B reconciled the authorized secondary documentation against the approv
 
 # 4. PRE-M6-R07 STATUS
 
-PRE-M6-R07 documentation reconciliation is complete: R07A and R07B are PASS / ACCEPTED / MERGED.
+PRE-M6-R01 through PRE-M6-R07 are complete. PRE-M6-R07A and PRE-M6-R07B are PASS / ACCEPTED / MERGED.
 
-The final Pre-M6 audit remains open and is the next action. It has not been declared passed.
+Final Pre-M6 audit: PASS / CLOSED, approved by the Project Owner.
 
 ---
 
@@ -76,4 +76,4 @@ The final Pre-M6 audit remains open and is the next action. It has not been decl
 
 M6 remains **NOT STARTED** and **NOT AUTHORIZED**.
 
-After all Pre-M6 remediation is accepted and the final audit explicitly passes, ChatGPT and the Project Owner must separately review and approve the exact offline EEG-to-full-system integration contract before any M6 implementation ticket is created.
+Final Pre-M6 audit is PASS / CLOSED. The next authorized governance activity is M6 contract definition and review only. Do not authorize or implement M6 yet.
