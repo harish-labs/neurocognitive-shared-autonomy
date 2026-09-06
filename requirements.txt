@@ -4,3 +4,6 @@ numpy
 pytest
 torch
 PyYAML
+pandas
+scikit-learn
+matplotlib
