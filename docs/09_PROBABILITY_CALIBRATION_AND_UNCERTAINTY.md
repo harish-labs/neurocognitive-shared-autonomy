@@ -341,7 +341,7 @@ final test data
 → untouched evaluation
 ```
 
-The exact calibration split remains unresolved.
+The calibration fitting partition is governed by D-049.
 
 ---
 
@@ -405,7 +405,7 @@ No strategy is currently locked.
 
 # 12. CALIBRATION METHODS — CANDIDATES ONLY
 
-The exact method remains unresolved.
+The calibration method is governed by D-048.
 
 Possible candidates include:
 
@@ -1017,7 +1017,7 @@ Potential methods may include:
 - minimizing wrong commitment under a bounded confirmation cost;
 - sensitivity analysis across several thresholds.
 
-Exact method remains unresolved.
+The calibration method is governed by D-048.
 
 ---
 
@@ -1924,7 +1924,7 @@ Using synthetic posterior distributions first.
 
 ## Step 7 — Implement confidence-policy interface
 
-Keep thresholds configurable/TBD until approved.
+Use the approved D-055 through D-057 policy; do not treat it as an ordinary runtime override.
 
 ## Step 8 — Connect to Bayesian inference
 

@@ -504,7 +504,7 @@ These are outside the current core evaluation.
 
 # 26. ADAPTATION LIMITATION
 
-The adaptation mechanism remains unresolved.
+The adaptation mechanism is governed by D-058 through D-060.
 
 Even after implementation, any adaptation is likely to be intentionally simple.
 

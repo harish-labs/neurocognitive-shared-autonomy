@@ -1602,7 +1602,7 @@ The dataset pipeline should therefore remain **application-agnostic** beyond the
 
 Calibration requires its own valid fitting/evaluation logic.
 
-The exact calibration method is unresolved.
+The calibration method is governed by D-048.
 
 Regardless of method:
 

@@ -51,7 +51,7 @@ This document must not silently convert the project into:
 
 The current project uses a **limited computational cognitive abstraction**.
 
-The exact adaptation mechanism remains unresolved and must not be selected without explicit approval.
+The adaptation mechanism is governed by D-058 through D-060 and must not be redefined without separate approval.
 
 ---
 

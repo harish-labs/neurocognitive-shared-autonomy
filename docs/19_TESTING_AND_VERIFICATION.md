@@ -617,7 +617,7 @@ Verify bin counts and means.
 
 # 31. CALIBRATOR TESTS
 
-After final calibration method approval:
+Under the approved D-048 calibration policy:
 
 - fit on allowed data;
 - transform probabilities;

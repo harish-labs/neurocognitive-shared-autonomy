@@ -496,7 +496,7 @@ The project has not yet locked:
 - whether risk depends on time;
 - whether some hazards are hard forbidden.
 
-Therefore the planner must keep risk representation configurable.
+Risk representation is governed by D-061 through D-065 and must not become an ordinary runtime scientific-policy override under D-072.
 
 ---
 
@@ -1188,7 +1188,7 @@ risk cost
 
 differ greatly in magnitude.
 
-Exact normalization remains unresolved.
+Risk normalization is governed by D-062.
 
 ---
 

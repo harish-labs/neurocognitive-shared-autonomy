@@ -2465,4 +2465,4 @@ That document should define:
 - logging;
 - and claim boundaries.
 
-The exact adaptation mechanism remains unresolved and must not be silently selected.
+The adaptation mechanism is governed by D-058 through D-060 and must not be silently redefined.

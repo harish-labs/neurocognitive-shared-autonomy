@@ -172,7 +172,7 @@ where:
 - \(E_t\) represents the current EEG-derived evidence;
 - and the posterior is updated sequentially over observations.
 
-The exact mapping from binary EEG output to Search & Rescue goals remains unresolved and is explicitly preserved as an open decision.
+The binary candidate A/B interaction protocol is governed by D-051; it does not authorize a direct K-goal EEG decoder.
 
 ---
 

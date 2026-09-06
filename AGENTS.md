@@ -536,24 +536,7 @@ Do not describe entropy as a complete decomposition of uncertainty.
 
 # 19. CALIBRATION
 
-Calibration is required conceptually.
-
-Candidate methods include:
-
-```text
-temperature scaling
-Platt / sigmoid scaling
-isotonic regression
-```
-
-The final method remains subject to explicit approval.
-
-Before method approval, it is safe to implement:
-
-- reliability-bin computation;
-- ECE;
-- Brier Score;
-- identity/no-calibration interface.
+Calibration policy is governed by D-048 through D-050: EEGNet uses temperature scaling, CSP+LDA uses sigmoid/Platt-style calibration, and an identity baseline is preserved. Calibrators fit on the approved validation partition; reliability uses 10 equal-width ECE bins and Brier Score.
 
 ---
 
@@ -588,22 +571,13 @@ PAUSE
 STOP
 ```
 
-Priority:
+Human command precedence before planning is:
 
 ```text
-Emergency Stop
-    highest
-
-Human Override / Pause
-
-Safety Controller
-
-Shared-Autonomy Policy
-
-Planner / Execution
+STOP > PAUSE > OVERRIDE > CONFIRM/RESUME > shared-autonomy policy > planner
 ```
 
-High confidence must never override human stop or hard safety constraints.
+Human authority selects WHAT mission objective is approved; safety retains a low-level veto before every environment transition. OVERRIDE cannot relax hard safety constraints, and high confidence cannot override a human stop or hard safety constraint.
 
 ---
 
@@ -682,7 +656,7 @@ The exact:
 
 are governed by D-061 through D-065.
 
-Keep them external/configurable.
+These approved scientific-policy values are governed by D-061 through D-065 and may change only through separately approved scientific or experimental governance, never through ordinary runtime configuration (D-072).
 
 ---
 

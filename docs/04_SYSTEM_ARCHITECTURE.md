@@ -1750,7 +1750,7 @@ The UI must not merely display these controls; their state must reach the underl
 
 # 14. ADAPTATION FEEDBACK PATH
 
-Because the adaptation mechanism remains unresolved, the architecture provides a generic feedback path:
+Because adaptation is governed by D-058 through D-060, the architecture provides the approved feedback path:
 
 ```text
 human correction / override
