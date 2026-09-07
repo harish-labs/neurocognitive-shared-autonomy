@@ -2188,6 +2188,61 @@ single canonical replay epoch
 
 ---
 
+## D-076 — M6 Decoder/Calibrator Runtime Injection Contract
+
+**Status:** APPROVED
+
+**Date:** 2026-09-07
+
+**Decision:**
+
+```text
+M6-T02 receives already-instantiated, already-fitted decoder and calibrator objects.
+
+M6-T02 must not load, deserialize, train, fit, refit, tune, select, or persist decoder/calibrator artifacts.
+
+Decoder/calibrator persistence and loading remain outside M6-T02 unless separately approved.
+```
+
+**Approved runtime flow:**
+
+```text
+ReplayObservation
++
+canonical source mne.Epochs
++
+already-instantiated decoder
++
+already-instantiated calibrator
+        ->
+verify exact replay <-> canonical epoch correspondence
+        ->
+single-trial decoder inference
+        ->
+approved model-specific calibration
+        ->
+DecodedReplayObservation
+```
+
+**Approved model-specific runtime paths:**
+
+```text
+CSP+LDA:
+CspLdaDecoder.predict_proba()
+-> already-fitted PlattScalingCalibrator.predict_proba()
+
+EEGNet:
+EEGNetDecoder.predict_logits()
+-> already-fitted TemperatureScalingCalibrator.predict_proba()
+```
+
+**Boundary:** Class order remains `("left", "right")`. M6-T02 may expose validated runtime evidence/provenance including replay index, canonical trial identity, subject ID, run ID, trial index, model family, class labels, raw decoder output, and calibrated probabilities. Preserve D-074, D-075, offline prerecorded EEG only, no live EEG, no new preprocessing, no new epoch semantics, and unresolved U-034/U-035/U-036.
+
+**Implementation consequence:** D-076 does not authorize M6-T02 implementation. It does not authorize Bayesian inference, D-051/D-052 goal mapping, shared autonomy, human authorization, navigation, adaptation, experiments, UI, new scientific policy, or artifact serialization/deserialization contracts such as pickle, joblib, or torch checkpoint loading.
+
+**Approved by:** Project Owner
+
+---
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
