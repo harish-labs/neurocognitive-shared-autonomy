@@ -27,10 +27,10 @@ Current module:
 M6-T01 — Deterministic Offline EEG Epoch Replay
 
 Current task:
-M6-T01
+None
 
 Task status:
-ACTIVE IMPLEMENTATION TASK
+NO ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
@@ -59,7 +59,7 @@ None yet
 
 The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, human-subject result, or end-to-end EEG-driven mission-execution claim is authorized.
 
-D-074 approves deterministic, auditable offline replay evidence semantics only: one accepted prerecorded EEG epoch/trial produces one decoder evidence observation, and a Bayesian decision episode may consume up to five accepted observations under D-054 through D-057. M6-T01 — Deterministic Offline EEG Epoch Replay is the sole active implementation task. It authorizes only synchronous replay of accepted prerecorded/processed epochs; no downstream decoding, calibration, Bayesian, autonomy, navigation, adaptation, experiment, UI, or asynchronous behavior. M6 implementation beyond M6-T01 remains NOT STARTED and NOT AUTHORIZED.
+D-074 approves deterministic, auditable offline replay evidence semantics only: one accepted prerecorded EEG epoch/trial produces one decoder evidence observation, and a Bayesian decision episode may consume up to five accepted observations under D-054 through D-057. M6-T01 is PASS / ACCEPTED / MERGED and implemented only synchronous replay of accepted prerecorded/processed epochs. M6-T02 remains NOT STARTED and NOT AUTHORIZED.
 
 ---
 
@@ -98,7 +98,7 @@ Total accepted implementation tasks: 25.
 PRE-M6-R07A is accepted governance/documentation remediation and is not an implementation task.
 PRE-M6-R07B is PASS / ACCEPTED / MERGED as a documentation-only reconciliation task. At its close, `MASTER_PROJECT_SPEC.md` and `DECISIONS.md` were not modified; U-034/U-035/U-036 remained unresolved; no results were invented; and no M6 contract or implementation had started.
 
-M6-T01 — Deterministic Offline EEG Epoch Replay is authorized as the sole active implementation task under D-074. It must preserve one accepted prerecorded epoch/trial per replay observation, deterministic auditable order, identity/provenance integrity, fail-closed input validation, and clean end-of-replay behavior. M6-T01 does not authorize sliding/overlapping/continuous evidence semantics or downstream system integration.
+M6-T01 is PASS / ACCEPTED / MERGED under D-074. It preserved one accepted prerecorded epoch/trial per replay observation, deterministic auditable order, identity/provenance integrity, fail-closed input validation, and clean end-of-replay behavior; no sliding/overlapping/continuous evidence semantics or downstream system integration was added.
 
 ---
 
@@ -238,6 +238,6 @@ no UI, reportable experiments, logging infrastructure, hardware integration, or 
 
 # 8. NEXT ACTION
 
-No implementation task is currently authorized. The next authorized governance activity is M6 contract definition and review only; do not authorize or implement M6 yet.
+No implementation task is currently authorized. M6-T01 is complete. M6-T02 is NOT STARTED / NOT AUTHORIZED.
 
-Do not authorize or implement M6. M6 contract definition and review is the next governance activity only; no M6 implementation branch or ticket is authorized.
+M6-T02 is NOT STARTED / NOT AUTHORIZED. Do not authorize or begin M6-T02.

@@ -4,9 +4,9 @@
 ### Current Codex Implementation Authority
 
 **Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.
-**Current status:** ACTIVE IMPLEMENTATION TASK
+**Current status:** NO ACTIVE IMPLEMENTATION TASK
 **Current milestone:** M6 Offline EEG Replay Integration
-**Task ID:** M6-T01
+**Task ID:** None
 **Task title:** Deterministic Offline EEG Epoch Replay
 **Owner:** Project Owner
 **Scientific reviewer:** ChatGPT
@@ -17,22 +17,17 @@
 
 ---
 
-# 1. ACTIVE TASK — M6-T01
+# 1. CURRENT AUTHORITY
 
 ```text
-Task ID: M6-T01
-Task title: Deterministic Offline EEG Epoch Replay
-Phase: M6 Offline EEG Replay Integration
-Task branch: task/m6-t01-offline-eeg-replay
-Status: ACTIVE IMPLEMENTATION TASK
-Governance authorization commit: this commit
+NO ACTIVE IMPLEMENTATION TASK
 ```
 
 ## Authority
 
-D-074 governs this task. One accepted prerecorded EEG epoch/trial produces one decoder evidence observation. Replay order must be deterministic and auditable. M6-T01 must not introduce sliding-window, overlapping-window, or continuous-stream EEG evidence semantics.
+M6-T01 is PASS / ACCEPTED / MERGED. D-074 remains the controlling offline replay evidence contract. One accepted prerecorded EEG epoch/trial produces one decoder evidence observation; replay order is deterministic and auditable; sliding-window, overlapping-window, and continuous-stream EEG evidence semantics remain excluded.
 
-## Authorized implementation scope
+## M6-T01 Closed Verification
 
 ```text
 - consume already accepted prerecorded/processed EEG epochs;
@@ -48,15 +43,15 @@ D-074 governs this task. One accepted prerecorded EEG epoch/trial produces one d
 - synchronous deterministic implementation only.
 ```
 
-## Forbidden scope
+## M6-T01 Scope Record
 
 ```text
 Do not run CSP+LDA, EEGNet, calibration, Bayesian inference, D-051/D-052 goal-evidence mapping, candidate A/B selection, shared-autonomy policy, human confirmation, planning, navigation, movement, replanning, adaptation updates, experiments, UI, asynchronous workers/threads/timers/event buses, or new scientific policy.
 ```
 
-Preserve offline prerecorded EEG / simulated real-time BCI only; no live EEG claim, no hardware requirement, no direct K-goal decoder, and U-034/U-035/U-036 unresolved.
+Accepted verification: focused replay tests 10 passed; relevant EEG regressions 29 passed; full pytest 337 passed with 1 known PyTorch padding warning. Preserve offline prerecorded EEG / simulated real-time BCI only; no live EEG claim, no hardware requirement, no direct K-goal decoder, and U-034/U-035/U-036 unresolved.
 
-## Required later verification
+## M6-T01 Accepted Result
 
 ```text
 - focused M6-T01 replay tests;
@@ -68,8 +63,8 @@ Preserve offline prerecorded EEG / simulated real-time BCI only; no live EEG cla
 - clean end-of-replay behavior.
 ```
 
-## Stop conditions
+## M6 Boundary
 
 Stop and report if implementation requires a new scientific, architectural, dataset-semantic, or evaluation decision. No new dependency is authorized.
 
-After implementing M6-T01, stop. Do not begin a later M6 task automatically.
+M6-T01 is PASS / ACCEPTED / MERGED. M6-T02 is NOT STARTED / NOT AUTHORIZED. No later M6 task may begin automatically.
