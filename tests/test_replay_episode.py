@@ -97,3 +97,30 @@ def test_rejects_duplicate_identity_and_invalid_inputs() -> None:
 def test_rejects_invalid_candidates(candidate_a: str, candidate_b: str) -> None:
     with pytest.raises(ReplayEpisodeIntegrationError):
         run_bayesian_replay_episode([observation(0)], candidate_a=candidate_a, candidate_b=candidate_b)
+
+def test_five_unresolved_updates_do_not_pull_a_sixth_observation() -> None:
+    pulled: list[int] = []
+
+    def stream():
+        for index in range(6):
+            pulled.append(index)
+            yield observation(index, (0.5, 0.5))
+
+    result = run_bayesian_replay_episode(stream(), candidate_a="A", candidate_b="B")
+    assert result.status is EpisodeStatus.DEFER
+    assert result.update_count == 5
+    assert pulled == [0, 1, 2, 3, 4]
+
+
+def test_rejects_non_observation_and_probability_failures() -> None:
+    invalid_values = [
+        [[float("nan"), 0.5]],
+        [[-0.1, 1.1]],
+        [[0.4]],
+        [[0.4, 0.4]],
+    ]
+    with pytest.raises(ReplayEpisodeIntegrationError):
+        run_bayesian_replay_episode([object()], candidate_a="A", candidate_b="B")
+    for values in invalid_values:
+        with pytest.raises(ReplayEpisodeIntegrationError):
+            run_bayesian_replay_episode([observation(0, values=values)], candidate_a="A", candidate_b="B")

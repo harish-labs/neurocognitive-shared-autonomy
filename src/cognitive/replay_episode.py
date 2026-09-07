@@ -69,8 +69,10 @@ def run_bayesian_replay_episode(
     except TypeError as error:
         raise ReplayEpisodeIntegrationError("Observations must be an iterable sequence.") from error
 
-    for observation in iterator:
-        if episode.status is not EpisodeStatus.PENDING:
+    while episode.status is EpisodeStatus.PENDING:
+        try:
+            observation = next(iterator)
+        except StopIteration:
             break
         if not isinstance(observation, DecodedReplayObservation):
             raise ReplayEpisodeIntegrationError("Each observation must be a DecodedReplayObservation.")
