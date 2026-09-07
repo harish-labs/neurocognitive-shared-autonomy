@@ -24,13 +24,13 @@ PRE-M6-R07B - Secondary Documentation Reconciliation: PASS / ACCEPTED / MERGED.
 PRE-M6-R01 through PRE-M6-R07 are complete. Final Pre-M6 audit: PASS / CLOSED, approved by the Project Owner.
 
 Current module:
-NO ACTIVE IMPLEMENTATION TASK
+M6-T02 - Decoder and Calibration Runtime Adapter
 
 Current task:
 None
 
 Task status:
-NO ACTIVE IMPLEMENTATION TASK
+ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
@@ -59,7 +59,7 @@ None yet
 
 The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, human-subject result, or end-to-end EEG-driven mission-execution claim is authorized.
 
-D-074 approves deterministic, auditable offline replay evidence semantics only: one accepted prerecorded EEG epoch/trial produces one decoder evidence observation, and a Bayesian decision episode may consume up to five accepted observations under D-054 through D-057. D-075 preserves the canonical accepted `mne.Epochs` representation as the authoritative source of decoder structural metadata and requires exact correspondence with the immutable `ReplayObservation` before decoder inference. M6-T01 is PASS / ACCEPTED / MERGED and implemented only synchronous replay of accepted prerecorded/processed epochs. M6-T02 remains NOT STARTED and NOT AUTHORIZED. D-076 requires M6-T02 to receive already-instantiated, already-fitted decoder and calibrator objects; artifact loading, deserialization, training, fitting, refitting, tuning, selection, and persistence remain outside M6-T02 unless separately approved. The approved model-specific runtime paths preserve CSP+LDA through Platt scaling and EEGNet through temperature scaling, with class order ("left", "right").
+D-074 approves deterministic, auditable offline replay evidence semantics only: one accepted prerecorded EEG epoch/trial produces one decoder evidence observation, and a Bayesian decision episode may consume up to five accepted observations under D-054 through D-057. D-075 preserves the canonical accepted `mne.Epochs` representation as the authoritative source of decoder structural metadata and requires exact correspondence with the immutable `ReplayObservation` before decoder inference. M6-T01 is PASS / ACCEPTED / MERGED and implemented only synchronous replay of accepted prerecorded/processed epochs. M6-T02 is the sole active implementation task under D-074, D-075, and D-076. It receives only ReplayObservation, canonical source mne.Epochs, and already-instantiated, already-fitted decoder and calibrator objects; it must not load, fit, tune, select, or persist artifacts. M6-T03 remains NOT STARTED and NOT AUTHORIZED. D-076 requires M6-T02 to receive already-instantiated, already-fitted decoder and calibrator objects; artifact loading, deserialization, training, fitting, refitting, tuning, selection, and persistence remain outside M6-T02 unless separately approved. The approved model-specific runtime paths preserve CSP+LDA through Platt scaling and EEGNet through temperature scaling, with class order ("left", "right").
 
 ---
 
@@ -238,6 +238,6 @@ no UI, reportable experiments, logging infrastructure, hardware integration, or 
 
 # 8. NEXT ACTION
 
-No implementation task is currently authorized. M6-T01 is complete. M6-T02 is NOT STARTED / NOT AUTHORIZED.
+M6-T02 is the sole active implementation task. M6-T03 is NOT STARTED / NOT AUTHORIZED.
 
-M6-T02 is NOT STARTED / NOT AUTHORIZED. D-076 is approved as a contract only; do not authorize or begin M6-T02 implementation.
+M6-T02 is authorized as the sole active implementation task under D-074, D-075, and D-076. M6-T03 is NOT STARTED / NOT AUTHORIZED.

@@ -3,68 +3,68 @@
 ## NeuroCognitive Shared Autonomy for Search & Rescue
 ### Current Codex Implementation Authority
 
-**Purpose:** Hold exactly one active implementation task for Codex, or explicitly record that no implementation task is currently authorized.
-**Current status:** NO ACTIVE IMPLEMENTATION TASK
-**Current milestone:** M6 Offline EEG Replay Integration
-**Task ID:** None
-**Task title:** Deterministic Offline EEG Epoch Replay
+**Current status:** ACTIVE IMPLEMENTATION TASK
+**Current milestone:** M6 Decoder/Calibration Runtime Adapter
+**Task ID:** M6-T02
+**Task title:** Decoder and Calibration Runtime Adapter
 **Owner:** Project Owner
 **Scientific reviewer:** ChatGPT
 **Implementation engineer:** Codex
-**Repository instructions:** `AGENTS.md`
-**Canonical branch:** `main`
-**Last updated:** 2026-09-07
+**Canonical branch:** `task/m6-t02-decoder-calibration-adapter`
+**Authorization base:** `f72324d32505d736e7a19b5716d5ee13612c6a9a`
 
 ---
 
-# 1. CURRENT AUTHORITY
+# 1. ACTIVE TASK - M6-T02
 
 ```text
-NO ACTIVE IMPLEMENTATION TASK
+Task ID: M6-T02
+Task title: Decoder and Calibration Runtime Adapter
+Status: ACTIVE IMPLEMENTATION TASK
+Governing decisions: D-074, D-075, D-076
 ```
 
-## Authority
-
-M6-T01 is PASS / ACCEPTED / MERGED. D-074 remains the controlling offline replay evidence contract. One accepted prerecorded EEG epoch/trial produces one decoder evidence observation; replay order is deterministic and auditable; sliding-window, overlapping-window, and continuous-stream EEG evidence semantics remain excluded.
-
-## M6-T01 Closed Verification
+## Authorized input boundary
 
 ```text
-- consume already accepted prerecorded/processed EEG epochs;
-- replay them in deterministic order;
-- expose exactly one epoch/trial per replay observation;
-- preserve subject identity;
-- preserve run identity;
-- preserve original trial/epoch identity;
-- preserve deterministic ordering information;
-- expose sufficient replay provenance for later downstream audit;
-- reject malformed, ambiguous, duplicated, or structurally invalid replay input;
-- terminate cleanly at end of replay;
-- synchronous deterministic implementation only.
+ReplayObservation
+canonical source mne.Epochs
+already-instantiated, already-fitted decoder
+already-instantiated, already-fitted calibrator
 ```
 
-## M6-T01 Scope Record
+## Authorized responsibilities
+
+Locate and verify the exact canonical source epoch before inference; preserve canonical channel/order, sampling, MNE Info, timing, replay identity, and provenance; validate decoder/calibrator compatibility and outputs; execute exactly one approved model-specific path; and return deterministic immutable-provenance runtime evidence.
+
+Approved paths:
 
 ```text
-Do not run CSP+LDA, EEGNet, calibration, Bayesian inference, D-051/D-052 goal-evidence mapping, candidate A/B selection, shared-autonomy policy, human confirmation, planning, navigation, movement, replanning, adaptation updates, experiments, UI, asynchronous workers/threads/timers/event buses, or new scientific policy.
+CSP+LDA: CspLdaDecoder.predict_proba(single_epoch)
+         -> already-fitted PlattScalingCalibrator.predict_proba(raw_probabilities)
+
+EEGNet: EEGNetDecoder.predict_logits(single_epoch)
+        -> already-fitted TemperatureScalingCalibrator.predict_proba(raw_logits)
 ```
 
-Accepted verification: focused replay tests 10 passed; relevant EEG regressions 29 passed; full pytest 337 passed with 1 known PyTorch padding warning. Preserve offline prerecorded EEG / simulated real-time BCI only; no live EEG claim, no hardware requirement, no direct K-goal decoder, and U-034/U-035/U-036 unresolved.
+Class order remains `("left", "right")`. Output provenance may include replay index, canonical trial identity, subject ID, run ID, trial index, source file, event code, semantic label, event sample, model family, class labels, raw decoder output, and calibrated probabilities.
 
-## M6-T01 Accepted Result
+## Required fail-closed validation
+
+Reject replay/source identity or epoch-data mismatch, unsupported or mismatched decoder/calibrator families, class-order changes, invalid row counts, non-finite outputs, probabilities outside [0,1], and probabilities that do not sum to one within reasonable floating-point tolerance. Preserve existing CSP+LDA and EEGNet validators without weakening or bypassing them.
+
+## Forbidden scope
 
 ```text
-- focused M6-T01 replay tests;
-- existing relevant EEG regression tests;
-- full pytest regression suite;
-- deterministic replay-order verification;
-- malformed-input/fail-closed tests;
-- duplicate/identity integrity tests;
-- clean end-of-replay behavior.
+No training, fitting, refitting, model selection, component/checkpoint selection, calibration tuning/evaluation, artifact loading/deserialization/persistence, new preprocessing or epoch semantics, raw EEG loading, continuous-stream interpretation, Bayesian inference, D-051/D-052 goal mapping, evidence accumulation, shared autonomy, human authorization, planning, navigation, adaptation, experiments, metrics/results claims, UI, asynchronous execution, or new dependencies.
 ```
 
-## M6 Boundary
+Preserve D-074, D-075, D-076, offline prerecorded EEG / simulated real-time BCI only, no live EEG or physical hardware claim, one accepted replay epoch/trial per decoder evidence observation, and unresolved U-034/U-035/U-036.
 
-Stop and report if implementation requires a new scientific, architectural, dataset-semantic, or evaluation decision. No new dependency is authorized.
+## Required verification
 
-M6-T01 is PASS / ACCEPTED / MERGED. M6-T02 is NOT STARTED / NOT AUTHORIZED. No later M6 task may begin automatically.
+Focused M6-T02 tests, M6-T01 replay regression tests, CSP+LDA regression tests, EEGNet regression tests, calibration regression tests, full pytest, and `git diff --check`.
+
+Stop if work requires a new scientific, dataset-semantic, model/calibrator persistence, decoder, calibration, class-order, replay-identity, dependency, or downstream M6-T03 decision.
+
+M6-T03 is NOT STARTED / NOT AUTHORIZED. Do not implement M6-T02 until work begins on this authorized task; do not begin M6-T03.
