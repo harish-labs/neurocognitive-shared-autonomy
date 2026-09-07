@@ -2136,6 +2136,58 @@ M6 must not introduce a new sliding-window, continuous-stream, or overlapping-wi
 
 ---
 
+## D-075 — M6 Replay-to-Decoder Structural Epoch Bridge
+
+**Status:** APPROVED
+
+**Date:** 2026-09-07
+
+**Decision:**
+
+```text
+M6-T02 shall not reconstruct decoder-ready EEG epochs from ReplayObservation data alone.
+
+The canonical accepted source mne.Epochs representation remains authoritative for EEG structural metadata, including:
+- channel names/order
+- sampling frequency
+- MNE Info
+- epoch timing / tmin / tmax
+
+ReplayObservation remains authoritative for:
+- exact replayed trial identity
+- replay order
+- canonical trial provenance
+- the immutable replay data snapshot
+
+Before decoder inference, M6-T02 must verify exact correspondence between the ReplayObservation and the matching single-trial canonical epoch.
+
+Decoder-specific input validation remains authoritative and must not be bypassed or weakened.
+```
+
+**Approved model-specific runtime paths:**
+
+```text
+CSP+LDA:
+single canonical replay epoch
+→ CspLdaDecoder.predict_proba()
+→ already-fitted PlattScalingCalibrator.predict_proba()
+→ calibrated [P(left), P(right)]
+
+EEGNet:
+single canonical replay epoch
+→ EEGNetDecoder.predict_logits()
+→ already-fitted TemperatureScalingCalibrator.predict_proba()
+→ calibrated [P(left), P(right)]
+```
+
+**Boundary:** Class order remains `("left", "right")`. Preserve offline prerecorded EEG only, no live EEG, no new preprocessing, no new epoch semantics, and no bypass of 64-channel, 160 Hz, or timing validators. This decision does not authorize fitting, refitting, tuning, or selecting decoders or calibrators; Bayesian inference; D-051/D-052 goal mapping; shared autonomy; navigation; adaptation; or changes to unresolved U-034, U-035, or U-036.
+
+**Implementation consequence:** D-075 does not authorize M6-T02 implementation, an M6-T02 task, an M6-T02 implementation branch, or any new scientific policy.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.

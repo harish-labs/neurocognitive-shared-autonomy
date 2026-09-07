@@ -5,7 +5,7 @@
 
 **Purpose:** Authoritative live record of what is actually true now about the project.  
 **Workflow:** ChatGPT + Project Owner + Codex + Git/GitHub  
-**Last updated:** 2026-09-06
+**Last updated:** 2026-09-07
 
 ---
 
@@ -51,7 +51,7 @@ Latest accepted software task:
 PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation
 
 Latest approved scientific/architectural decision register entry:
-D-074 — M6 Offline EEG Replay Evidence Contract
+D-075 — M6 Replay-to-Decoder Structural Epoch Bridge
 
 Latest valid reportable experiment:
 None yet
@@ -59,7 +59,7 @@ None yet
 
 The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, human-subject result, or end-to-end EEG-driven mission-execution claim is authorized.
 
-D-074 approves deterministic, auditable offline replay evidence semantics only: one accepted prerecorded EEG epoch/trial produces one decoder evidence observation, and a Bayesian decision episode may consume up to five accepted observations under D-054 through D-057. M6-T01 is PASS / ACCEPTED / MERGED and implemented only synchronous replay of accepted prerecorded/processed epochs. M6-T02 remains NOT STARTED and NOT AUTHORIZED.
+D-074 approves deterministic, auditable offline replay evidence semantics only: one accepted prerecorded EEG epoch/trial produces one decoder evidence observation, and a Bayesian decision episode may consume up to five accepted observations under D-054 through D-057. D-075 preserves the canonical accepted `mne.Epochs` representation as the authoritative source of decoder structural metadata and requires exact correspondence with the immutable `ReplayObservation` before decoder inference. M6-T01 is PASS / ACCEPTED / MERGED and implemented only synchronous replay of accepted prerecorded/processed epochs. M6-T02 remains NOT STARTED and NOT AUTHORIZED.
 
 ---
 
