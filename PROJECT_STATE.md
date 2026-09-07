@@ -59,6 +59,8 @@ None yet
 
 The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, human-subject result, or end-to-end EEG-driven mission-execution claim is authorized.
 
+D-074 approves deterministic, auditable offline replay evidence semantics only: one accepted prerecorded EEG epoch/trial produces one decoder evidence observation, and a Bayesian decision episode may consume up to five accepted observations under D-054 through D-057. D-075 preserves the canonical accepted `mne.Epochs` representation as the authoritative source of decoder structural metadata and requires exact correspondence with the immutable `ReplayObservation` before decoder inference. M6-T01 is PASS / ACCEPTED / MERGED and implemented only synchronous replay of accepted prerecorded/processed epochs. M6-T02 is PASS / ACCEPTED / MERGED under D-074, D-075, and D-076. D-076 requires already-instantiated, already-fitted decoder and calibrator objects and forbids artifact loading, deserialization, training, fitting, refitting, tuning, selection, and persistence within M6-T02. M6-T03 remains NOT STARTED and NOT AUTHORIZED.
+
 
 
 ---
