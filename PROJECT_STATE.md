@@ -24,13 +24,13 @@ PRE-M6-R07B - Secondary Documentation Reconciliation: PASS / ACCEPTED / MERGED.
 PRE-M6-R01 through PRE-M6-R07 are complete. Final Pre-M6 audit: PASS / CLOSED, approved by the Project Owner.
 
 Current module:
-NO ACTIVE IMPLEMENTATION TASK
+M6-T03 - Calibrated EEG Evidence -> Bayesian Decision Episode
 
 Current task:
-None
+M6-T03
 
 Task status:
-NO ACTIVE IMPLEMENTATION TASK
+ACTIVE IMPLEMENTATION TASK
 
 Canonical branch:
 main
@@ -240,6 +240,6 @@ no UI, reportable experiments, logging infrastructure, hardware integration, or 
 
 # 8. NEXT ACTION
 
-M6-T02 is PASS / ACCEPTED / MERGED. No implementation task is currently active. M6-T03 is NOT STARTED / NOT AUTHORIZED.
+M6-T02 is PASS / ACCEPTED / MERGED. M6-T03 is the sole active implementation task: Calibrated EEG Evidence -> Bayesian Decision Episode.
 
-M6-T02 is PASS / ACCEPTED / MERGED under D-074, D-075, and D-076. M6-T03 is NOT STARTED / NOT AUTHORIZED.
+M6-T02 is PASS / ACCEPTED / MERGED under D-074, D-075, and D-076. M6-T03 is AUTHORIZED / implementation not started under the existing accepted Bayesian decisions. M6-T04 is NOT STARTED / NOT AUTHORIZED.
