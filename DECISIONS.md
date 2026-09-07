@@ -2109,6 +2109,33 @@ D-073 does not authorize PRE-M6-R06, M6, general dependency reconciliation, requ
 
 ---
 
+## D-074 — M6 Offline EEG Replay Evidence Contract
+
+**Status:** APPROVED
+
+**Date:** 2026-09-07
+**Supplements:** D-051, D-052, D-054 through D-057
+
+**Decision:**
+
+```text
+One accepted prerecorded EEG epoch/trial produces one decoder evidence observation.
+
+A Bayesian decision episode may consume up to 5 accepted evidence observations under the already-approved D-054 stopping/commitment rule and D-055 through D-057 uncertainty/shared-autonomy policy.
+
+Replay order must be deterministic and auditable.
+
+M6 must not introduce a new sliding-window, continuous-stream, or overlapping-window interpretation of EEG evidence.
+```
+
+**Boundary:** Public prerecorded EEG / offline replay / simulated real-time BCI only. This decision does not authorize live EEG acquisition, physical EEG hardware, a direct K-goal EEG decoder, model retraining, calibration changes, preprocessing changes, or changes to D-054 through D-057. Binary candidate A/B semantics remain governed by D-051/D-052. U-034, U-035, and U-036 remain unresolved.
+
+**Implementation consequence:** D-074 does not authorize M6 implementation, an M6 task, an M6 implementation branch, or any new scientific policy.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.

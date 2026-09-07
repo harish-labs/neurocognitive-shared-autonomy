@@ -51,13 +51,15 @@ Latest accepted software task:
 PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation
 
 Latest approved scientific/architectural decision register entry:
-D-073 — YAML Parser Dependency Contract
+D-074 — M6 Offline EEG Replay Evidence Contract
 
 Latest valid reportable experiment:
 None yet
 ```
 
 The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, human-subject result, or end-to-end EEG-driven mission-execution claim is authorized.
+
+D-074 approves deterministic, auditable offline replay evidence semantics only: one accepted prerecorded EEG epoch/trial produces one decoder evidence observation, and a Bayesian decision episode may consume up to five accepted observations under D-054 through D-057. It does not authorize M6 implementation. NO ACTIVE IMPLEMENTATION TASK remains in effect; M6 remains NOT STARTED and NOT AUTHORIZED.
 
 ---
 
