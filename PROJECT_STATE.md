@@ -5,7 +5,7 @@
 
 **Purpose:** Authoritative live record of what is actually true now about the project.  
 **Workflow:** ChatGPT + Project Owner + Codex + Git/GitHub  
-**Last updated:** 2026-09-07
+**Last updated:** 2026-09-08
 
 ---
 
@@ -24,13 +24,13 @@ PRE-M6-R07B - Secondary Documentation Reconciliation: PASS / ACCEPTED / MERGED.
 PRE-M6-R01 through PRE-M6-R07 are complete. Final Pre-M6 audit: PASS / CLOSED, approved by the Project Owner.
 
 Current module:
-M6-T03 - Calibrated EEG Evidence -> Bayesian Decision Episode
+M6-R01 - Reproducible Python Verification CI
 
 Current task:
-M6-T03
+M6-R01
 
 Task status:
-ACTIVE IMPLEMENTATION TASK
+ACTIVE REMEDIATION TASK
 
 Canonical branch:
 main
@@ -59,7 +59,7 @@ None yet
 
 The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, human-subject result, or end-to-end EEG-driven mission-execution claim is authorized.
 
-D-074 approves deterministic, auditable offline replay evidence semantics only: one accepted prerecorded EEG epoch/trial produces one decoder evidence observation, and a Bayesian decision episode may consume up to five accepted observations under D-054 through D-057. D-075 preserves the canonical accepted `mne.Epochs` representation as the authoritative source of decoder structural metadata and requires exact correspondence with the immutable `ReplayObservation` before decoder inference. M6-T01 is PASS / ACCEPTED / MERGED and implemented only synchronous replay of accepted prerecorded/processed epochs. M6-T02 is PASS / ACCEPTED / MERGED under D-074, D-075, and D-076. D-076 requires already-instantiated, already-fitted decoder and calibrator objects and forbids artifact loading, deserialization, training, fitting, refitting, tuning, selection, and persistence within M6-T02. M6-T03 remains NOT STARTED and NOT AUTHORIZED.
+D-074 approves deterministic, auditable offline replay evidence semantics only: one accepted prerecorded EEG epoch/trial produces one decoder evidence observation, and a Bayesian decision episode may consume up to five accepted observations under D-054 through D-057. D-075 preserves the canonical accepted `mne.Epochs` representation as the authoritative source of decoder structural metadata and requires exact correspondence with the immutable `ReplayObservation` before decoder inference. M6-T01 is PASS / ACCEPTED / MERGED and implemented only synchronous replay of accepted prerecorded/processed epochs. M6-T02 is PASS / ACCEPTED / MERGED under D-074, D-075, and D-076. D-076 requires already-instantiated, already-fitted decoder and calibrator objects and forbids artifact loading, deserialization, training, fitting, refitting, tuning, selection, and persistence within M6-T02. M6-T03 is AUTHORIZED and has reviewed unmerged candidate `fe35d8de5966a439fbde5b999bd35deedf82f7ff`, but acceptance is BLOCKED because no executable Python verification environment is available on the current host. M6-T03 merge authorization remains NO. M6-R01 — Reproducible Python Verification CI is the sole active remediation task and exists only to establish repository-controlled verification; it must not alter M6-T03 scientific or implementation semantics.
 
 
 
@@ -151,6 +151,22 @@ warning: pre-existing PyTorch convolution padding warning
 
 R07A was documentation-only; production test execution was not required.
 
+M6-T03 verification state:
+
+```text
+reviewed candidate: fe35d8de5966a439fbde5b999bd35deedf82f7ff
+code review: satisfactory after terminal-iterator remediation
+runtime verification: BLOCKED
+focused M6-T03 tests: NOT RUN
+M6-T02 regression: NOT RUN
+Bayesian regression: NOT RUN
+full pytest: NOT RUN
+merge authorization: NO
+blocker: Windows denies Python execution; no usable WSL distribution or Docker daemon is available
+```
+
+M6-R01 is authorized solely to establish a repository-controlled reproducible Python verification path using GitHub Actions. It must not weaken M6-T03 acceptance criteria.
+
 ---
 
 # 5. PRE-M6-R07 AUDIT FINDING
@@ -233,13 +249,13 @@ fresh navigation authorization remains required
 D-069 stepwise navigation remains authoritative
 D-070 event-bounded replacement-snapshot replanning remains authoritative
 safety veto remains mandatory before every environment transition
-no UI, reportable experiments, logging infrastructure, hardware integration, or M6 implementation without separate authorization
+no UI, reportable experiments, logging infrastructure, hardware integration, or additional M6 implementation without separate authorization
 ```
 
 ---
 
 # 8. NEXT ACTION
 
-M6-T02 is PASS / ACCEPTED / MERGED. M6-T03 is the sole active implementation task: Calibrated EEG Evidence -> Bayesian Decision Episode.
+M6-R01 — Reproducible Python Verification CI is the sole active remediation task. Its purpose is to establish a minimal GitHub Actions workflow that can verify an explicit ref/SHA in a clean Linux Python 3.12 environment using the existing `requirements.txt` and full pytest suite.
 
-M6-T02 is PASS / ACCEPTED / MERGED under D-074, D-075, and D-076. M6-T03 is AUTHORIZED / implementation not started under the existing accepted Bayesian decisions. M6-T04 is NOT STARTED / NOT AUTHORIZED.
+M6-T03 remains AUTHORIZED but BLOCKED on runtime verification with reviewed candidate `fe35d8de5966a439fbde5b999bd35deedf82f7ff`; it is not closed and must not be merged until required verification passes. M6-T04 is NOT STARTED / NOT AUTHORIZED. U-034, U-035, and U-036 remain unresolved.
