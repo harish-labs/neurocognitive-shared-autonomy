@@ -17,38 +17,39 @@ M1-T01 through M1-T10 accepted and merged.
 M4-T01 through M4-T05 accepted and merged.
 M5-T01 through M5-T04 accepted and merged.
 PRE-M6-R01 through PRE-M6-R06 accepted and merged.
-Final Pre-M6 audit found widespread stale decision-state documentation contradictions.
-PRE-M6-R07 was authorized for documentation reconciliation and stopped correctly when the change-controlled Master Specification was found to contain stale unresolved-state claims.
 PRE-M6-R07A — Master Authority Reconciliation: PASS / ACCEPTED / MERGED.
-PRE-M6-R07B - Secondary Documentation Reconciliation: PASS / ACCEPTED / MERGED.
-PRE-M6-R01 through PRE-M6-R07 are complete. Final Pre-M6 audit: PASS / CLOSED, approved by the Project Owner.
+PRE-M6-R07B — Secondary Documentation Reconciliation: PASS / ACCEPTED / MERGED.
+Final Pre-M6 audit: PASS / CLOSED.
+M6-T01: PASS / ACCEPTED / MERGED / CLOSED.
+M6-T02: PASS / ACCEPTED / MERGED / CLOSED.
+M6-R01: PASS / ACCEPTED / MERGED / CLOSED.
 
 Current module:
-M6-R01 - Reproducible Python Verification CI
+M6-T03 - Calibrated EEG Evidence -> Bayesian Decision Episode
 
 Current task:
-M6-R01
+M6-T03
 
 Task status:
-ACTIVE REMEDIATION TASK
+AUTHORIZED / IMPLEMENTED CANDIDATE / BLOCKED PENDING CI VERIFICATION
 
 Canonical branch:
 main
 
-PRE-M6-R07A accepted task-branch commit:
-94611b858984e10b89849930be698416db871007
+M6-T03 reviewed candidate:
+fe35d8de5966a439fbde5b999bd35deedf82f7ff
 
-PRE-M6-R07A merge commit:
-8b919c04553b1f3ccd55647fa02a9543e2efe9d7
+M6-T03 merge authorization:
+NO
 
-Latest accepted task-branch software commit:
-23196b8c11ccc800728a077a9ea4203b6be9ae7b
+M6-R01 accepted candidate:
+9030350dcd5a2d210ddd284c498c97027589c11e
 
-Final merged software commit through accepted R06:
-f66dba3b78dc91abedaff1b24a3597c7748426df
+M6-R01 software merge:
+a0dc2ebc8d4d7ad5ecdcd99449602afd701c05a9
 
-Latest accepted software task:
-M6-T01 — Deterministic Offline EEG Epoch Replay
+Verification workflow:
+.github/workflows/verify.yml
 
 Latest approved scientific/architectural decision register entry:
 D-076 — M6 Decoder/Calibrator Runtime Injection Contract
@@ -59,9 +60,11 @@ None yet
 
 The project remains an **offline prerecorded EEG / simulated real-time BCI** system. No live EEG, physical robot, certified safety, human-subject result, or end-to-end EEG-driven mission-execution claim is authorized.
 
-D-074 approves deterministic, auditable offline replay evidence semantics only: one accepted prerecorded EEG epoch/trial produces one decoder evidence observation, and a Bayesian decision episode may consume up to five accepted observations under D-054 through D-057. D-075 preserves the canonical accepted `mne.Epochs` representation as the authoritative source of decoder structural metadata and requires exact correspondence with the immutable `ReplayObservation` before decoder inference. M6-T01 is PASS / ACCEPTED / MERGED and implemented only synchronous replay of accepted prerecorded/processed epochs. M6-T02 is PASS / ACCEPTED / MERGED under D-074, D-075, and D-076. D-076 requires already-instantiated, already-fitted decoder and calibrator objects and forbids artifact loading, deserialization, training, fitting, refitting, tuning, selection, and persistence within M6-T02. M6-T03 is AUTHORIZED and has reviewed unmerged candidate `fe35d8de5966a439fbde5b999bd35deedf82f7ff`, but acceptance is BLOCKED because no executable Python verification environment is available on the current host. M6-T03 merge authorization remains NO. M6-R01 — Reproducible Python Verification CI is the sole active remediation task and exists only to establish repository-controlled verification; it must not alter M6-T03 scientific or implementation semantics.
+D-074 approves deterministic, auditable offline replay evidence semantics: one accepted prerecorded EEG epoch/trial produces one decoder evidence observation, and a Bayesian decision episode may consume up to five accepted observations under the approved Bayesian policy. D-075 preserves canonical accepted `mne.Epochs` as the authoritative decoder structural source. D-076 requires already-instantiated, already-fitted decoder/calibrator objects and forbids loading, fitting, tuning, selection, or persistence inside M6-T02.
 
+M6-T03 is AUTHORIZED and has reviewed candidate `fe35d8de5966a439fbde5b999bd35deedf82f7ff`. Code review is satisfactory after terminal-iterator remediation, but acceptance remains BLOCKED until the required tests execute successfully. M6-T03 merge authorization remains NO.
 
+M6-R01 — Reproducible Python Verification CI — is PASS / ACCEPTED / MERGED / CLOSED. It added only `.github/workflows/verify.yml` and established a repository-controlled GitHub Actions path for exact-ref verification in `ubuntu-latest` with Python 3.12 using the existing `requirements.txt` and full pytest suite. It introduced no scientific, source, test, or dependency changes.
 
 ---
 
@@ -87,20 +90,18 @@ M5-T01 — Human Command & Confirmation State Layer
 M5-T02 — Shared-Autonomy / Human-Interaction Authorization Bridge
 M5-T03 — Human-Authority-Aware Stepwise Navigation Runtime
 M5-T04 — Stepwise Replacement-Snapshot Replanning Integration
-PRE-M6-R01 — M4 Wrong-Terminal Route Protection: PASS / MERGED
-PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction: PASS / MERGED
-PRE-M6-R03 — Environment Snapshot Immutability and Goal Registry Hardening: PASS / MERGED
-PRE-M6-R04 — Adaptation Disabled-State Mutation Correction: PASS / MERGED
-PRE-M6-R05 — Central Runtime Composition Configuration: PASS / MERGED
-PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation: PASS / MERGED
+PRE-M6-R01 — M4 Wrong-Terminal Route Protection
+PRE-M6-R02 — Human OVERRIDE Symbolic Goal Identity Correction
+PRE-M6-R03 — Environment Snapshot Immutability and Goal Registry Hardening
+PRE-M6-R04 — Adaptation Disabled-State Mutation Correction
+PRE-M6-R05 — Central Runtime Composition Configuration
+PRE-M6-R06 — Accepted-Code Dependency Manifest Reconciliation
+M6-T01 — Deterministic Offline EEG Epoch Replay
+M6-T02 — Decoder and Calibration Runtime Adapter
+M6-R01 — Reproducible Python Verification CI
 ```
 
-Total accepted implementation tasks: 25.
-
-PRE-M6-R07A is accepted governance/documentation remediation and is not an implementation task.
-PRE-M6-R07B is PASS / ACCEPTED / MERGED as a documentation-only reconciliation task. At its close, `MASTER_PROJECT_SPEC.md` and `DECISIONS.md` were not modified; U-034/U-035/U-036 remained unresolved; no results were invented; and no M6 contract or implementation had started.
-
-M6-T01 is PASS / ACCEPTED / MERGED under D-074. It preserved one accepted prerecorded epoch/trial per replay observation, deterministic auditable order, identity/provenance integrity, fail-closed input validation, and clean end-of-replay behavior; no sliding/overlapping/continuous evidence semantics or downstream system integration was added.
+M6-T03 is the sole active implementation task and remains blocked pending CI verification. M6-T04 is not authorized.
 
 ---
 
@@ -149,79 +150,48 @@ full pytest suite: 327 passed, 1 warning
 warning: pre-existing PyTorch convolution padding warning
 ```
 
-R07A was documentation-only; production test execution was not required.
+M6-T02 accepted verification:
+
+```text
+focused M6-T02 tests: 24 passed
+replay/CSP+LDA/EEGNet/calibration regressions: 40 passed, 1 known warning
+full pytest: 361 passed, 1 known warning
+git diff --check: PASS
+```
 
 M6-T03 verification state:
 
 ```text
 reviewed candidate: fe35d8de5966a439fbde5b999bd35deedf82f7ff
 code review: satisfactory after terminal-iterator remediation
-runtime verification: BLOCKED
-focused M6-T03 tests: NOT RUN
-M6-T02 regression: NOT RUN
-Bayesian regression: NOT RUN
-full pytest: NOT RUN
+runtime verification: BLOCKED PENDING CI
+focused M6-T03 tests: NOT YET VERIFIED
+M6-T02 regression: NOT YET VERIFIED FOR THIS CANDIDATE
+Bayesian regression: NOT YET VERIFIED FOR THIS CANDIDATE
+full pytest: NOT YET VERIFIED FOR THIS CANDIDATE
 merge authorization: NO
-blocker: Windows denies Python execution; no usable WSL distribution or Docker daemon is available
 ```
 
-M6-R01 is authorized solely to establish a repository-controlled reproducible Python verification path using GitHub Actions. It must not weaken M6-T03 acceptance criteria.
+M6-R01 verification infrastructure:
+
+```text
+status: PASS / ACCEPTED / MERGED / CLOSED
+accepted candidate: 9030350dcd5a2d210ddd284c498c97027589c11e
+software merge: a0dc2ebc8d4d7ad5ecdcd99449602afd701c05a9
+workflow: .github/workflows/verify.yml
+trigger: workflow_dispatch with required ref input
+runner: ubuntu-latest
+Python: 3.12
+dependency install: requirements.txt
+verification: full pytest + git diff --check
+exact 40-character SHA integrity check: enabled
+```
 
 ---
 
-# 5. PRE-M6-R07 AUDIT FINDING
+# 5. PRE-M6 GOVERNANCE STATUS
 
-The final Pre-M6 audit after R06 found material stale decision-state claims in implementation-facing documentation.
-
-Original R07 scope covered:
-
-```text
-AGENTS.md
-TODO.md
-RESEARCH_LOG.md
-docs/15_IMPLEMENTATION_BLUEPRINT.md
-```
-
-Codex correctly stopped because materially stale contradictions were also discovered outside that scope, including:
-
-```text
-MASTER_PROJECT_SPEC.md
-README.md
-docs/01_PROJECT_CONCEPT_AND_PROBLEM.md
-docs/02_OBJECTIVES_SCOPE_AND_RESEARCH_QUESTIONS.md
-docs/03_SEARCH_AND_RESCUE_SCENARIO.md
-docs/04_SYSTEM_ARCHITECTURE.md
-docs/05_TECHNOLOGY_STACK.md
-docs/06_DATASET_AND_DATA_PIPELINE.md
-docs/07_NEUROSCIENCE_AND_BCI_FOUNDATIONS.md
-docs/08_EEG_SIGNAL_PROCESSING_AND_ML.md
-docs/09_PROBABILITY_CALIBRATION_AND_UNCERTAINTY.md
-docs/10_BAYESIAN_GOAL_INFERENCE.md
-docs/11_COGNITIVE_AND_ADAPTIVE_MODEL.md
-docs/12_SHARED_AUTONOMY_AND_HUMAN_AI_INTERACTION.md
-docs/13_AUTONOMOUS_PLANNING_AND_CONTROL.md
-docs/14_SAFETY_CRITICAL_CONTROL.md
-docs/17_EXPERIMENTAL_DESIGN.md
-docs/19_TESTING_AND_VERIFICATION.md
-docs/20_LIMITATIONS_ETHICS_AND_VALIDITY.md
-docs/23_RESULTS_AND_ANALYSIS.md
-docs/25_FUTURE_WORK.md
-```
-
-No R07 candidate was committed or pushed from that stopped attempt. Its four authorized files may contain local uncommitted edits in the Codex workspace, but those edits are not accepted repository state.
-
----
-
-# 6. PRE-M6-R07 GOVERNANCE STATUS
-
-PRE-M6-R07A is PASS / ACCEPTED / MERGED. It reconciled `MASTER_PROJECT_SPEC.md` with already-approved decisions through D-073 without new scientific or architectural decisions.
-
-```text
-Accepted task-branch commit:
-94611b858984e10b89849930be698416db871007
-Merge commit:
-8b919c04553b1f3ccd55647fa02a9543e2efe9d7
-```
+PRE-M6-R07A and PRE-M6-R07B are PASS / ACCEPTED / MERGED. Final Pre-M6 audit is PASS / CLOSED.
 
 The genuinely unresolved experimental-analysis decisions remain:
 
@@ -231,11 +201,9 @@ U-035 — robustness perturbation levels
 U-036 — inferential-statistics policy
 ```
 
-PRE-M6-R07B - Secondary Documentation Reconciliation is PASS / ACCEPTED / MERGED. Final Pre-M6 audit: PASS / CLOSED, approved by the Project Owner.
-
 ---
 
-# 7. CLAIM / SCOPE BOUNDARIES
+# 6. CLAIM / SCOPE BOUNDARIES
 
 Preserve at least:
 
@@ -249,13 +217,29 @@ fresh navigation authorization remains required
 D-069 stepwise navigation remains authoritative
 D-070 event-bounded replacement-snapshot replanning remains authoritative
 safety veto remains mandatory before every environment transition
-no UI, reportable experiments, logging infrastructure, hardware integration, or additional M6 implementation without separate authorization
+no UI, reportable experiments, hardware integration, or additional M6 implementation without separate authorization
 ```
 
 ---
 
-# 8. NEXT ACTION
+# 7. NEXT ACTION
 
-M6-R01 — Reproducible Python Verification CI is the sole active remediation task. Its purpose is to establish a minimal GitHub Actions workflow that can verify an explicit ref/SHA in a clean Linux Python 3.12 environment using the existing `requirements.txt` and full pytest suite.
+Use `.github/workflows/verify.yml` from canonical `main` to verify the exact M6-T03 candidate:
 
-M6-T03 remains AUTHORIZED but BLOCKED on runtime verification with reviewed candidate `fe35d8de5966a439fbde5b999bd35deedf82f7ff`; it is not closed and must not be merged until required verification passes. M6-T04 is NOT STARTED / NOT AUTHORIZED. U-034, U-035, and U-036 remain unresolved.
+```text
+fe35d8de5966a439fbde5b999bd35deedf82f7ff
+```
+
+Required acceptance evidence remains:
+
+```text
+focused M6-T03 tests
+M6-T02/runtime-adapter regression
+Bayesian regression
+full pytest
+git diff --check
+```
+
+If all required checks pass, stop for ChatGPT review before M6-T03 merge.
+
+M6-T04 remains NOT STARTED / NOT AUTHORIZED. U-034, U-035, and U-036 remain unresolved.
