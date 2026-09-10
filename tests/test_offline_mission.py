@@ -7,7 +7,7 @@ import pytest
 
 from src.autonomy.environment import EnvironmentConfig, SearchRescueEnvironment
 from src.autonomy.safety import SafetyController
-from src.control.human_interaction import HumanCommand, HumanCommandType
+from src.control.human_interaction import CommandStatus, HumanCommand, HumanCommandType
 from src.control.navigation_runtime import NavigationReplanTrigger, NavigationRuntime, NavigationStatus
 from src.control.offline_mission import MissionStage, OfflineMission
 from src.models.calibration import PlattScalingCalibrator
@@ -173,3 +173,88 @@ def test_explicit_d070_replan_is_delegated_without_automatic_retry() -> None:
     assert ready.navigation is not None and ready.navigation.status is NavigationStatus.READY
     assert replanned.replan is not None and replanned.replan.status is NavigationStatus.READY
     assert not replanned.moved and mission.environment is replacement
+
+
+def test_unresolved_episode_consumes_at_most_five_replay_observations() -> None:
+    mission = OfflineMission(environment())
+    result, decoder = begin(mission, [(0.5, 0.5)] * 6)
+
+    assert result.replay_episode is not None
+    assert result.replay_episode.update_count == 5
+    assert decoder.calls == 5
+    assert result.navigation is None and mission.environment.state.position == (1, 0)
+
+
+def test_duplicate_human_command_id_is_consumed_once_without_navigation_side_effect() -> None:
+    mission = OfflineMission(environment())
+    command = HumanCommand("pause-1", HumanCommandType.PAUSE)
+    first = mission.submit_human_command(command)
+    state_after_first = mission.controller.state
+    duplicate = mission.submit_human_command(command)
+
+    assert first.command is not None and first.command.status is CommandStatus.APPLIED
+    assert duplicate.command is not None and duplicate.command.status is CommandStatus.ALREADY_CONSUMED
+    assert mission.controller.state == state_after_first
+    assert mission.navigation_runtime.session is None and mission.environment.state.position == (1, 0)
+
+
+def test_stale_confirmation_request_fails_closed_without_goal_or_navigation() -> None:
+    mission = OfflineMission(environment())
+    confirmed, _ = begin(
+        mission,
+        [(0.5, 0.5)] * 4 + [(0.8, 0.2)],
+        confirmation_request_id="request-current",
+    )
+    stale = mission.submit_human_command(
+        HumanCommand("confirm-stale", HumanCommandType.CONFIRM, request_id="request-stale")
+    )
+
+    assert confirmed.navigation is None
+    assert stale.command is not None and stale.command.status is CommandStatus.STALE_REQUEST
+    assert mission.controller.state.approved_goal is None
+    assert mission.navigation_runtime.session is None and mission.environment.state.position == (1, 0)
+
+
+def test_malformed_replay_provenance_and_invalid_runtime_dependency_fail_closed() -> None:
+    mission = OfflineMission(environment())
+    malformed_epochs = epochs(1)
+    malformed_epochs.metadata = None
+    malformed = mission.begin_from_epochs(
+        malformed_epochs,
+        RecordingCspDecoder([np.asarray([[1.0, 0.0]])]),
+        RecordingPlattCalibrator(),
+        candidate_a="victim_a",
+        candidate_b="victim_b",
+        execution_id="malformed",
+    )
+    invalid_dependency = mission.begin_from_epochs(
+        epochs(1),
+        object(),
+        object(),
+        candidate_a="victim_a",
+        candidate_b="victim_b",
+        execution_id="invalid-dependency",
+    )
+
+    assert malformed.stage is MissionStage.REJECTED
+    assert invalid_dependency.stage is MissionStage.REJECTED
+    assert mission.navigation_runtime.session is None and mission.environment.state.position == (1, 0)
+
+
+def test_one_caller_advance_executes_exactly_one_environment_transition(monkeypatch: pytest.MonkeyPatch) -> None:
+    mission = OfflineMission(environment())
+    ready, _ = begin(mission, [(1.0, 0.0)], execution_id="step-bound")
+    step_calls: list[object] = []
+    original_step = mission.environment.step
+
+    def recording_step(action: object):
+        step_calls.append(action)
+        return original_step(action)
+
+    monkeypatch.setattr(mission.environment, "step", recording_step)
+    advanced = mission.advance_one_step()
+
+    assert ready.navigation is not None and ready.navigation.status is NavigationStatus.READY
+    assert advanced.navigation is not None and advanced.navigation.moved
+    assert len(step_calls) == 1
+    assert advanced.navigation.remaining_action_count > 0
