@@ -73,7 +73,7 @@ D-XXX or NONE
 
 ## R-001 — PhysioNet EEGBCI Dataset Semantics
 
-**Status:** REVIEWED
+**Status:** REVIEWED / RESOLVED FOR CURRENT PIPELINE
 
 Current project understanding:
 
@@ -113,17 +113,15 @@ T1 = imagined left fist
 T2 = imagined right fist
 ```
 
-Implication:
-
-The initial decoder may use Left-vs-Right motor imagery.
-
-T0 handling remains a methodological decision.
+Current decision state:
+- T0 handling is resolved by D-036.
+- The current primary decoder remains Left-vs-Right motor imagery.
 
 ---
 
 ## R-002 — Classical Motor-Imagery Baseline
 
-**Status:** REVIEWED
+**Status:** REVIEWED / RESOLVED FOR CURRENT BASELINE
 
 Candidate baseline:
 
@@ -147,11 +145,14 @@ CSP must be fit within the training partition.
 
 Fitting CSP before the split can leak test information.
 
+Current decision state:
+- D-043 and D-044 freeze the CSP configuration and validation-only selection rule.
+
 ---
 
 ## R-003 — EEGNet / Compact CNN
 
-**Status:** REVIEWED
+**Status:** REVIEWED / RESOLVED FOR CURRENT MODEL
 
 The project includes EEGNet or a scientifically accurate compact EEG CNN.
 
@@ -167,6 +168,9 @@ call it a compact EEG CNN inspired by EEGNet
 
 rather than falsely claiming exact reproduction.
 
+Current decision state:
+- D-045 through D-047 freeze the approved EEGNet architecture/training details required by the current project.
+
 ---
 
 ## R-004 — Calibration
@@ -179,7 +183,7 @@ Core observation:
 classification accuracy ≠ calibrated confidence
 ```
 
-Candidate methods:
+Candidate methods historically considered:
 
 ```text
 temperature scaling
@@ -195,14 +199,7 @@ Brier Score
 Reliability Diagram
 ```
 
-Open questions:
-
-- which calibration method;
-- which partition fits it;
-- how reliability bins are defined;
-- how cross-subject calibration is handled.
-
-Historical linked decisions, resolved by:
+Resolved by:
 
 ```text
 D-048 — Final Calibration Method
@@ -218,37 +215,25 @@ D-050 — Reliability-Diagram Binning
 
 Critical distinction:
 
-Decoder output:
-
 \[
 P(C \mid EEG)
 \]
 
-Bayesian goal model requires:
+and:
 
 \[
 P(E \mid G)
 \]
 
-These are not automatically identical.
+must not be silently conflated.
 
-Implication:
-
-A Goal-Evidence Adapter must define the semantics.
-
-Potential approaches require explicit modeling and should not be invented during coding.
-
-Historical linked decision, resolved by:
-
-```text
-D-052 — Decoder Posterior → Goal Likelihood Construction
-```
+Current project semantics are governed by D-051 and D-052.
 
 ---
 
 ## R-006 — Sequential Bayesian Goal Inference
 
-**Status:** REVIEWED / PARTIALLY OPEN
+**Status:** REVIEWED / RESOLVED FOR CURRENT PROJECT
 
 Core update:
 
@@ -259,20 +244,24 @@ P(E_t \mid G)
 P(G \mid E_{1:t-1})
 \]
 
-Generic Bayesian inference can be implemented and verified with synthetic likelihoods independently of the real EEG-to-goal mapping.
+Current decision state:
 
-Open questions:
+```text
+D-051 — binary-choice interaction
+D-052 — evidence likelihood weights
+D-053 — baseline prior
+D-054 — stopping / commitment / reset
+D-055 through D-057 — uncertainty/shared-autonomy policy
+D-074 — one accepted replay epoch = one evidence observation
+```
 
-- final prior policy;
-- evidence independence assumptions;
-- stopping/commitment rule;
-- reset semantics in final interaction protocol.
+No M7-blocking Bayesian decision remains open.
 
 ---
 
 ## R-007 — Posterior Entropy
 
-**Status:** REVIEWED
+**Status:** REVIEWED / RESOLVED FOR CURRENT POLICY
 
 Initial uncertainty measure:
 
@@ -280,23 +269,13 @@ Initial uncertainty measure:
 H(P)=-\sum_i p_i \log p_i
 \]
 
-Interpretation:
-
-```text
-high entropy
-→ diffuse belief
-
-low entropy
-→ concentrated belief
-```
-
 Important caveat:
 
 ```text
 low entropy does not imply correctness
 ```
 
-A confidently wrong posterior remains a critical failure mode.
+A confidently wrong posterior remains a critical failure mode. D-055 makes posterior thresholds authoritative while entropy remains the explicit uncertainty measure.
 
 ---
 
@@ -304,29 +283,7 @@ A confidently wrong posterior remains a critical failure mode.
 
 **Status:** REVIEWED / RESOLVED BY D-051
 
-Problem:
-
-```text
-initial EEG decoder = binary
-SAR world = potentially multiple goals
-```
-
-Preserved alternatives:
-
-```text
-A. two active selectable goals at a time
-B. hierarchical / sequential binary selection
-C. EEG controls an abstract binary priority
-D. later multiclass EEG
-```
-
-Do not permanently hard-code T1/T2 to specific victims without an approved interaction protocol.
-
-Historical linked decision, resolved by:
-
-```text
-D-051 — Binary EEG → Multi-Goal Interaction Protocol
-```
+The approved interaction uses two currently valid candidate goals/options at each decision point and represents multi-goal SAR as a sequence of binary choices. The binary decoder must not be treated as a direct K-goal classifier.
 
 ---
 
@@ -344,23 +301,7 @@ PAUSE
 STOP
 ```
 
-Old numeric thresholds discussed during planning are examples only.
-
-Open questions:
-
-- confidence vs entropy policy;
-- threshold values;
-- hysteresis;
-- prolonged ambiguity;
-- confirmation burden.
-
-Historical linked decisions, resolved by:
-
-```text
-D-055 — Confidence / Entropy Thresholds
-D-056 — Exact PROCEED / CONFIRM / DEFER Policy
-D-057 — Prolonged-Uncertainty Fallback
-```
+The exact current thresholds and fallback behavior are no longer open research questions for the primary system.
 
 ---
 
@@ -368,16 +309,9 @@ D-057 — Prolonged-Uncertainty Fallback
 
 **Status:** REVIEWED / RESOLVED BY D-058 THROUGH D-060
 
-Potential bounded targets:
+The current approved mechanism is bounded subject-specific, candidate-pair-specific prior personalization from explicit human-approved feedback only.
 
-```text
-user-specific priors
-decoder reliability
-confidence thresholds
-evidence weights
-```
-
-Required properties:
+Required properties remain:
 
 ```text
 bounded
@@ -388,50 +322,40 @@ leakage-safe
 switchable
 ```
 
-Do not claim formal adaptive control unless implemented.
+Do not claim formal adaptive control beyond what is implemented.
 
 ---
 
 ## R-011 — A* and Risk-Aware Planning
 
-**Status:** PARTIALLY REVIEWED
+**Status:** REVIEWED / RESOLVED FOR CURRENT PROJECT
 
 Approved planner:
 
 ```text
 A*
+four-connected grid
+Manhattan heuristic
 ```
 
-Initial grid:
+Current risk policy is governed by:
 
 ```text
-four-connected
+D-061 — fixed normalized risk scale
+D-062 — normalization/exposure aggregation
+D-063 — lambda = 2.0
+D-064 — PROHIBITED = 1.00 hard boundary
+D-065 — no-safe-path policy
+D-066 — controlled environment-change replanning
 ```
 
-Initial heuristic:
-
-```text
-Manhattan distance
-```
-
-Conceptual risk-aware cost:
-
-\[
-J = distance + \lambda \cdot risk
-\]
-
-Open:
-
-- risk scale;
-- normalization;
-- \(\lambda\);
-- prohibited hazards.
+No M7-blocking planning/safety parameter remains open.
 
 ---
 
 ## R-012 — Safety Architecture
 
-**Status:** REVIEWED / PARTIALLY OPEN
+**Status:** REVIEWED / RESOLVED FOR CURRENT PROJECT
 
 Core sequence:
 
@@ -441,26 +365,13 @@ planner proposes
 → environment executes only if approved
 ```
 
-Hard safety and soft risk must remain separate.
-
-Core hard-safety candidates:
-
-```text
-map boundary
-blocked cells
-invalid actions
-pause
-emergency stop
-prohibited hazards
-```
-
-Historical note: the prohibited-hazard policy is resolved by D-064.
+Hard safety and soft risk remain separate. Prohibited-hazard and no-safe-path behavior are governed by D-064 and D-065.
 
 ---
 
 ## R-013 — Experimental Comparison Logic
 
-**Status:** REVIEWED / PARTIALLY OPEN
+**Status:** REVIEWED / RESOLVED BY D-077
 
 Principal comparison:
 
@@ -471,27 +382,13 @@ C — Bayesian shared autonomy
 D — Full system
 ```
 
-Required principle:
-
-Each system must be defined explicitly before experiments.
-
-Do not allow component leakage between conditions.
-
-Ablations should isolate:
-
-```text
-calibration
-Bayes
-uncertainty
-safety
-adaptation
-```
+The final component matrix is frozen by D-077. Ablations continue to isolate calibration, Bayes, uncertainty, safety, and adaptation where applicable.
 
 ---
 
 ## R-014 — Cross-Subject Generalization
 
-**Status:** DECISION REQUIRED
+**Status:** REVIEWED / RESOLVED BY D-041 AND D-042
 
 Core leakage constraint:
 
@@ -499,15 +396,11 @@ Core leakage constraint:
 train_subjects ∩ test_subjects = ∅
 ```
 
-Possible protocols:
-
-```text
-leave-one-subject-out
-grouped K-fold
-fixed held-out subject groups
-```
-
-Historical note: the final cross-subject protocol is resolved by D-041/D-042.
+Primary protocol:
+- fixed 70/15/15 subject-level train/validation/final-test split;
+- deterministic seed 42 subject shuffle;
+- frozen versioned split manifest;
+- subject-wise reporting retained.
 
 ---
 
@@ -530,27 +423,70 @@ The project must preserve these outcomes if observed.
 
 ---
 
-# 4. OPEN RESEARCH QUEUE
+## R-016 — M7 Robustness Design
 
-Priority open questions:
+**Status:** REVIEWED / RESOLVED BY D-078
+
+Primary M7 robustness stress testing operates at the binary probability/evidence interface rather than inventing a physiological EEG-noise model.
+
+Two mandatory perturbation families are frozen:
 
 ```text
-[ ] Final EEG preprocessing configuration
-[ ] T0 handling
-[ ] Final data split strategy
-[ ] Cross-subject protocol
-[ ] Calibration method / split
-[ ] Binary EEG → multi-goal protocol
-[ ] Goal-evidence likelihood semantics
-[ ] Bayesian commitment rule
-[ ] Shared-autonomy thresholds
-[ ] Adaptation mechanism
-[ ] Risk scale and λ
-[ ] Prohibited-hazard rule
-[ ] Final A/B/C/D matrix
-[ ] Robustness perturbation definitions
-[ ] Statistical-analysis plan
+R1 — evidence flattening toward [0.5,0.5]
+epsilon = 0.00, 0.25, 0.50, 0.75, 1.00
+
+R2 — contradictory-evidence swap [pA,pB] -> [pB,pA]
+contamination fraction q = 0.00, 0.10, 0.20, 0.30, 0.40
 ```
+
+Each perturbation must preserve labels/true-goal evaluation metadata, use deterministic/frozen selection where randomness is involved, and must not be used to refit or tune the decoder, calibrator, thresholds, or protected-test policy.
+
+---
+
+## R-017 — M7 Inferential Statistics
+
+**Status:** REVIEWED / RESOLVED BY D-079
+
+Primary inference unit for real-EEG/system comparisons:
+
+```text
+subject
+```
+
+Primary policy:
+
+```text
+two-sided tests
+alpha = 0.05
+paired subject-level raw effects
+95% paired bootstrap confidence intervals
+10,000 bootstrap resamples with fixed seed
+paired sign-flip/permutation test
+Holm correction within experiment families
+```
+
+For a 17-subject final-test cohort, exact sign-flip enumeration is feasible when all subject-level paired differences are available. Seeds and individual trials must not be treated as substitutes for independent subjects.
+
+Deterministic planner/safety scenario validation remains primarily descriptive/exhaustive rather than being forced into artificial significance testing.
+
+---
+
+# 4. OPEN RESEARCH QUEUE
+
+No currently known M7-blocking scientific decision remains unresolved after D-077 through D-079.
+
+Current research/analysis queue is implementation- and evidence-dependent rather than parameter-decision-dependent:
+
+```text
+[ ] Observe actual decoder and calibration behavior on valid experiment outputs
+[ ] Examine subject-wise failure cases and difficult subjects
+[ ] Examine whether robustness degradation is graceful or pathological
+[ ] Examine trade-offs among wrong-goal rate, deferral/confirmation, latency, and safety
+[ ] Examine whether approved adaptation helps, harms, or has no meaningful effect by subject
+[ ] Preserve unexpected, mixed, and negative results for final discussion
+```
+
+Any new scientifically meaningful ambiguity discovered during M7 must be surfaced for Project Owner approval before Codex changes methodology.
 
 ---
 

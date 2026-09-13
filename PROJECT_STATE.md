@@ -29,6 +29,11 @@ M6-T06: PASS / ACCEPTED / MERGED / CLOSED.
 
 M6 — End-to-End EEG Integration: COMPLETE / PASS / CLOSED.
 
+M7 planning:
+D-077 through D-079 APPROVED.
+Former U-034, U-035, and U-036 resolved.
+M7 implementation remains NOT STARTED / NOT AUTHORIZED.
+
 Current task:
 None
 
@@ -52,14 +57,45 @@ overall: SUCCESS
 
 M6 demonstrates a software-only end-to-end path using public prerecorded EEG / offline replay / simulated real-time BCI. No live EEG, physical EEG hardware, physical robot deployment, certified safety, or real-world efficacy is claimed.
 
-Production-code changes: none
-New dependencies: none
-Scope deviations: none
+Production-code changes in this M7 planning step: none
+New dependencies in this M7 planning step: none
+Experiment execution in this M7 planning step: none
 
-M7: NOT STARTED / NOT AUTHORIZED.
+---
 
-# 2. REMAINING UNRESOLVED DECISIONS
+# 2. M7 EXPERIMENTAL DECISIONS
 
-U-034 — final A/B/C/D component matrix
-U-035 — robustness perturbation levels
-U-036 — inferential-statistics policy
+D-077 resolves U-034 and freezes the principal A/B/C/D experimental component matrix.
+
+D-078 resolves U-035 and freezes the primary M7 robustness perturbation families and severity levels:
+- probability/evidence flattening toward `[0.5, 0.5]` at epsilon 0.00, 0.25, 0.50, 0.75, 1.00;
+- deterministic contradictory-evidence swaps at contamination fractions 0.00, 0.10, 0.20, 0.30, 0.40 under a frozen seed/index selection.
+
+D-079 resolves U-036 and freezes the primary subject-level inferential-statistics policy: paired subject-level effects, 95% paired bootstrap confidence intervals, two-sided paired sign-flip/permutation tests, alpha 0.05, and Holm correction within experiment families.
+
+The principal M7 implementation plan is intentionally consolidated:
+
+```text
+M7-T01 — Consolidated Experiment & Evaluation Harness
+M7-T02 — Frozen Final Experiment Execution & Scientific Audit
+```
+
+M7-T01 must be frozen and accepted before M7-T02 may execute protected final-test evaluation.
+
+---
+
+# 3. REMAINING UNRESOLVED DECISIONS
+
+None currently recorded as M7-blocking unresolved scientific decisions.
+
+Any new scientifically meaningful ambiguity discovered during M7 planning or implementation must be surfaced for Project Owner approval rather than invented in code.
+
+---
+
+# 4. CURRENT AUTHORITY
+
+No M7 implementation task is active.
+
+The next candidate task is M7-T01, but it is PLANNED / NOT AUTHORIZED.
+
+Do not begin M7 code changes or reportable experiment execution until a separate Project Owner authorization updates `CURRENT_TASK.md` with the exact implementation ticket.
