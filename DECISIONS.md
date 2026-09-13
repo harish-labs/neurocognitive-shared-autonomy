@@ -1867,7 +1867,6 @@ CONTROL CYCLE
 
 ---
 
-
 ## D-070 — Stepwise Replacement-Snapshot Replanning Contract
 
 **Status:** APPROVED
@@ -2128,7 +2127,7 @@ Replay order must be deterministic and auditable.
 M6 must not introduce a new sliding-window, continuous-stream, or overlapping-window interpretation of EEG evidence.
 ```
 
-**Boundary:** Public prerecorded EEG / offline replay / simulated real-time BCI only. This decision does not authorize live EEG acquisition, physical EEG hardware, a direct K-goal EEG decoder, model retraining, calibration changes, preprocessing changes, or changes to D-054 through D-057. Binary candidate A/B semantics remain governed by D-051/D-052. U-034, U-035, and U-036 remain unresolved.
+**Boundary:** Public prerecorded EEG / offline replay / simulated real-time BCI only. This decision does not authorize live EEG acquisition, physical EEG hardware, a direct K-goal EEG decoder, model retraining, calibration changes, preprocessing changes, or changes to D-054 through D-057. Binary candidate A/B semantics remain governed by D-051/D-052.
 
 **Implementation consequence:** D-074 does not authorize M6 implementation, an M6 task, an M6 implementation branch, or any new scientific policy.
 
@@ -2180,7 +2179,7 @@ single canonical replay epoch
 → calibrated [P(left), P(right)]
 ```
 
-**Boundary:** Class order remains `("left", "right")`. Preserve offline prerecorded EEG only, no live EEG, no new preprocessing, no new epoch semantics, and no bypass of 64-channel, 160 Hz, or timing validators. This decision does not authorize fitting, refitting, tuning, or selecting decoders or calibrators; Bayesian inference; D-051/D-052 goal mapping; shared autonomy; navigation; adaptation; or changes to unresolved U-034, U-035, or U-036.
+**Boundary:** Class order remains `("left", "right")`. Preserve offline prerecorded EEG only, no live EEG, no new preprocessing, no new epoch semantics, and no bypass of 64-channel, 160 Hz, or timing validators. This decision does not authorize fitting, refitting, tuning, or selecting decoders or calibrators; Bayesian inference; D-051/D-052 goal mapping; shared autonomy; navigation; adaptation; or changes to experimental analysis policy.
 
 **Implementation consequence:** D-075 does not authorize M6-T02 implementation, an M6-T02 task, an M6-T02 implementation branch, or any new scientific policy.
 
@@ -2236,13 +2235,218 @@ EEGNetDecoder.predict_logits()
 -> already-fitted TemperatureScalingCalibrator.predict_proba()
 ```
 
-**Boundary:** Class order remains `("left", "right")`. M6-T02 may expose validated runtime evidence/provenance including replay index, canonical trial identity, subject ID, run ID, trial index, model family, class labels, raw decoder output, and calibrated probabilities. Preserve D-074, D-075, offline prerecorded EEG only, no live EEG, no new preprocessing, no new epoch semantics, and unresolved U-034/U-035/U-036.
+**Boundary:** Class order remains `("left", "right")`. M6-T02 may expose validated runtime evidence/provenance including replay index, canonical trial identity, subject ID, run ID, trial index, model family, class labels, raw decoder output, and calibrated probabilities. Preserve D-074, D-075, offline prerecorded EEG only, no live EEG, no new preprocessing, and no new epoch semantics.
 
 **Implementation consequence:** D-076 does not authorize M6-T02 implementation. It does not authorize Bayesian inference, D-051/D-052 goal mapping, shared autonomy, human authorization, navigation, adaptation, experiments, UI, new scientific policy, or artifact serialization/deserialization contracts such as pickle, joblib, or torch checkpoint loading.
 
 **Approved by:** Project Owner
 
 ---
+
+## D-077 — Final M7 A/B/C/D Experimental Component Matrix
+
+**Status:** APPROVED
+
+**Date:** 2026-09-13  
+**Resolves:** U-034
+
+**Decision:**
+
+The principal M7 system comparison is frozen as follows:
+
+| Component | A — Direct EEG | B — Confidence-Aware | C — Bayesian Shared Autonomy | D — Full System |
+|---|---:|---:|---:|---:|
+| Same frozen decoder evidence | Yes | Yes | Yes | Yes |
+| Calibration | Identity / OFF | ON | ON | ON |
+| Evidence horizon | 1 observation | 1 observation | Up to 5 | Up to 5 |
+| Sequential Bayesian accumulation | No | No | Yes | Yes |
+| Uncertainty gating | No | Yes | Yes | Yes |
+| Human CONFIRM / DEFER behavior | No | Yes | Yes | Yes |
+| A* navigation / same risk model | Yes | Yes | Yes | Yes |
+| Hard safety controller | Yes | Yes | Yes | Yes |
+| Human STOP / PAUSE / OVERRIDE authority | Yes | Yes | Yes | Yes |
+| Adaptation | No | No | No | Yes |
+
+Additional semantics:
+
+```text
+System A:
+- use the first accepted evidence observation;
+- use identity / no calibration;
+- choose the evidence argmax and commit directly;
+- do not use uncertainty refusal or Bayesian accumulation.
+
+System B:
+- use one calibrated evidence observation;
+- no sequential Bayes;
+- apply the approved numerical confidence boundaries to the single calibrated observation:
+  >= 0.90 -> PROCEED
+  >= 0.75 and < 0.90 -> CONFIRM
+  < 0.75 -> DEFER
+- CONFIRM still requires explicit human approval.
+
+System C:
+- use calibrated evidence;
+- use D-053/D-054 sequential Bayesian accumulation with up to five accepted observations;
+- use D-055 through D-057 uncertainty/shared-autonomy policy;
+- adaptation disabled.
+
+System D:
+- same as System C;
+- adaptation enabled under D-058 through D-060;
+- adaptation may update only from legitimate explicit human-approved feedback and never from hidden evaluation truth.
+```
+
+Both approved decoder families must be evaluated under the A/B/C/D system comparison where valid:
+
+```text
+A/B/C/D × CSP+LDA
+A/B/C/D × EEGNet
+```
+
+Planner, risk model, hard safety, and human emergency authority remain constant across A/B/C/D so the principal comparison does not confound intent-control methodology with downstream navigation/safety differences. Safety effectiveness remains separately testable through the dedicated safety ablation.
+
+**Context:** D-027 approved the conceptual A/B/C/D structure but left exact component membership unresolved. M7 requires a frozen matrix before reportable system experiments.
+
+**Alternatives considered:** disabling safety in the direct baseline; changing planners across conditions; using calibration inconsistently without an explicit baseline; evaluating only whichever decoder performs best; letting System C/D differ in multiple uncontrolled downstream components.
+
+**Rationale:** Holding unrelated navigation and hard-safety components constant isolates the intended progression from direct EEG control to confidence awareness, Bayesian shared autonomy, and adaptation. Evaluating both decoder families prevents the system-level conclusion from depending on a convenient post-hoc decoder choice.
+
+**Affected documents/modules:** `DECISIONS.md`, `PROJECT_STATE.md`, `RESEARCH_LOG.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, and future M7 evaluation code only when separately authorized.
+
+**Implementation consequence:** D-077 freezes M7 experimental methodology only. It does not authorize M7 coding, reportable experiment execution, final-test access, or an implementation branch. A separate `CURRENT_TASK.md` authorization is required.
+
+**Approved by:** Project Owner
+
+---
+
+## D-078 — M7 Robustness Perturbation Contract
+
+**Status:** APPROVED
+
+**Date:** 2026-09-13  
+**Resolves:** U-035
+
+**Decision:**
+
+Primary M7 robustness testing uses controlled perturbations at the normalized binary probability/evidence interface. Signal-level physiological-noise simulation is not required for the core M7 experiment matrix and remains future/optional work unless separately approved.
+
+### R1 — Evidence flattening / ambiguity
+
+For binary evidence:
+
+\[
+p=[p_A,p_B]
+\]
+
+apply:
+
+\[
+p_{\epsilon}=(1-\epsilon)p+\epsilon[0.5,0.5]
+\]
+
+with frozen severity levels:
+
+```text
+ε = 0.00   clean
+ε = 0.25   mild
+ε = 0.50   moderate
+ε = 0.75   severe
+ε = 1.00   fully uninformative
+```
+
+### R2 — Contradictory-evidence contamination
+
+For selected evidence observations, apply:
+
+```text
+[pA, pB] -> [pB, pA]
+```
+
+with frozen contamination fractions:
+
+```text
+q = 0.00
+q = 0.10
+q = 0.20
+q = 0.30
+q = 0.40
+```
+
+Observation selection for contamination must be deterministic under a frozen recorded seed/index rule. The perturbation definition, severity, seed, original evidence, and perturbed evidence must be traceable.
+
+Perturbations are applied to the normalized two-candidate evidence interface after the condition's configured identity/model-specific calibration stage and before direct decision, confidence gating, or Bayesian accumulation as applicable to that condition.
+
+Labels and evaluation-only true goals remain unchanged. Perturbed protected-test evidence must never be used to refit or retune the decoder, calibrator, confidence thresholds, Bayesian policy, adaptation policy, or other scientific parameters.
+
+**Context:** Robustness must test both increasingly ambiguous evidence and confidently misleading evidence without introducing an arbitrary physiological EEG-noise model that would expand the project's scientific claims.
+
+**Alternatives considered:** only one generic noise percentage; raw-signal Gaussian noise as the mandatory core robustness model; retraining models under each perturbation; tuning perturbation levels after viewing final-test results.
+
+**Rationale:** R1 tests graceful behavior as evidence loses information; R2 tests behavior under misleading evidence. Together they directly stress the project's uncertainty-aware intent-control architecture while remaining deterministic, interpretable, and computationally efficient.
+
+**Affected documents/modules:** `DECISIONS.md`, `PROJECT_STATE.md`, `RESEARCH_LOG.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, and future M7 robustness code only when separately authorized.
+
+**Implementation consequence:** D-078 freezes M7 robustness methodology only. It does not authorize implementation, model refitting, reportable experiment execution, or protected final-test access.
+
+**Approved by:** Project Owner
+
+---
+
+## D-079 — M7 Inferential-Statistics Policy
+
+**Status:** APPROVED
+
+**Date:** 2026-09-13  
+**Resolves:** U-036
+
+**Decision:**
+
+For real-EEG and subject-generalization system comparisons, the primary inferential unit is the subject.
+
+Primary policy:
+
+```text
+alpha = 0.05
+two-sided inference
+primary reported effect = paired raw metric difference between conditions at subject level
+95% paired bootstrap confidence interval
+10,000 paired bootstrap resamples
+fixed recorded bootstrap seed
+paired sign-flip/permutation test on subject-level paired differences
+Holm correction across formal tests within the same experiment family
+report subject count
+report individual subject values/distribution where practical
+report raw effect
+report 95% CI
+report exact raw p-value
+report Holm-adjusted p-value when a family contains multiple formal tests
+```
+
+For the frozen 17-subject final-test cohort defined by D-041/D-042, exact sign-flip enumeration over all \(2^{17}=131072\) sign assignments is preferred when the complete paired subject-level difference vector is available and computationally practical. Otherwise use a deterministic sufficiently large permutation sample whose size and seed are recorded.
+
+Do not treat EEG trials, evidence observations, navigation actions, maps, or neural-network random seeds as independent human subjects. Trials/events may contribute to each subject's metric, but subject-level comparisons must aggregate to the subject before the primary inferential test.
+
+Neural-network seed variability may be reported descriptively or as a secondary reproducibility analysis, but seeds are not substitutes for subjects.
+
+Deterministic planner/safety scenario validation should use descriptive/exhaustive reporting rather than artificial significance tests unless a later scientifically justified stochastic sampling design is separately approved.
+
+Negative, mixed, non-significant, or directionally unexpected results remain valid and must be preserved.
+
+**Context:** The project needed a final inferential policy that avoids pseudo-replication, remains appropriate for a modest fixed held-out-subject cohort, and reports effect magnitude/uncertainty rather than relying on p-values alone.
+
+**Alternatives considered:** trial-level significance testing; parametric paired t-tests as the universal default; no inferential analysis; treating random seeds as independent subjects; uncorrected families of many formal tests.
+
+**Rationale:** Subject-level paired nonparametric inference is well matched to the protected cross-subject design and avoids strong normality assumptions. Paired bootstrap intervals expose effect uncertainty, sign-flip/permutation tests provide a transparent paired null test, and Holm correction controls multiplicity within experiment families without excessive complexity.
+
+**Affected documents/modules:** `DECISIONS.md`, `PROJECT_STATE.md`, `RESEARCH_LOG.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, and future M7 statistics/evaluation code only when separately authorized.
+
+**Implementation consequence:** D-079 freezes the primary inferential-statistics methodology only. It does not authorize M7 implementation or final-test execution. Any new statistical method outside this policy requires explicit scientific review rather than implementation-time invention.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
@@ -2286,9 +2490,7 @@ None currently unresolved.
 ## Experimental Analysis
 
 ```text
-U-034 — Final A/B/C/D component matrix
-U-035 — Robustness perturbation levels
-U-036 — Final inferential-statistics policy
+None currently unresolved.
 ```
 
 ---
