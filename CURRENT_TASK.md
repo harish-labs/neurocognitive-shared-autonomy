@@ -29,6 +29,8 @@ M7-T01 candidate `1e60d8a0e3344e3706f9a08892b8695b7536c309` was scientifically r
 
 M7-T02 is therefore AUTHORIZED subject to the mandatory governance and leakage gates in this ticket.
 
+On 2026-09-13 the Project Owner additionally approved D-081, resolving the fixed-intent real-EEG episode-construction blocker and approving the disclosed protected-data prefetch interpretation. M7-T02 remains ACTIVE / AUTHORIZED. E1–E9 have not yet been executed, and no protected final outcome has yet been accessed.
+
 ---
 
 # 2. PURPOSE
@@ -208,6 +210,18 @@ The simulated operator is deterministic and exists only to exercise the already-
 - hidden true-goal metadata may be read by the simulator only to generate the explicit human command and to score evaluation outcomes; it must never be passed directly into decoder fitting, calibration fitting, Bayes, planner likelihood, or adaptation state.
 
 This simulated-human contract must be logged distinctly as simulated/offline and must not be described as a real human study.
+
+## 4.6 D-081 fixed-intent episode construction
+
+For E3/E4/E6/E7/E9, construct sequential episodes within one `(subject_id, run_id, intended_class)` group. Order by `event_sample` with canonical trial index or stable canonical identity as tie-breaker, then form non-overlapping consecutive blocks of exactly five source trials. Never mix subjects, runs, or intended classes; never overlap, reuse, pad, duplicate, or create shorter tail episodes. Record excluded tails and retain those single trials for valid E1/E2 use.
+
+A/B/C/D share the identical frozen episode basis. A and B use source observation 1; C and D receive observations 1–5 in the same order and may stop early only under the accepted decision policy. Evaluation labels are authorized only for episode construction, simulated-human command selection, and scoring, and remain forbidden from decoder/calibration/Bayesian inference, planning, safety, and direct adaptation state.
+
+For E9, order completed episodes within each subject/candidate-pair stream by `run_id`, first source `event_sample`, and stable episode identity. R1/R2 reuse the frozen episode identities; R2 selection remains population-level and does not restart at episode boundaries.
+
+The resulting episodes are deterministic offline repeated-trial constructions for a fixed intended choice, not natural continuous EEG sessions or live/online BCI evidence accumulation.
+
+The disclosed retrieval/cache creation for final-subject public EDF files is protected-data prefetch rather than protected-outcome access under D-081. Preserve that audit entry. First protected-outcome access remains forbidden until every split, episode, artifact, test, and execution-manifest gate passes.
 
 ---
 

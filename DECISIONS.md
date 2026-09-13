@@ -2482,6 +2482,37 @@ M7-T02 uses the deterministic final execution contract frozen in `CURRENT_TASK.m
 
 ---
 
+## D-081 — M7 Fixed-Intent EEG Episode Construction and Protected-Data Prefetch Interpretation
+
+**Status:** APPROVED
+
+**Date:** 2026-09-13
+**Supplements:** D-040 through D-042, D-051 through D-054, D-074, D-077 through D-080
+
+**Decision:**
+
+One C/D Bayesian evidence episode represents one fixed intended binary choice. Construct real-EEG sequential episodes only within a single `(subject_id, run_id, intended_class)` group. Within each group, order trials by `event_sample`, using canonical trial index or stable canonical trial identity only as a deterministic tie-breaker, and divide them into non-overlapping consecutive blocks of exactly five source observations. Do not shuffle, overlap, reuse, pad, duplicate, borrow across class/run/subject, or form a shorter sequential episode. Record every incomplete tail and its canonical source identities; tail trials remain eligible for scientifically appropriate E1/E2 single-trial analyses.
+
+Evaluation labels may be used only to construct fixed-intent episode blocks, define the evaluation-only intended goal, drive the D-080 deterministic simulated-human command, and score outcomes. Evaluation truth must not enter decoder fitting/inference, calibration fitting, evidence probabilities, Bayesian likelihood or state, uncertainty, thresholds, autonomous goal inference, planning, safety, or adaptation directly. Adaptation may receive truth only indirectly through a legitimate explicit applied simulated-human feedback event.
+
+A/B/C/D use the same frozen source episodes. A and B both use source observation 1; C and D receive source observations 1 through 5 in the identical order and may consume fewer only through the accepted stopping policy. Each episode has a stable identity and preserves subject, run, intended class, block index, ordered canonical trial identities, event samples, and canonical trial indices. For E9, order completed episodes within each subject/candidate-pair stream by `run_id`, first source `event_sample`, and stable episode identity. R1/R2 operate on these frozen identities; R2 selection remains global across the complete ordered evidence population and never restarts at episode boundaries.
+
+The five-observation episodes are a deterministic offline repeated-trial construction representing repeated evidence for one fixed intended binary choice. They are not a naturally continuous recording of five repeated thoughts, a real-time human-control session, online EEG, or live BCI evidence accumulation.
+
+Public EDF retrieval/cache creation alone is classified as protected-data prefetch, not protected-outcome access, provided no protected signal outcome is evaluated or used for scientific selection. The disclosed prefetched final-subject files for subjects 2, 3, 87, and runs 4/8 for subject 88 remain scientifically usable. Preserve the prefetch audit; do not claim the files were never downloaded. The first protected-outcome boundary remains the first operation exposing a final-subject decoder/logit/probability, calibrated probability, prediction, metric contribution, or downstream intent outcome, after all freeze gates pass.
+
+**Context:** M7-T02 was blocked because D-054 fixed the within-episode horizon but did not define how independent real EEG trials form fixed-intent sequential evaluation episodes. The previous run also disclosed final-subject EDF prefetch before artifact/manifest freeze without loading signals or producing outcomes.
+
+**Rationale:** Fixed-intent, within-run, non-overlapping five-trial blocks preserve the latent-goal assumption, paired A/B/C/D fairness, acquisition provenance, and protection against trial reuse. Separating public-file prefetch from outcome access records the disclosed event without mischaracterizing it as result leakage.
+
+**Affected documents/modules:** `DECISIONS.md`, `CURRENT_TASK.md`, `PROJECT_STATE.md`, `RESEARCH_LOG.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, and authorized M7 evaluation code/artifacts only.
+
+**Implementation consequence:** D-081 resolves the M7-T02 episode-construction blocker. The episode and final execution manifests must be frozen before protected outcome access. It does not authorize changes to accepted production modules, new scientific methods, final-outcome-driven tuning, M8, or merging M7-T02.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.

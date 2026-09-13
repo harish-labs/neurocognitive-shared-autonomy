@@ -356,6 +356,10 @@ This ensures mathematical correctness is separated from EEG quality.
 
 D-051 and D-052 resolve the interaction and likelihood semantics: each decision exposes exactly two valid candidates, calibrated Left evidence supports candidate A, calibrated Right evidence supports candidate B, and planning/risk must not alter the intent likelihood. Protected final-test execution remains reserved for M7-T02.
 
+D-081 freezes the real-EEG sequential evaluation unit. Within each `(subject_id, run_id, intended_class)` group, order trials by acquisition `event_sample` with canonical trial identity as deterministic tie-breaker and form non-overlapping consecutive blocks of exactly five. Do not mix classes, runs, or subjects; do not overlap, reuse, pad, or create a short tail episode. Record excluded tails, which remain eligible for valid E1/E2 single-trial analysis.
+
+A/B/C/D share each frozen episode identity. A and B use its first source observation; C and D receive the same ordered five-observation opportunity and may stop early only under accepted policy. Evaluation labels may construct and score the episode and drive the simulated-human command, but must not enter decoder/calibration/Bayesian inference, planning, safety, or adaptation directly. These are deterministic offline repeated-trial constructions for one fixed intended choice, not natural continuous sessions or live/online EEG accumulation.
+
 ---
 
 # 22. E4 — UNCERTAINTY / SHARED-AUTONOMY EXPERIMENT
@@ -1346,13 +1350,13 @@ No claim should exist without supporting experimental evidence.
 
 # 82. REMAINING EXECUTION-SPECIFIC ITEMS
 
-D-040 through D-079 resolve the scientific-policy items previously listed here. D-080 and `CURRENT_TASK.md` authorize and freeze M7-T02's exact final scenarios/maps, simulated-human rule, and operational seed policy. Decoder/checkpoint/calibrator identities must still be identified or fitted from train/validation data only, hashed, and frozen in the execution manifest before protected outcomes are inspected.
+D-040 through D-081 resolve the scientific-policy items previously listed here. D-080 and `CURRENT_TASK.md` authorize and freeze M7-T02's exact final scenarios/maps, simulated-human rule, and operational seed policy; D-081 freezes fixed-intent episode construction, paired source episodes, tail handling, E9 ordering, and the protected-data-prefetch interpretation. Decoder/checkpoint/calibrator identities and the split/episode/execution manifests must still be frozen before protected outcomes are inspected.
 
 ---
 
 # 83. DECISIONS REQUIRED BEFORE FINAL REPORTABLE EXPERIMENTS
 
-The scientific policies in items 1–11 and the subject-level statistical plan are approved in D-031 through D-079. M7-T02 is separately authorized by `CURRENT_TASK.md`, with its execution contract recorded by D-080. Its final execution manifest must freeze exact artifacts, inputs, hashes, and the already-approved execution definitions before protected results are accessed.
+The scientific policies in items 1–11 and the subject-level statistical plan are approved in D-031 through D-079. M7-T02 is separately authorized by `CURRENT_TASK.md`, with its execution contract recorded by D-080 and fixed-intent episode semantics recorded by D-081. Its final execution manifest must freeze exact artifacts, inputs, episode manifest/hash, and approved execution definitions before protected results are accessed.
 
 ---
 
@@ -1381,7 +1385,7 @@ The experimental design is correctly implemented when:
 
 # 85. CURRENT EXPERIMENTAL DESIGN SUMMARY
 
-The project uses a layered experimental strategy. EEG experiments compare CSP+LDA and EEGNet on the same Left-vs-Right PhysioNet motor-imagery task. Calibration uses D-048 through D-050. Bayesian/shared-autonomy experiments use D-051 through D-057, while planning/safety experiments independently validate the accepted A*, D-061 through D-065 risk/safety behavior, action rejection, replanning, and emergency-stop behavior. D-077 freezes A/B/C/D, D-078 freezes the two probability-interface robustness families, and D-079 freezes paired subject-level inference. M7-T01 built and verified the development-only harness; D-080 and `CURRENT_TASK.md` authorize M7-T02 under a committed governance reconciliation and hard split/artifact/manifest gates. All results must preserve provenance, explicit denominators, individual-subject structure, and negative or mixed outcomes.
+The project uses a layered experimental strategy. EEG experiments compare CSP+LDA and EEGNet on the same Left-vs-Right PhysioNet motor-imagery task. Calibration uses D-048 through D-050. Bayesian/shared-autonomy experiments use D-051 through D-057, while planning/safety experiments independently validate the accepted A*, D-061 through D-065 risk/safety behavior, action rejection, replanning, and emergency-stop behavior. D-077 freezes A/B/C/D, D-078 freezes robustness, D-079 freezes paired subject-level inference, and D-081 freezes fixed-intent real-EEG episode construction. M7-T01 built and verified the development-only harness; D-080 and `CURRENT_TASK.md` authorize M7-T02 under committed governance and hard split/episode/artifact/execution-manifest gates. All results must preserve provenance, explicit denominators, individual-subject structure, and negative or mixed outcomes.
 
 ---
 

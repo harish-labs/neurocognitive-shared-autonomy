@@ -79,6 +79,8 @@ On 2026-09-13 the Project Owner explicitly approved:
 
 `CURRENT_TASK.md` contains the exact M7-T02 execution contract and is the current implementation authority.
 
+D-081 now resolves the previously reported M7-T02 episode-construction blocker. It freezes same-subject/same-run/same-intended-class, event-sample-ordered, non-overlapping five-trial blocks; explicit tail exclusions; identical A/B/C/D episode pairing; deterministic E9 ordering; and the protected-data-prefetch interpretation. M7-T02 remains ACTIVE / AUTHORIZED. E1–E9 remain unexecuted and protected final outcomes remain unaccessed at this decision point.
+
 ---
 
 # 4. GOVERNANCE RECONCILIATION GATE
@@ -102,6 +104,9 @@ The following are frozen for the reportable M7 phase:
 - primary operational/bootstrap/R2 seed 42 unless an accepted upstream artifact carries its own frozen seed;
 - no extra neural-network seeds may be treated as independent human subjects;
 - no composite overall score.
+- D-081 fixed-intent episode construction and A/B/C/D source-episode pairing;
+- D-081 deterministic E9 ordering and explicit incomplete-tail provenance;
+- the disclosed final-subject EDF retrieval is recorded as protected-data prefetch, not outcome access.
 
 ---
 

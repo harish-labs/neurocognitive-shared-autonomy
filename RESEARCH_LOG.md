@@ -471,9 +471,19 @@ Deterministic planner/safety scenario validation remains primarily descriptive/e
 
 ---
 
-# 4. OPEN RESEARCH QUEUE
+# 4. D-081 FIXED-INTENT EPISODE RESOLUTION
 
-No currently known M7-blocking scientific decision remains unresolved after D-077 through D-079.
+On 2026-09-13 the Project Owner approved D-081 to resolve the M7-T02 real-EEG sequential-episode blocker. Sequential system episodes are deterministic non-overlapping blocks of exactly five acquisition-ordered trials sharing subject, run, and evaluation-only intended class. A/B use the first source observation; C/D use the same ordered five-observation opportunity. Incomplete tails are explicitly recorded and remain eligible for valid E1/E2 single-trial analyses. E9 has a frozen run/event/episode ordering, and robustness reuses the frozen episode identities.
+
+D-081 also records the reviewed protected-data prefetch: public EDF files for final subjects 2, 3, 87, and runs 4/8 for subject 88 were cached, but no protected EEG outcome, prediction, metric, selection, calibration, or tuning occurred. File prefetch is not the first protected-outcome access; the exact first outcome event must still occur only after every freeze gate passes.
+
+At the time of this decision E1–E9 remain unexecuted and no protected final outcome has been accessed.
+
+---
+
+# 5. OPEN RESEARCH QUEUE
+
+No currently known M7-blocking scientific decision remains unresolved after D-077 through D-081.
 
 M7-T02 execution is additionally frozen by D-080: deterministic S1–S7 scenarios, the accepted M6 mission map, deterministic simulated-human commands through the existing authority API, operational/bootstrap/R2 seed 42, and a hard pre-final split/artifact/manifest gate. This is an offline software evaluation, not a real human-subject study. Protected final outcomes must not influence fitting, selection, calibration, thresholds, scenarios, metrics, or policy.
 
@@ -492,7 +502,7 @@ Any new scientifically meaningful ambiguity discovered during M7 must be surface
 
 ---
 
-# 5. SOURCE QUALITY RULE
+# 6. SOURCE QUALITY RULE
 
 For critical methodology:
 

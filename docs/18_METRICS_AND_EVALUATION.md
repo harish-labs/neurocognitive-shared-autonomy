@@ -90,6 +90,8 @@ random seed
 
 Metrics must not mix these units without explanation.
 
+For M7-T02 sequential system metrics, D-081 defines one evaluation episode as a deterministic, non-overlapping block of exactly five acquisition-ordered trials from one `(subject_id, run_id, intended_class)` group. A/B use source observation 1 and C/D receive the identical ordered source observations 1–5. Source episode length and actually consumed evidence count are separate machine-readable quantities. Incomplete tails are excluded from sequential episode metrics with provenance but remain eligible for appropriate E1/E2 single-trial metrics. Subjects—not trials or episodes—remain the D-079 inferential unit.
+
 ---
 
 # 4. M1 — EEG CLASSIFICATION METRICS
@@ -1816,7 +1818,7 @@ M7-T01 now fixes per-class precision/recall/F1 plus macro F1, D-050 calibration 
 
 # 104. DECISIONS REQUIRED BEFORE FINAL METRIC REPORTING
 
-The required metric and inferential rules are governed by D-050, D-062, and D-077 through D-079. D-080 and `CURRENT_TASK.md` authorize and freeze M7-T02 execution semantics; the execution manifest must still freeze exact artifact identities and hashes before protected access. Path efficiency must remain unavailable unless its reference formula is separately approved.
+The required metric and inferential rules are governed by D-050, D-062, and D-077 through D-081. D-080 and `CURRENT_TASK.md` authorize and freeze M7-T02 execution semantics; D-081 additionally freezes the sequential episode unit, pairing, tail handling, and protected-data-prefetch interpretation. The episode and execution manifests must freeze exact source and artifact identities/hashes before protected outcome access. Path efficiency must remain unavailable unless its reference formula is separately approved.
 
 ---
 
@@ -1858,7 +1860,7 @@ Final evaluation is valid when:
 
 # 107. CURRENT METRICS & EVALUATION SUMMARY
 
-The project evaluates performance at distinct EEG, calibration, Bayesian/uncertainty, shared-autonomy, planning/safety, and full-system levels. M7-T01 implements per-class and macro EEG metrics, D-050 reliability/ECE and Brier metrics, posterior/confidence/entropy and decision counts, D-062 path risk/cost accounting, explicit denominators, and separated evidence versus navigation steps. For M7-T02, primary wrong-goal rate is wrong commitments divided by all evaluated episodes and the secondary conditional rate is wrong commitments divided by committed episodes. D-079 requires one paired metric per subject for primary inference, 10,000-resample paired bootstrap intervals, paired sign-flip/permutation p-values, and Holm correction within families. Robustness follows D-078 and all records preserve evaluation unit, seed/index provenance, and subject identity. D-080 freezes M7-T02 execution while keeping artifact and protected-access gates explicit. Path efficiency remains intentionally unavailable pending a separate approved reference definition.
+The project evaluates performance at distinct EEG, calibration, Bayesian/uncertainty, shared-autonomy, planning/safety, and full-system levels. M7-T01 implements per-class and macro EEG metrics, D-050 reliability/ECE and Brier metrics, posterior/confidence/entropy and decision counts, D-062 path risk/cost accounting, explicit denominators, and separated evidence versus navigation steps. For M7-T02, primary wrong-goal rate is wrong commitments divided by all evaluated episodes and the secondary conditional rate is wrong commitments divided by committed episodes. D-079 requires one paired metric per subject for primary inference, 10,000-resample paired bootstrap intervals, paired sign-flip/permutation p-values, and Holm correction within families. Robustness follows D-078. D-081 fixes the five-source-observation episode basis while keeping actual consumed evidence separate, preserves A/B/C/D pairing, and keeps subjects as the inferential unit. D-080/D-081 keep artifact, episode-manifest, execution-manifest, and protected-outcome gates explicit. Path efficiency remains intentionally unavailable pending a separate approved reference definition.
 
 ---
 
