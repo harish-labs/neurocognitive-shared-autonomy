@@ -12,6 +12,7 @@ from src.evaluation.episodes import (
     order_episodes_for_e9,
     validate_episode_manifest,
 )
+from src.evaluation.statistics import SubjectMetric, paired_subject_inference
 
 
 def _rows(*, subject=2, run=4, label="left", count=12, offset=0):
@@ -84,6 +85,13 @@ def test_episode_ids_and_manifest_freeze_are_deterministic(tmp_path):
     assert freeze_episode_manifest(second, path) == first_hash
     with pytest.raises(EpisodeConstructionError, match="different content"):
         freeze_episode_manifest(construct_episode_manifest(pd.DataFrame(_rows(count=11))), path)
+
+
+def test_frozen_episode_provenance_uses_repository_stable_source_names():
+    table = pd.DataFrame(_rows(count=5))
+    table["source_file"] = [r"C:\\machine-specific\\cache\\S002R04.edf"] * 5
+    episode = construct_episode_manifest(table).episodes[0]
+    assert {trial.source_file for trial in episode.source_trials} == {"S002R04.edf"}
 
 
 def test_fail_closed_for_missing_malformed_or_duplicate_provenance():
@@ -165,3 +173,10 @@ def test_d083_participation_is_post_split_balanced_and_never_replaces_subjects()
     by_subject = {item.subject_id: item for item in participation.records}
     assert by_subject[2].exclusion_reason == "valid_d081_episodes_for_only_one_intended_class"
     assert by_subject[3].exclusion_reason == "no_valid_d081_t1_or_t2_episode"
+    paired = paired_subject_inference(
+        tuple(SubjectMetric(str(subject_id), 0.0, 1) for subject_id in participation.included_subject_ids),
+        tuple(SubjectMetric(str(subject_id), 1.0, 1) for subject_id in participation.included_subject_ids),
+        bootstrap_seed=42,
+    )
+    assert paired.subject_count == len(participation.included_subject_ids)
+    assert paired.permutation_assignments == 2 ** paired.subject_count

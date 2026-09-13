@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** M1–M6 and M7-T01 accepted and merged; M7-T02 final experiment execution and scientific audit is active and authorized
+**Current stage:** M1–M6 and M7-T01 accepted and merged; M7-T02 is authorized but blocked before final-manifest freeze on unresolved E7 ablation execution semantics
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -57,8 +57,9 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 ## Current authorization
 
 ```text
-[ ] Wait for next explicitly approved CURRENT_TASK.md
-[ ] Do not begin another implementation module without a narrow approved ticket
+[x] Execute the authorized M7-T02 pre-final QC/manifest work
+[ ] Obtain Project Owner approval for exact Full - Bayes and Full - uncertainty execution rules
+[ ] Resume artifact freeze and E1-E9 only after that decision is recorded
 [ ] Do not treat synthetic or bounded smoke results as reportable efficacy evidence
 ```
 

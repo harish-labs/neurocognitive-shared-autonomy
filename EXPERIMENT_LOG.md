@@ -481,3 +481,29 @@ reproducibility is sufficient
 No reportable experiment has been executed yet.
 
 The first entries should be added only after implementation and experiment execution begin.
+
+---
+
+# 19. M7-T02 PRE-FINAL AUDIT CHECKPOINT — BLOCKED
+
+**Date:** 2026-09-13
+**Generating software SHA:** `f7260b0c3fe25c5364943857d0fc8c22a608e6a2`
+**Policy:** D-035, D-040–D-042, D-079, D-081–D-083
+**Protected outcomes accessed:** No
+
+Completed pre-final work:
+
+- audited all 109 EEGBCI source subjects under fixed D-035 QC;
+- froze 68 D-083-eligible subjects and 41 exclusions with reasons;
+- froze the D-082 split at 48 train / 10 validation / 10 final-test subjects;
+- froze 261 D-081 episodes from 2,017 retained source trials, with 1,305 sequential observations and 712 tail observations;
+- froze D-083 final sequential participation: 8 included, one no-episode exclusion, and one one-class-only exclusion, with no replacement.
+
+Manifest file hashes:
+
+- QC/eligibility: `a37dfeed5253533d47c1354b63616ae4ed19d01aec659acdf665bc8aa4f8f8cd`
+- split: `befd67eaa0a14d96c8386447e424e606f829542c73ece86843fd6de252429ae8`
+- episodes: `2c38cd6066422d54a35b5ff5d17da65dad687e163c3763aa690edef8ecafed03`
+- participation: `8de4367ab2d274c28dff38c331c1af22e0a52815be6914f208d3c0225da11286`
+
+Execution stopped before artifact fitting, final-execution-manifest freeze, or E1–E9 because the approved authorities do not define executable replacement decision semantics for `Full - Bayes` and `Full - uncertainty`. No result, probability, logit, prediction, calibration outcome, or downstream intent outcome from the protected final cohort was computed. This is a pre-final audit checkpoint, not a reportable efficacy experiment.

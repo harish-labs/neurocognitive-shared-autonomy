@@ -520,6 +520,18 @@ Any new scientifically meaningful ambiguity discovered during M7 must be surface
 
 ---
 
+# 9. M7-T02 PRE-FINAL ABLATION-SEMANTICS AUDIT
+
+During resumed M7-T02 implementation, Codex verified that D-077 and the approved numbered documents define the required component-removal matrix and the one-component-only fairness rule, but do not define an executable replacement rule for `Full - Bayes` or `Full - uncertainty`.
+
+For `Full - Bayes`, the approved matrix retains a five-observation horizon while disabling sequential Bayes; no authority selects first evidence, last evidence, averaging, another accumulator, or a commitment time. For `Full - uncertainty`, Bayes remains active while uncertainty gating is disabled; no authority fixes the commitment time/criterion or the status of CONFIRM/DEFER. These alternatives are outcome-affecting scientific choices rather than implementation details.
+
+The issue was identified before artifact freeze, final-execution-manifest freeze, decoder evaluation, or protected outcome access. D-077 through D-083 were not changed, and no substitute rule was implemented. Project Owner approval is required before reportable E7 ablation execution can proceed.
+
+The complete pre-final cohort audit was nevertheless finalized without protected outcome access: 68 of 109 source subjects met D-083, the D-082 split is 48/10/10, and the frozen final partition contains subjects 89, 16, 34, 29, 84, 57, 31, 93, 21, and 76. D-081 produced 261 episodes. The D-083 balanced-sequential final sample contains eight subjects; subject 84 has no valid class episode and subject 57 has only a T1 episode. This attrition changes no frozen partition membership.
+
+---
+
 # 8. SOURCE QUALITY RULE
 
 For critical methodology:

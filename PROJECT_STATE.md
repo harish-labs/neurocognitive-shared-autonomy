@@ -47,7 +47,7 @@ Current task:
 
 Task status:
 
-**ACTIVE / AUTHORIZED**
+**BLOCKED / AUTHORIZED — OWNER DECISION REQUIRED BEFORE FINAL-MANIFEST FREEZE**
 
 Authorized task branch:
 
@@ -84,6 +84,26 @@ D-081 now resolves the previously reported M7-T02 episode-construction blocker. 
 D-082 now resolves the post-QC cohort-size blocker without changing D-035. M7-T02 must complete the fixed 150 µV QC audit for all 109 source subjects, freeze the actual post-QC eligible cohort, then assign every eligible subject using one ascending-sort/seed-42 shuffle and deterministic largest-remainder 70/15/15 allocation. The historical 76/16/17 counts and provisional final-subject list are not forced execution inputs.
 
 D-083 resolves the remaining eligibility ambiguity: cross-subject eligibility requires at least one retained T1 and one retained T2 trial after QC. D-040 within-subject feasibility and D-081 balanced-sequential participation remain separate. Episode availability is assessed only after split freeze and cannot remove, replace, reshuffle, or move a frozen subject.
+
+The resumed implementation review identified a new pre-final scientific blocker in the required E7 ablations. D-077 freezes the component flags for `Full - Bayes` and `Full - uncertainty`, but no approved authority freezes the replacement decision rule when Bayes or uncertainty gating is removed. Because different aggregation/commitment rules would materially change reportable outcomes, M7-T02 must not freeze its final execution manifest or access protected outcomes until the Project Owner approves those exact operational semantics.
+
+Pre-final audit state at the block:
+
+- 109/109 source subjects audited;
+- 68 D-083 cross-subject eligible; 41 excluded under fixed QC/source contracts;
+- D-082 allocation: 48 train, 10 validation, 10 final test;
+- final-test IDs: `89, 16, 34, 29, 84, 57, 31, 93, 21, 76`;
+- 261 D-081 episodes; 2,017 retained source trials; 1,305 sequential observations; 712 tail observations;
+- D-083 final balanced-sequential IDs: `89, 16, 34, 29, 31, 93, 21, 76` (`n=8`);
+- no-replacement exclusions: subject 84 has no valid class episode; subject 57 has a T1 episode only;
+- no protected final outcome accessed; no artifact fitting or reportable E1–E9 execution occurred.
+
+Frozen manifest file hashes:
+
+- QC/eligibility: `a37dfeed5253533d47c1354b63616ae4ed19d01aec659acdf665bc8aa4f8f8cd`;
+- split: `befd67eaa0a14d96c8386447e424e606f829542c73ece86843fd6de252429ae8`;
+- episodes: `2c38cd6066422d54a35b5ff5d17da65dad687e163c3763aa690edef8ecafed03`;
+- participation: `8de4367ab2d274c28dff38c331c1af22e0a52815be6914f208d3c0225da11286`.
 
 ---
 

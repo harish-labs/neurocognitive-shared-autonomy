@@ -1,0 +1,21 @@
+{
+  "schema_version": "m7-t02-prefinal-blocker-v1",
+  "status": "BLOCKED",
+  "stage": "before_artifact_and_final_execution_manifest_freeze",
+  "software_sha": "f7260b0c3fe25c5364943857d0fc8c22a608e6a2",
+  "protected_outcomes_accessed": false,
+  "blocked_experiment_family": "E7_ablation",
+  "unresolved_conditions": {
+    "full_minus_bayes": {
+      "frozen_flags": "evidence_horizon=5; sequential_bayes=false; uncertainty_gating=true",
+      "missing_rule": "How five evidence observations produce the decision probability and when commitment occurs without sequential Bayes."
+    },
+    "full_minus_uncertainty": {
+      "frozen_flags": "evidence_horizon=5; sequential_bayes=true; uncertainty_gating=false",
+      "missing_rule": "When and from which posterior commitment occurs, and whether CONFIRM/DEFER remain reachable without uncertainty gating."
+    }
+  },
+  "scientific_risk": "Multiple plausible implementations are outcome-affecting and are not equivalent; selecting one would create new experimental policy.",
+  "required_resolution": "Project Owner approval and a recorded decision freezing exact operational rules for both ablations.",
+  "unchanged_policy_ids": ["D-077", "D-078", "D-079", "D-080", "D-081", "D-082", "D-083"]
+}

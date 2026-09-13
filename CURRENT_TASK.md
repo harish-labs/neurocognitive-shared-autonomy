@@ -2,7 +2,7 @@
 
 ## Current Codex Implementation Authority
 
-**Current status:** ACTIVE / AUTHORIZED  
+**Current status:** BLOCKED / AUTHORIZED — OWNER DECISION REQUIRED BEFORE FINAL-MANIFEST FREEZE
 **Current milestone:** M7 — Experiments / Ablations / Robustness  
 **Task ID:** M7-T02  
 **Task title:** Frozen Final Experiment Execution & Scientific Audit  
@@ -44,6 +44,23 @@ Execute the frozen M7 experiment program and produce reproducible, auditable sci
 This is the reportable experiment phase. It may access the protected final-test cohort only after all pre-final gates below pass and the final execution manifest is frozen.
 
 Negative, mixed, non-significant, or unexpected results are valid and must be preserved.
+
+## 2.1 Newly discovered pre-final scientific blocker
+
+Implementation review found that the approved ablation registry freezes which component is removed but does not freeze the replacement decision semantics for two required E7 conditions:
+
+- `Full - Bayes`: the five-observation horizon remains enabled while sequential Bayesian accumulation is disabled, but no approved rule states how those observations produce a decision probability or when commitment occurs;
+- `Full - uncertainty`: sequential Bayesian accumulation remains enabled while uncertainty gating is disabled, but no approved rule states when the system commits, which posterior it uses, or whether CONFIRM/DEFER remains reachable.
+
+The plausible alternatives are scientifically non-equivalent and would change E7 outcomes. Codex must not select one during implementation. M7-T02 therefore remains authorized but is blocked before artifact/final-execution-manifest freeze and before protected outcome access until the Project Owner approves exact operational rules for these two ablations. D-077 through D-083 otherwise remain unchanged.
+
+Valid pre-final work completed before the stop:
+
+- all 109 source subjects audited; D-083 cross-subject eligible `N=68`, excluded `41`;
+- D-082 split frozen at `48 train / 10 validation / 10 final_test` with no replacement;
+- D-081 manifest frozen with `261` episodes from `2,017` retained source trials (`1,305` sequential observations and `712` tails);
+- D-083 final sequential participation frozen at `8` included subjects; subject 84 has no valid five-trial class episode and subject 57 has a T1 episode only;
+- protected outcome access remains `false`; no decoder/calibrator artifact was fit and E1–E9 were not executed.
 
 ---
 

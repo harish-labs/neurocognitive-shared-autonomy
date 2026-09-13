@@ -1,0 +1,30 @@
+{
+  "schema_version": "m7-t02-cohort-flow-v1",
+  "source_subject_count": 109,
+  "post_qc_eligible_count": 68,
+  "post_qc_excluded_count": 41,
+  "d082_partition_counts": {
+    "train": 48,
+    "validation": 10,
+    "final_test": 10
+  },
+  "within_subject_feasible_count": 59,
+  "cross_subject_eligible_but_within_subject_infeasible_ids": [19, 27, 38, 43, 45, 52, 54, 77, 84],
+  "d083_final_sequential_feasible_count": 8,
+  "d083_final_sequential_included_subject_ids": [89, 16, 34, 29, 31, 93, 21, 76],
+  "d083_final_sequential_exclusions": {
+    "57": "valid_d081_episodes_for_only_one_intended_class",
+    "84": "no_valid_d081_t1_or_t2_episode"
+  },
+  "experiment_specific_actual_n": {
+    "E1": 10,
+    "E2": 10,
+    "E3": 8,
+    "E4": 8,
+    "E6": 8,
+    "E7_balanced_sequential": 8,
+    "E8": 10,
+    "E9": 8
+  },
+  "inference_note": "Counts identify eligible complete-pair populations only; E1-E9 were not executed because the pre-final scientific gate remained closed."
+}
