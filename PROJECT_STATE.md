@@ -29,16 +29,27 @@ M6-T06: PASS / ACCEPTED / MERGED / CLOSED.
 
 M6 — End-to-End EEG Integration: COMPLETE / PASS / CLOSED.
 
-M7 planning:
+M7 planning decisions:
 D-077 through D-079 APPROVED.
 Former U-034, U-035, and U-036 resolved.
-M7 implementation remains NOT STARTED / NOT AUTHORIZED.
+
+Current milestone:
+M7 — Experiments / Ablations / Robustness
 
 Current task:
-None
+M7-T01 — Consolidated Experiment & Evaluation Harness
 
 Task status:
-NO ACTIVE IMPLEMENTATION TASK
+ACTIVE / AUTHORIZED
+
+Authorized task branch:
+`task/m7-t01-experiment-evaluation-harness`
+
+Pre-authorization canonical main:
+`19fadbdfa0cbe3bae57ac3be9be1f2fb8c808d21`
+
+M7-T02 — Frozen Final Experiment Execution & Scientific Audit:
+NOT STARTED / NOT AUTHORIZED
 
 M6-T06 accepted candidate:
 575c44a50c16b108fdfa712386aeb8a6da4b2bd4
@@ -57,10 +68,6 @@ overall: SUCCESS
 
 M6 demonstrates a software-only end-to-end path using public prerecorded EEG / offline replay / simulated real-time BCI. No live EEG, physical EEG hardware, physical robot deployment, certified safety, or real-world efficacy is claimed.
 
-Production-code changes in this M7 planning step: none
-New dependencies in this M7 planning step: none
-Experiment execution in this M7 planning step: none
-
 ---
 
 # 2. M7 EXPERIMENTAL DECISIONS
@@ -73,29 +80,62 @@ D-078 resolves U-035 and freezes the primary M7 robustness perturbation families
 
 D-079 resolves U-036 and freezes the primary subject-level inferential-statistics policy: paired subject-level effects, 95% paired bootstrap confidence intervals, two-sided paired sign-flip/permutation tests, alpha 0.05, and Holm correction within experiment families.
 
-The principal M7 implementation plan is intentionally consolidated:
+No currently recorded M7-blocking scientific decisions remain unresolved.
+
+---
+
+# 3. M7 IMPLEMENTATION STRUCTURE
+
+The consolidated M7 plan remains:
 
 ```text
 M7-T01 — Consolidated Experiment & Evaluation Harness
 M7-T02 — Frozen Final Experiment Execution & Scientific Audit
 ```
 
-M7-T01 must be frozen and accepted before M7-T02 may execute protected final-test evaluation.
+M7-T01 is now ACTIVE / AUTHORIZED.
+
+M7-T01 scope includes the evaluation condition registry, approved metrics, D-078 robustness transforms, D-079 statistics, result/provenance schema, synthetic/development orchestration, required tests, and reconciliation of stale experiment/metrics documentation with already-approved decisions.
+
+M7-T01 must not access or execute protected final-test outcomes. It must be implemented, tested, reviewed, accepted, and frozen before M7-T02 may be authorized.
+
+M7-T02 remains NOT AUTHORIZED and is the only planned phase permitted to run the frozen protected final experiment matrix after explicit Project Owner approval.
 
 ---
 
-# 3. REMAINING UNRESOLVED DECISIONS
+# 4. FINAL-TEST PROTECTION
 
-None currently recorded as M7-blocking unresolved scientific decisions.
+During M7-T01:
 
-Any new scientifically meaningful ambiguity discovered during M7 planning or implementation must be surfaced for Project Owner approval rather than invented in code.
+```text
+protected final-test execution: FORBIDDEN
+protected final-test outcome inspection: FORBIDDEN
+final-test-driven tuning: FORBIDDEN
+reportable final M7 results: NOT AUTHORIZED
+```
+
+M7-T01 verification must use synthetic fixtures, leakage-safe development/training/validation inputs or previously accepted non-final-test artifacts, and controlled deterministic planning/safety scenarios.
 
 ---
 
-# 4. CURRENT AUTHORITY
+# 5. IMPLEMENTATION DISCIPLINE
 
-No M7 implementation task is active.
+M7-T01 is intentionally one large coherent task to reduce governance overhead and accelerate completion.
 
-The next candidate task is M7-T01, but it is PLANNED / NOT AUTHORIZED.
+Do not split M7-T01 into micro-tasks unless implementation discovers a genuine safety, scientific, architectural, dependency, or protected-test boundary that requires separate Project Owner review.
 
-Do not begin M7 code changes or reportable experiment execution until a separate Project Owner authorization updates `CURRENT_TASK.md` with the exact implementation ticket.
+If a new scientifically meaningful ambiguity appears, Codex must stop and report it rather than make the decision independently.
+
+The accepted M1–M6 production runtime is read-only for M7-T01 unless a real defect blocks the harness and separate authorization is granted.
+
+No new dependency is authorized.
+
+---
+
+# 6. NEXT GATE
+
+Codex should implement M7-T01 on `task/m7-t01-experiment-evaluation-harness` exactly under `CURRENT_TASK.md`.
+
+After implementation, testing, exact-ref GitHub Actions verification, and candidate push, ChatGPT must review the actual diff/code/tests/results before the task can be accepted or merged.
+
+M7-T02 must not begin before that review and a separate explicit Project Owner authorization.
