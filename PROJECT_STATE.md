@@ -3,139 +3,199 @@
 ## NeuroCognitive Shared Autonomy for Search & Rescue
 ### Live Project State
 
-**Purpose:** Authoritative live record of what is actually true now about the project.
-**Workflow:** ChatGPT + Project Owner + Codex + Git/GitHub
+**Purpose:** Authoritative live record of what is actually true now about the project.  
+**Workflow:** ChatGPT + Project Owner + Codex + Git/GitHub  
 **Last updated:** 2026-09-13
 
 ---
 
 # 1. STATUS AT A GLANCE
 
-Project phase:
-M1-T01 through M1-T10 accepted and merged.
-M4-T01 through M4-T05 accepted and merged.
-M5-T01 through M5-T04 accepted and merged.
-PRE-M6-R01 through PRE-M6-R06 accepted and merged.
-PRE-M6-R07A: PASS / ACCEPTED / MERGED.
-PRE-M6-R07B: PASS / ACCEPTED / MERGED.
-Final Pre-M6 audit: PASS / CLOSED.
-M6-T01: PASS / ACCEPTED / MERGED / CLOSED.
-M6-T02: PASS / ACCEPTED / MERGED / CLOSED.
-M6-R01: PASS / ACCEPTED / MERGED / CLOSED.
-M6-T03: PASS / ACCEPTED / MERGED / CLOSED.
-M6-T04: PASS / ACCEPTED / MERGED / CLOSED.
-M6-T05: PASS / ACCEPTED / MERGED / CLOSED.
-M6-T06: PASS / ACCEPTED / MERGED / CLOSED.
+Completed / accepted core work:
 
-M6 — End-to-End EEG Integration: COMPLETE / PASS / CLOSED.
+- M1-T01 through M1-T10: accepted and merged.
+- M4-T01 through M4-T05: accepted and merged.
+- M5-T01 through M5-T04: accepted and merged.
+- PRE-M6-R01 through PRE-M6-R07B: accepted and merged.
+- Final Pre-M6 audit: PASS / CLOSED.
+- M6-T01 through M6-T06, including M6-R01: PASS / ACCEPTED / MERGED / CLOSED.
+- M6 — End-to-End EEG Integration: COMPLETE / PASS / CLOSED.
+- M7 planning decisions D-077 through D-079: APPROVED.
+- M7-T01 — Consolidated Experiment & Evaluation Harness: PASS / ACCEPTED / MERGED / CLOSED.
 
-M7 planning decisions:
-D-077 through D-079 APPROVED.
-Former U-034, U-035, and U-036 resolved.
+M7-T01 accepted candidate:
+
+`1e60d8a0e3344e3706f9a08892b8695b7536c309`
+
+M7-T01 exact-ref verification:
+
+- GitHub Actions run: `34746224355`
+- requested SHA: `1e60d8a0e3344e3706f9a08892b8695b7536c309`
+- resolved SHA: `1e60d8a0e3344e3706f9a08892b8695b7536c309`
+- result: `440 passed, 16 warnings`
+- diff integrity: PASS
+- clean tree: PASS
+- conclusion: SUCCESS
 
 Current milestone:
-M7 — Experiments / Ablations / Robustness
+
+**M7 — Experiments / Ablations / Robustness**
 
 Current task:
-M7-T01 — Consolidated Experiment & Evaluation Harness
+
+**M7-T02 — Frozen Final Experiment Execution & Scientific Audit**
 
 Task status:
-ACTIVE / AUTHORIZED
+
+**ACTIVE / AUTHORIZED**
 
 Authorized task branch:
-`task/m7-t01-experiment-evaluation-harness`
 
-Pre-authorization canonical main:
-`19fadbdfa0cbe3bae57ac3be9be1f2fb8c808d21`
-
-M7-T02 — Frozen Final Experiment Execution & Scientific Audit:
-NOT STARTED / NOT AUTHORIZED
-
-M6-T06 accepted candidate:
-575c44a50c16b108fdfa712386aeb8a6da4b2bd4
-
-M6-T06 software merge:
-a02463619e7b109fc877e515b3c2de34391e966e
-
-M6-T06 exact-ref GitHub Actions verification:
-Run 34709434481
-requested SHA = resolved SHA = 575c44a50c16b108fdfa712386aeb8a6da4b2bd4
-dependency installation: PASS
-full pytest: 402 passed, 16 warnings
-git diff --check: PASS
-working tree: clean
-overall: SUCCESS
-
-M6 demonstrates a software-only end-to-end path using public prerecorded EEG / offline replay / simulated real-time BCI. No live EEG, physical EEG hardware, physical robot deployment, certified safety, or real-world efficacy is claimed.
+`task/m7-t02-final-experiments-scientific-audit`
 
 ---
 
-# 2. M7 EXPERIMENTAL DECISIONS
+# 2. M7-T01 REVIEW CLOSE
 
-D-077 resolves U-034 and freezes the principal A/B/C/D experimental component matrix.
+ChatGPT reviewed the first M7-T01 candidate `fd37a3c14ecb78c42bc6afba9a7d65c53f1c4ec9` and identified a scientifically meaningful R2 orchestration defect: contradictory-evidence contamination was initially rounded independently inside short episodes, which could make nonzero q levels ineffective for A/B and collapse severities for C/D.
 
-D-078 resolves U-035 and freezes the primary M7 robustness perturbation families and severity levels:
-- probability/evidence flattening toward `[0.5, 0.5]` at epsilon 0.00, 0.25, 0.50, 0.75, 1.00;
-- deterministic contradictory-evidence swaps at contamination fractions 0.00, 0.10, 0.20, 0.30, 0.40 under a frozen seed/index selection.
+Codex remediated the defect in amended candidate `1e60d8a0e3344e3706f9a08892b8695b7536c309` by selecting R2 contamination once across the complete ordered condition/evaluation-run evidence population, preserving stable global observation identities and auditable provenance.
 
-D-079 resolves U-036 and freezes the primary subject-level inferential-statistics policy: paired subject-level effects, 95% paired bootstrap confidence intervals, two-sided paired sign-flip/permutation tests, alpha 0.05, and Holm correction within experiment families.
+The amended candidate passed focused tests, regressions, full pytest, import/compiler checks, diff checks, and exact-ref GitHub Actions. No protected final-test outcomes were accessed and M7-T02 was not started during M7-T01.
 
-No currently recorded M7-blocking scientific decisions remain unresolved.
+M7-T01 is therefore accepted and closed.
 
 ---
 
-# 3. M7 IMPLEMENTATION STRUCTURE
+# 3. M7-T02 OWNER APPROVAL
 
-The consolidated M7 plan remains:
+On 2026-09-13 the Project Owner explicitly approved:
 
-```text
-M7-T01 — Consolidated Experiment & Evaluation Harness
-M7-T02 — Frozen Final Experiment Execution & Scientific Audit
-```
+- M7-T01 acceptance and merge;
+- `MASTER_PROJECT_SPEC.md` reconciliation through D-079;
+- the recommended deterministic M7-T02 S1–S7 final SAR scenario suite;
+- the deterministic simulated-human policy;
+- continuing with a large consolidated M7 task instead of unnecessary micro-tasks.
 
-M7-T01 is now ACTIVE / AUTHORIZED.
-
-M7-T01 scope includes the evaluation condition registry, approved metrics, D-078 robustness transforms, D-079 statistics, result/provenance schema, synthetic/development orchestration, required tests, and reconciliation of stale experiment/metrics documentation with already-approved decisions.
-
-M7-T01 must not access or execute protected final-test outcomes. It must be implemented, tested, reviewed, accepted, and frozen before M7-T02 may be authorized.
-
-M7-T02 remains NOT AUTHORIZED and is the only planned phase permitted to run the frozen protected final experiment matrix after explicit Project Owner approval.
+`CURRENT_TASK.md` contains the exact M7-T02 execution contract and is the current implementation authority.
 
 ---
 
-# 4. FINAL-TEST PROTECTION
+# 4. GOVERNANCE RECONCILIATION GATE
 
-During M7-T01:
+A known governance mismatch remains at the moment M7-T02 is authorized:
 
-```text
-protected final-test execution: FORBIDDEN
-protected final-test outcome inspection: FORBIDDEN
-final-test-driven tuning: FORBIDDEN
-reportable final M7 results: NOT AUTHORIZED
-```
+`MASTER_PROJECT_SPEC.md` still contains stale historical text saying U-034/U-035/U-036 are unresolved even though D-077/D-078/D-079 already resolved those items.
 
-M7-T01 verification must use synthetic fixtures, leakage-safe development/training/validation inputs or previously accepted non-final-test artifacts, and controlled deterministic planning/safety scenarios.
+The Project Owner has explicitly approved reconciliation through D-079.
 
----
+Therefore, before any protected final-test outcome is accessed, the M7-T02 branch must:
 
-# 5. IMPLEMENTATION DISCIPLINE
+1. reconcile `MASTER_PROJECT_SPEC.md` through D-079 without changing unrelated authority;
+2. record the approved M7-T02 execution contract in `DECISIONS.md`;
+3. reconcile any directly conflicting stale governance status text required for consistency;
+4. commit that governance reconciliation on the authorized task branch.
 
-M7-T01 is intentionally one large coherent task to reduce governance overhead and accelerate completion.
-
-Do not split M7-T01 into micro-tasks unless implementation discovers a genuine safety, scientific, architectural, dependency, or protected-test boundary that requires separate Project Owner review.
-
-If a new scientifically meaningful ambiguity appears, Codex must stop and report it rather than make the decision independently.
-
-The accepted M1–M6 production runtime is read-only for M7-T01 unless a real defect blocks the harness and separate authorization is granted.
-
-No new dependency is authorized.
+Protected final-test access is forbidden until this gate is complete.
 
 ---
 
-# 6. NEXT GATE
+# 5. FROZEN M7-T02 EXECUTION STATE
 
-Codex should implement M7-T01 on `task/m7-t01-experiment-evaluation-harness` exactly under `CURRENT_TASK.md`.
+The following are frozen for the reportable M7 phase:
 
-After implementation, testing, exact-ref GitHub Actions verification, and candidate push, ChatGPT must review the actual diff/code/tests/results before the task can be accepted or merged.
+- D-077 A/B/C/D component matrix;
+- D-078 R1/R2 robustness contract including population-level R2 selection;
+- D-079 subject-level inference/statistics policy;
+- deterministic S1–S7 controlled SAR scenario suite specified in `CURRENT_TASK.md`;
+- accepted M6 two-goal mission map for primary full-system orchestration;
+- deterministic simulated-human CONFIRM/correction/DEFER policy specified in `CURRENT_TASK.md`;
+- primary operational/bootstrap/R2 seed 42 unless an accepted upstream artifact carries its own frozen seed;
+- no extra neural-network seeds may be treated as independent human subjects;
+- no composite overall score.
 
-M7-T02 must not begin before that review and a separate explicit Project Owner authorization.
+---
+
+# 6. PROTECTED FINAL-TEST GATE
+
+M7-T02 may access reportable protected final-test outcomes only after all pre-final gates pass.
+
+Required before first final-test outcome:
+
+- exact D-040–D-042 split manifest verified;
+- full approved 109-subject eligible cohort verified;
+- 76 train / 16 validation / 17 protected final-test subject split verified;
+- if eligible cohort != 109 or final cohort != 17, STOP for Project Owner review;
+- decoder/checkpoint/calibrator artifacts proven train/validation-only and leakage-safe;
+- final execution manifest frozen with artifact hashes/provenance;
+- M7-T02 governance reconciliation committed.
+
+Once protected outcomes are visible, no model/checkpoint/calibrator/threshold/scenario/metric/perturbation/ablation selection may be changed in response to them.
+
+---
+
+# 7. M7-T02 REQUIRED EXPERIMENT PROGRAM
+
+The authorized large task covers the complete frozen M7 program as far as scientifically valid and technically available:
+
+- E1 — EEG decoding;
+- E2 — calibration;
+- E3 — direct vs sequential Bayesian inference;
+- E4 — uncertainty/shared autonomy;
+- E5 — planning/safety using frozen S1–S7;
+- E6 — principal A/B/C/D comparison for both decoder families where valid;
+- E7 — component ablations plus R1/R2 robustness;
+- E8 — cross-subject held-out-subject evaluation;
+- E9 — adaptation OFF/ON with explicit simulated-human feedback only;
+- D-079 paired subject-level statistics / Holm correction;
+- failure taxonomy;
+- reproducible tables/figures and machine-readable results;
+- scientific validity / claim audit.
+
+Negative, mixed, non-significant, and unexpected outcomes must be preserved.
+
+---
+
+# 8. READ-ONLY PRODUCTION BOUNDARY
+
+Accepted M1–M6 production scientific/runtime modules remain read-only during M7-T02 unless a genuine defect blocks the frozen experiment contract and separate authorization is obtained.
+
+In particular, protected results must not trigger changes to:
+
+- EEG preprocessing/splits;
+- model fitting/selection rules;
+- calibration fitting;
+- Bayesian mathematics;
+- thresholds;
+- adaptation policy;
+- planner/risk/safety policy;
+- human-authority semantics.
+
+A required production change is a STOP condition.
+
+---
+
+# 9. CLAIM BOUNDARY
+
+The system remains a software-only research prototype using public prerecorded EEG and offline replay / simulated real-time BCI.
+
+M7-T02 does not authorize claims of:
+
+- live EEG acquisition;
+- real human-subject efficacy;
+- physical robot performance;
+- real Search & Rescue deployment;
+- medical/clinical efficacy;
+- certified safety.
+
+---
+
+# 10. NEXT GATE
+
+Codex should execute M7-T02 on:
+
+`task/m7-t02-final-experiments-scientific-audit`
+
+under the exact `CURRENT_TASK.md` authority.
+
+Codex must not merge the final candidate. After implementation, experiment execution, result persistence, testing, and exact-ref GitHub Actions, ChatGPT must review the actual code, provenance, results, statistics, figures/tables, and CI before M7 is accepted/closed.
