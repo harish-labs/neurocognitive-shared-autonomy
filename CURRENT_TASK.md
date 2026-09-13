@@ -2,357 +2,607 @@
 
 ## Current Codex Implementation Authority
 
-**Current status:** ACTIVE / AUTHORIZED
-**Current milestone:** M7 — Experiments / Ablations / Robustness
-**Task ID:** M7-T01
-**Task title:** Consolidated Experiment & Evaluation Harness
-**Owner:** Project Owner
-**Scientific reviewer:** ChatGPT
-**Implementation engineer:** Codex
-**Canonical branch:** main
-**Authorized task branch:** `task/m7-t01-experiment-evaluation-harness`
-**Pre-authorization canonical main:** `19fadbdfa0cbe3bae57ac3be9be1f2fb8c808d21`
+**Current status:** ACTIVE / AUTHORIZED  
+**Current milestone:** M7 — Experiments / Ablations / Robustness  
+**Task ID:** M7-T02  
+**Task title:** Frozen Final Experiment Execution & Scientific Audit  
+**Owner:** Project Owner  
+**Scientific reviewer:** ChatGPT  
+**Implementation engineer:** Codex  
+**Canonical branch:** `main`  
+**Authorized task branch:** `task/m7-t02-final-experiments-scientific-audit`  
+**Accepted M7-T01 candidate / M7-T02 software base:** `1e60d8a0e3344e3706f9a08892b8695b7536c309`
 
 ---
 
-# 1. AUTHORIZATION
+# 1. OWNER AUTHORIZATION
 
-The Project Owner explicitly authorizes M7-T01 as one consolidated implementation phase.
+On 2026-09-13 the Project Owner explicitly approved all of the following as one consolidated transition:
 
-This authorization is intentionally broad enough to finish the complete experiment/evaluation harness without splitting it into micro-tasks, while preserving the protected-final-test boundary. D-077, D-078, and D-079 are the governing experimental decisions.
+1. accept and merge M7-T01;
+2. reconcile `MASTER_PROJECT_SPEC.md` through approved decisions D-077, D-078, and D-079;
+3. freeze the recommended M7-T02 final deterministic SAR scenario suite;
+4. freeze the deterministic simulated-human policy described below;
+5. proceed to M7-T02 as a large high-effort task rather than splitting it into unnecessary micro-tasks.
 
-M7-T02 — Frozen Final Experiment Execution & Scientific Audit remains NOT AUTHORIZED.
+M7-T01 candidate `1e60d8a0e3344e3706f9a08892b8695b7536c309` was scientifically reviewed by ChatGPT and accepted for merge after the R2 population-level remediation. Exact-ref GitHub Actions run `34746224355` checked out that SHA and reported `440 passed, 16 warnings`, successful diff integrity, and a clean tree.
+
+M7-T02 is therefore AUTHORIZED subject to the mandatory governance and leakage gates in this ticket.
 
 ---
 
 # 2. PURPOSE
 
-Implement and verify the deterministic, reproducible evaluation infrastructure required to run the approved M7 experiment families without yet executing protected final-test experiments.
+Execute the frozen M7 experiment program and produce reproducible, auditable scientific results for E1–E9 without changing the already-approved scientific policy after protected outcomes are visible.
 
-M7-T01 must provide the machinery needed for:
+This is the reportable experiment phase. It may access the protected final-test cohort only after all pre-final gates below pass and the final execution manifest is frozen.
 
-```text
-E1 — EEG decoding evaluation
-E2 — probability calibration evaluation
-E3 — Bayesian goal-inference evaluation
-E4 — uncertainty/shared-autonomy evaluation
-E5 — planning/safety evaluation
-E6 — principal A/B/C/D comparison
-E7 — component ablations and robustness
-E8 — cross-subject aggregation
-E9 — adaptation evaluation
-```
-
-The harness must be capable of representing these experiment families, but protected final-test execution and reportable final results remain reserved for M7-T02.
+Negative, mixed, non-significant, or unexpected results are valid and must be preserved.
 
 ---
 
-# 3. REQUIRED IMPLEMENTATION SCOPE
+# 3. MANDATORY PHASE 0 — GOVERNANCE RECONCILIATION BEFORE FINAL-TEST ACCESS
 
-M7-T01 shall implement, as one coherent evaluation subsystem:
+Before reading, running, summarizing, or otherwise exposing any protected final-test outcome, Codex must reconcile the repository governance exactly as already approved by the Project Owner.
 
-## 3.1 Condition registry / experiment definitions
+Required governance edits:
 
-Represent the frozen D-077 principal conditions exactly:
+- reconcile `MASTER_PROJECT_SPEC.md` through D-079;
+- remove stale statements that U-034/U-035/U-036 remain unresolved;
+- state that D-077 resolves U-034, D-078 resolves U-035, and D-079 resolves U-036;
+- preserve all unrelated Master authority unchanged;
+- add the approved M7-T02 execution decision(s) to `DECISIONS.md` without inventing additional policy;
+- update `PROJECT_STATE.md` to close M7-T01 as PASS / ACCEPTED / MERGED / CLOSED and mark M7-T02 ACTIVE / AUTHORIZED;
+- reconcile stale M7 status text in governance/backlog files only where needed to avoid contradictions.
 
-```text
-A — Direct EEG
-B — Confidence-Aware
-C — Bayesian Shared Autonomy
-D — Full System
-```
+The governance reconciliation must be committed on the authorized M7-T02 branch before any protected final-test outcome is accessed.
 
-The implementation must encode the approved component membership and must not silently redefine the matrix.
-
-Support the required component ablations where applicable:
-
-```text
-Full
-Full - calibration
-Full - Bayes
-Full - uncertainty
-Full - safety
-Full - adaptation
-```
-
-Ablation construction must change only the intended component and preserve unrelated components.
-
-## 3.2 Metrics
-
-Provide deterministic metric computation with explicit evaluation units and denominators for the approved evaluation layers, including at minimum:
-
-```text
-EEG:
-accuracy
-balanced accuracy
-per-class precision / recall / F1
-macro F1
-confusion matrix
-
-Calibration:
-10 equal-width-bin reliability data under D-050
-ECE under D-050
-Brier Score
-
-Bayesian / shared autonomy:
-goal inference / commitment correctness
-wrong-goal commitment
-posterior confidence
-entropy
-accepted evidence count / decision latency
-PROCEED / CONFIRM / DEFER counts and rates
-human intervention counts where applicable
-
-Planning / safety:
-path length
-approved D-062 cumulative risk exposure
-path/planning cost where available
-replanning count
-unsafe action attempts
-executed hard-safety violations
-NO_SAFE_PATH / unreachable outcomes
-
-Full system:
-task success
-wrong-goal commitment
-decision latency separated from navigation/environment steps
-confirmation / override / deferral counts
-navigation/safety outcomes
-```
-
-Wrong-goal rate and task-success denominators must be explicit and machine-readable. Do not collapse unrelated dimensions into a composite overall score.
-
-## 3.3 Robustness
-
-Implement D-078 exactly:
-
-```text
-R1 evidence flattening:
-p_epsilon = (1-epsilon) * p + epsilon * [0.5, 0.5]
-epsilon = {0.00, 0.25, 0.50, 0.75, 1.00}
-
-R2 contradictory-evidence contamination:
-[pA, pB] -> [pB, pA]
-q = {0.00, 0.10, 0.20, 0.30, 0.40}
-```
-
-Contamination selection must be deterministic under a recorded fixed seed/index rule. Original and perturbed evidence, perturbation family, severity, seed, and selected indices must be auditable.
-
-Do not add signal-level EEG noise as a core M7-T01 requirement.
-
-## 3.4 Inferential statistics
-
-Implement D-079 subject-level inference:
-
-```text
-paired raw subject-level effect
-95% paired bootstrap CI
-10,000 bootstrap resamples
-fixed recorded seed
-two-sided paired sign-flip/permutation test
-exact 2^17 sign enumeration when the complete 17-subject paired final-test vector is later supplied and feasible
-Holm correction within an experiment family
-```
-
-The implementation must prevent trial/evidence/action/map/seed observations from being silently treated as independent human subjects.
-
-Planner/safety deterministic scenario validation should remain descriptive/exhaustive unless a separately approved stochastic design exists.
-
-## 3.5 Reproducibility / result schema
-
-Provide deterministic machine-readable result/provenance structures sufficient to record, where applicable:
-
-```text
-experiment family / experiment ID
-condition / ablation
-decoder family
-split / evaluation track
-subject identity or anonymous subject key
-seed(s)
-perturbation family / severity / selected indices
-effective operational configuration
-relevant scientific-policy identifiers
-input evidence/trial provenance
-metric definitions / denominators
-subject-level metrics
-aggregate metrics
-statistical outputs
-software/git SHA supplied by the caller/runtime
-```
-
-Do not fabricate unavailable provenance. Fail closed or mark a field explicitly unavailable only where the schema permits it.
-
-## 3.6 Experiment orchestration
-
-Provide deterministic orchestration sufficient to evaluate synthetic/development inputs and already-produced module outputs through the approved condition/metric/robustness/statistics interfaces.
-
-Reuse accepted production modules rather than duplicating Bayesian, shared-autonomy, planner, safety, navigation, decoder, or calibration logic.
-
-M7-T01 is evaluation infrastructure, not a rewrite of accepted M1–M6 scientific/runtime modules.
-
-## 3.7 Documentation reconciliation
-
-Update `docs/17_EXPERIMENTAL_DESIGN.md` and `docs/18_METRICS_AND_EVALUATION.md` only as needed to reconcile stale TBD/unresolved language with already-approved decisions D-048 through D-057 and D-077 through D-079 and with the actual M7-T01 implementation.
-
-Do not introduce new scientific policy through documentation edits.
+This is reconciliation of already-approved owner decisions, not permission to make new scientific decisions.
 
 ---
 
-# 4. PROTECTED FINAL-TEST BOUNDARY
+# 4. FROZEN M7-T02 EXECUTION CONTRACT
 
-M7-T01 MUST NOT execute, inspect, summarize, tune against, or produce reportable outcomes from the protected final-test cohort.
+## 4.1 Principal experimental policy
 
-The harness may implement generic support needed for later final evaluation, but M7-T01 verification must use only:
+Preserve D-077 exactly:
+
+- A — Direct EEG;
+- B — Confidence-Aware;
+- C — Bayesian Shared Autonomy;
+- D — Full System;
+- evaluate both approved decoder families where valid: CSP+LDA and EEGNet/approved compact EEG CNN;
+- common planner/risk/hard-safety/human emergency authority remain fixed across A–D except in the explicit safety ablation;
+- adaptation is enabled only in D and the explicit adaptation comparison;
+- do not redefine component membership after results are visible.
+
+Preserve D-078 exactly:
+
+- R1 epsilon: `0.00, 0.25, 0.50, 0.75, 1.00`;
+- R2 q: `0.00, 0.10, 0.20, 0.30, 0.40`;
+- R2 selection occurs once over the complete ordered condition/evaluation-run evidence population, never independently per short episode;
+- perturb after the condition's approved identity/model-specific calibration stage and before direct decision/confidence gating/Bayesian update;
+- labels and evaluation-only intended-goal metadata are never perturbed.
+
+Preserve D-079 exactly:
+
+- subject is the primary inferential unit for real EEG / subject-generalization comparisons;
+- two-sided alpha `0.05`;
+- paired raw subject-level effect;
+- 95% paired bootstrap CI with 10,000 resamples and a fixed recorded seed;
+- paired sign-flip/permutation test;
+- exact `2^17 = 131072` sign enumeration for the complete 17-subject final vector when available and practical;
+- Holm correction within each experiment family;
+- no pseudo-replication using trials, observations, actions, maps, or neural seeds as subjects.
+
+## 4.2 Frozen operational/random seeds
+
+Use `42` for M7-T02 operational randomness unless an already-approved upstream artifact has its own frozen training/selection seed that must be preserved. In particular:
+
+- bootstrap seed: `42`;
+- R2 population-selection seed: `42` for the primary robustness matrix;
+- environment reset / deterministic orchestration seed where a seed field is required: `42`.
+
+Do not create extra neural-network repeat runs merely to increase inferential sample size. Existing approved model-seed policy and already-frozen model artifacts take precedence. Neural seeds are descriptive/reproducibility metadata, never independent subjects.
+
+## 4.3 Frozen controlled SAR scenario suite for E5 / safety validation
+
+Use these deterministic fixtures, derived from already-accepted planner/safety/replanning contracts. Coordinate convention is `(row, column)`.
+
+### S1 — Basic free-space route
+
+- grid: `3 x 4`
+- start: `(1,0)`
+- approved goal: `(0,3)`
+- blocked cells: none
+- risk map: all FREE
+
+### S2 — Static obstacle route
+
+- grid: `3 x 4`
+- start: `(1,0)`
+- approved goal: `(0,3)`
+- blocked cells: `{(1,1)}`
+- risk map: all FREE
+
+### S3 — Short risky vs longer safer route
+
+- grid: `3 x 5`
+- start: `(1,0)`
+- approved goal: `(1,4)`
+- blocked cells: none
+- HIGH-risk cells: `(1,1)`, `(1,2)`, `(1,3)` at `0.75`
+- all other cells FREE
+- D-063 lambda remains `2.0`
+
+### S4 — No-safe-path case
+
+- grid: `3 x 3`
+- start: `(1,0)`
+- approved goal: `(1,2)`
+- blocked cells: `{(0,1), (1,1), (2,1)}`
+- risk map: all FREE
+- expected contract: explicit NO_SAFE_PATH / stationary behavior, not goal substitution.
+
+### S5 — Dynamic blockage / controlled replanning
+
+Initial snapshot:
+
+- grid: `3 x 5`
+- start: `(1,0)`
+- approved goal: `(1,4)`
+- blocked cells: none
+- risk map: all FREE
+
+Replacement snapshot for the frozen environment-change event:
+
+- same grid and same approved goal;
+- replacement start equals the current valid agent position;
+- add blocked cell `(1,1)`;
+- event ID is stable and consumed once;
+- replan under D-066/D-070 without changing the approved goal.
+
+### S6 — Prohibited-hazard safety rejection
+
+- grid: `3 x 4`
+- current/start: `(1,1)`
+- approved goal: `(0,3)`
+- prohibited cell: `(1,2)` with risk `1.00`
+- frozen proposed action for the safety probe: RIGHT
+- expected contract: PROHIBITED_HAZARD / REPLAN_REQUIRED; the prohibited move must not execute.
+
+### S7 — Emergency stop
+
+- grid: `3 x 4`
+- current/start: `(1,1)`
+- approved goal: `(0,3)`
+- otherwise free map
+- issue STOP / emergency-stop authority before the next movement proposal is executed
+- expected contract: halted and zero movement after stop.
+
+These seven scenarios are deterministic validation scenarios. Do not fabricate stochastic significance testing over them. Report them descriptively/exhaustively under D-079.
+
+## 4.4 Frozen full-system mission map
+
+For E3/E4/E6/E7/E9 end-to-end mission orchestration, use the already-accepted M6 two-goal environment unless an experiment explicitly uses one of S1–S7 above:
+
+- grid: `3 x 5`;
+- start: `(1,0)`;
+- `victim_a = (1,4)`;
+- `victim_b = (0,2)`;
+- no blocked cells and all FREE in the primary baseline mission map.
+
+Candidate order is stable as `(victim_a, victim_b)` when this map is used. Do not reinterpret Left/Right class semantics or hidden true-goal metadata.
+
+## 4.5 Deterministic simulated-human policy
+
+M7-T02 remains a software-only offline-replay experiment. No real human-subject data are introduced.
+
+The simulated operator is deterministic and exists only to exercise the already-approved human-authority interface reproducibly:
+
+- `PROCEED`: no simulated-human command is injected.
+- `CONFIRM`: if the controller's proposed candidate equals the episode's evaluation-only intended goal, submit the accepted explicit CONFIRM command for that request. If the proposed candidate is not the intended goal, submit an explicit OVERRIDE/correction to the intended goal rather than approving the wrong proposal.
+- `DEFER`: submit an explicit OVERRIDE/correction selecting the evaluation-only intended goal, thereby representing a human response to the request for input. Do not force an autonomous argmax.
+- `PAUSE` and `STOP`: inject only in their dedicated controlled experiments/scenarios, not randomly in the primary A/B/C/D comparison.
+- adaptation may update only from the resulting legitimate explicit applied human-feedback event through the already-accepted D-058–D-060 interfaces;
+- hidden true-goal metadata may be read by the simulator only to generate the explicit human command and to score evaluation outcomes; it must never be passed directly into decoder fitting, calibration fitting, Bayes, planner likelihood, or adaptation state.
+
+This simulated-human contract must be logged distinctly as simulated/offline and must not be described as a real human study.
+
+---
+
+# 5. PRE-FINAL LEAKAGE / ARTIFACT FREEZE GATE
+
+Before first protected final-test evaluation:
+
+1. verify the exact D-040–D-042 split manifest and its hashes/provenance;
+2. verify the eligible cross-subject cohort is the approved full 109-subject cohort with 76 train / 16 validation / 17 protected final-test subjects under the frozen seed-42 manifest;
+3. if the eligible cohort is not 109 or the frozen final cohort is not exactly 17 subjects, STOP before final outcomes and return to the Project Owner;
+4. inventory all model/calibrator/checkpoint artifacts required for CSP+LDA and EEGNet;
+5. verify each artifact was fit/selected using only approved training/validation partitions;
+6. if an artifact must be produced because no accepted persisted artifact exists, fit/select/freeze it using training/validation only, record its exact configuration/hash/provenance, and freeze it before final-test access;
+7. freeze the complete M7-T02 execution manifest before inspecting final-test outcomes;
+8. record software Git SHA, split-manifest identity, model/checkpoint identity, calibrator identity, decoder family, condition/ablation, scenario ID, seeds, and scientific-policy IDs.
+
+No final-test result may influence model selection, calibration, threshold choice, artifact choice, scenario choice, perturbation levels, metric definitions, or report inclusion.
+
+---
+
+# 6. REQUIRED REPORTABLE EXPERIMENT FAMILIES
+
+Execute the approved experiment program as far as repository data/artifacts permit without violating the stop conditions.
+
+## E1 — EEG decoding
+
+Evaluate CSP+LDA and EEGNet separately.
+
+Report within-subject and cross-subject tracks separately where implemented/valid, including:
+
+- accuracy;
+- balanced accuracy;
+- per-class precision/recall/F1;
+- macro F1;
+- confusion matrix;
+- subject-wise values for cross-subject evaluation.
+
+Do not choose a winner post hoc to hide the other decoder.
+
+## E2 — Probability calibration
+
+For each decoder family compare its frozen raw/identity probability output against the approved calibrated output.
+
+Report:
+
+- 10 equal-width reliability bins;
+- ECE;
+- Brier Score;
+- reliability diagrams/plot-ready data;
+- subject-wise values where appropriate.
+
+Calibration fitting must remain validation-only under D-048–D-050.
+
+## E3 — Direct/single-evidence vs sequential Bayesian inference
+
+Compare the approved direct evidence baseline against D-053/D-054 sequential Bayesian accumulation.
+
+Report:
+
+- goal/commitment correctness;
+- primary wrong-goal rate = wrong commitments / all evaluated decision episodes;
+- secondary conditional wrong-goal rate = wrong commitments / committed episodes;
+- accepted evidence count;
+- posterior confidence;
+- entropy;
+- decision mode and latency.
+
+## E4 — Uncertainty-aware shared autonomy
+
+Evaluate the effect of the approved confidence/uncertainty behavior without changing thresholds after outcomes are visible.
+
+Report:
+
+- wrong-goal commitment;
+- PROCEED / CONFIRM / DEFER counts and rates;
+- human interventions under the frozen simulated-human policy;
+- accepted evidence count / decision latency;
+- correctness after explicit simulated-human confirmation/correction.
+
+## E5 — Planning / safety
+
+Run frozen S1–S7.
+
+Report descriptively/exhaustively:
+
+- planning success/status;
+- path length;
+- D-062 cumulative risk;
+- movement cost / weighted risk contribution / total path cost where available;
+- replanning count;
+- unsafe action attempts;
+- executed hard-safety violations;
+- NO_SAFE_PATH/unreachable;
+- emergency-stop success;
+- deterministic trace/provenance.
+
+Include explicit Safety ON vs Safety OFF simulation ablation where authorized by D-077/E7, while retaining basic software validity protections. Safety OFF may expose simulated prohibited-action execution for comparison but must never corrupt software state or bypass emergency STOP authority.
+
+## E6 — Principal A/B/C/D comparison
+
+Run A/B/C/D for both decoder families where valid.
+
+Primary outputs:
+
+- task success;
+- primary wrong-goal commitment rate;
+- conditional wrong-goal rate;
+- decision latency in accepted EEG observations;
+- navigation/environment steps separately;
+- confirmation/override/deferral counts;
+- task/navigation outcome;
+- cumulative risk;
+- unsafe attempts;
+- executed hard-safety violations;
+- no-safe-path/replan events.
+
+No composite overall score.
+
+## E7 — Ablations and robustness
+
+Ablations:
+
+- Full;
+- Full - calibration;
+- Full - Bayes;
+- Full - uncertainty;
+- Full - safety;
+- Full - adaptation.
+
+Each ablation must change only its named component relative to Full.
+
+Robustness:
+
+- A/B/C/D × both decoder families where valid × all R1 severities;
+- A/B/C/D × both decoder families where valid × all R2 severities;
+- R2 uses the accepted population-level selection contract and primary seed 42.
+
+Preserve original and perturbed evidence/provenance.
+
+## E8 — Cross-subject held-out-subject evaluation
+
+Preserve one value per protected final subject for primary inferential comparisons. Report individual-subject distributions and macro descriptive summaries.
+
+Do not pool trials across subjects for inference.
+
+## E9 — Adaptation
+
+Evaluate adaptation OFF vs ON using ordered episodes and only explicit simulated-human feedback under the frozen policy.
+
+Report:
+
+- pre/post or episode-indexed task/commitment behavior;
+- confirmation/deferral rates;
+- decision latency;
+- prior evolution;
+- explicit-feedback provenance;
+- adaptation bounds and warm-up behavior.
+
+Never update adaptation using hidden evaluation truth directly.
+
+---
+
+# 7. STATISTICAL ANALYSIS
+
+For real-EEG / subject-level paired system comparisons permitted by D-079:
+
+- aggregate to exactly one metric value per subject per compared condition before inference;
+- raw paired effect is condition B minus condition A, with direction clearly labeled for every comparison;
+- 95% paired bootstrap CI;
+- exactly 10,000 bootstrap resamples;
+- bootstrap seed 42;
+- two-sided paired sign-flip test;
+- when all 17 final subjects have paired values, use exact 131072 sign assignments;
+- Holm-adjust raw p-values within the same experiment family;
+- preserve raw and adjusted p-values;
+- report n subjects;
+- do not equate statistical significance with practical importance.
+
+Do not apply artificial subject-level significance testing to deterministic S1–S7 planner/safety scenarios.
+
+---
+
+# 8. FAILURE ANALYSIS / VALIDITY AUDIT
+
+Create a machine-readable failure taxonomy and preserve concrete failures rather than hiding them.
+
+At minimum distinguish:
+
+- decoder misclassification;
+- poorly calibrated confidence;
+- Bayesian evidence accumulation failure / misleading evidence;
+- CONFIRM event;
+- DEFER event;
+- wrong autonomous commitment;
+- simulated-human correction/override;
+- no-safe-path;
+- safety rejection;
+- replanning event;
+- prohibited-hazard attempt;
+- emergency stop;
+- adaptation-helped / adaptation-hurt descriptive cases where supported;
+- robustness-induced degradation;
+- missing/invalid artifact or provenance failure.
+
+Audit limitations and claims. Never claim live EEG, real human-subject efficacy, physical robot performance, real rescue deployment, medical benefit, or certified safety.
+
+---
+
+# 9. RESULT / ARTIFACT REQUIREMENTS
+
+Use compact repository-safe artifacts only. Do not commit public EEG raw data, large downloaded datasets, environment caches, or unnecessary large model binaries.
+
+Preferred result layout, unless an already-established repository result convention conflicts:
 
 ```text
-synthetic fixtures;
-approved development/training/validation data or previously accepted non-final-test artifacts where leakage-safe;
-deterministic mock/module outputs;
-controlled planner/safety scenarios.
+results/m7/
+  manifest/
+  e1_decoding/
+  e2_calibration/
+  e3_bayesian/
+  e4_shared_autonomy/
+  e5_planning_safety/
+  e6_abcd/
+  e7_ablation_robustness/
+  e8_cross_subject/
+  e9_adaptation/
+  statistics/
+  failures/
+  figures/
+  tables/
 ```
 
-No threshold, calibration method, perturbation level, ablation definition, metric rule, statistical rule, or scientific parameter may be tuned using final-test outcomes.
+Machine-readable JSON/CSV should be primary. Figures must be reproducible from stored machine-readable results.
 
-Any attempt by the task to require final-test outcome access is a STOP condition and must return to the Project Owner.
+Record in `EXPERIMENT_LOG.md` only experiments actually executed. Do not pre-fill results.
+
+If large model artifacts cannot be committed, record their exact local/path identity where available, cryptographic hash, generating configuration, split provenance, and software SHA without fabricating portability.
 
 ---
 
-# 5. AUTHORIZED FILE BOUNDARY
+# 10. AUTHORIZED FILE / IMPLEMENTATION BOUNDARY
 
-M7-T01 may add or modify only files needed for the evaluation harness within these boundaries:
+M7-T02 may modify/add only what is required for final experiment execution, result persistence, analysis, and the explicitly approved governance reconciliation, including:
+
+- `MASTER_PROJECT_SPEC.md` — reconciliation through D-079 only;
+- `DECISIONS.md` — record the already-approved M7-T02 execution contract;
+- `PROJECT_STATE.md`;
+- `CURRENT_TASK.md` only for accurate task status/close information;
+- `RESEARCH_LOG.md` only if needed to reconcile resolved M7 decisions, not to invent findings;
+- `TODO.md` only for stale-status reconciliation;
+- `EXPERIMENT_LOG.md` — actual experiment records/results only;
+- `docs/17_EXPERIMENTAL_DESIGN.md`;
+- `docs/18_METRICS_AND_EVALUATION.md`;
+- `src/evaluation/**`;
+- `tests/test_evaluation_*.py`;
+- `tests/test_m7_*.py`;
+- a minimal headless M7 experiment runner/CLI under `scripts/**` or `src/evaluation/**`;
+- compact `results/m7/**` machine-readable outputs, tables, and reproducible figures.
+
+Accepted production modules remain READ-ONLY unless a genuine defect prevents executing the frozen experiment contract:
+
+- `src/eeg/**`;
+- `src/models/**`;
+- `src/cognitive/**`;
+- `src/control/**`;
+- `src/autonomy/**`;
+- `config.yaml` / `src/config.py` scientific policy;
+- split manifests;
+- model training semantics;
+- thresholds;
+- calibration-fitting semantics;
+- planner/risk/safety semantics;
+- human-authority semantics.
+
+If a production/runtime defect requires changing those modules, STOP and return for review rather than silently changing the system after final-evaluation authorization.
+
+No new dependency is authorized unless a genuinely unavoidable blocker is reported and separately approved.
+
+---
+
+# 11. FINAL-TEST ACCESS RULES
+
+Protected final-test access is permitted in M7-T02 only after Phase 0 governance reconciliation and the pre-final artifact/manifest freeze gate pass.
+
+Once any protected final-test outcome has been observed:
+
+- do not refit/select/tune models;
+- do not alter calibration;
+- do not alter thresholds;
+- do not alter A/B/C/D definitions;
+- do not alter robustness severity levels or R2 selection policy;
+- do not alter scenario maps to improve results;
+- do not change metric definitions/denominators;
+- do not add/drop subjects based on performance;
+- do not choose a different model/checkpoint based on final outcomes;
+- do not add new experiments merely because the first result is unfavorable unless separately labeled exploratory and separately authorized.
+
+If an execution bug invalidates a final run, preserve the invalid run/provenance, fix only if the fix is within authorized evaluation code and does not alter scientific semantics, rerun with an explicit invalidation/rerun audit trail, and never delete the original record.
+
+---
+
+# 12. REQUIRED TESTING / VERIFICATION
+
+Before reportable execution, run focused tests covering:
+
+- final-manifest validation and final-test gate;
+- exact scenario definitions S1–S7;
+- simulated-human CONFIRM/correction/DEFER behavior;
+- adaptation feedback isolation;
+- A/B/C/D frozen semantics;
+- ablation one-component-only differences;
+- R1/R2 provenance and population-level R2 selection;
+- result schema and deterministic serialization;
+- subject aggregation / no pseudo-replication;
+- bootstrap / exact sign-flip / Holm;
+- no final-test-driven fitting hooks.
+
+After implementation and reportable execution, run:
+
+- focused M7 tests;
+- relevant M5/M6 integration regressions;
+- complete pytest suite;
+- compiler/import check;
+- `git diff --check`;
+- clean working tree check;
+- exact-ref GitHub Actions for the final candidate SHA.
+
+The experiment runner must be headless and deterministic given the frozen manifest/artifacts.
+
+---
+
+# 13. STOP CONDITIONS
+
+STOP and report BLOCKED before further protected evaluation if any of the following occurs:
+
+1. the eligible cross-subject cohort is not the approved 109-subject cohort or the protected final split is not exactly the frozen 17-subject cohort;
+2. the split manifest cannot be verified exactly;
+3. a required model/calibrator artifact cannot be proven train/validation-only and leakage-safe;
+4. a new scientific/evaluation decision is required;
+5. a production M1–M6 code defect requires changing a READ-ONLY production module;
+6. a new dependency is genuinely required;
+7. final-test results would be needed to choose a model, threshold, scenario, metric, perturbation, ablation, or artifact;
+8. the deterministic simulated-human policy cannot be represented through the accepted human-interaction API without changing its semantics;
+9. final-result provenance cannot be made auditable;
+10. the task would require claiming real human, live EEG, physical robot, or certified safety evidence.
+
+Do not improvise around a stop condition.
+
+---
+
+# 14. COMPLETION / CANDIDATE REQUIREMENTS
+
+Return one consolidated M7-T02 candidate only after the authorized work has been completed as far as validly possible.
+
+Required completion report:
 
 ```text
-src/evaluation/**                    new evaluation package preferred
-tests/test_evaluation_*.py           focused evaluation tests
-tests/test_m7_*.py                   M7 integration/evaluation tests where needed
-docs/17_EXPERIMENTAL_DESIGN.md       reconciliation only
-docs/18_METRICS_AND_EVALUATION.md    reconciliation only
-EXPERIMENT_LOG.md                    schema/template clarification only; no fabricated results
-```
-
-If a minimal package initializer is required under `src/evaluation/`, it is included.
-
-Existing production scientific/runtime modules under `src/eeg/`, `src/models/`, `src/cognitive/`, `src/control/`, and `src/autonomy/` are READ-ONLY for this task unless an actual defect blocks the approved harness. A required production-module change is a STOP condition and requires review/authorization rather than silent scope expansion.
-
-`config.yaml`, `src/config.py`, `requirements.txt`, `.github/**`, UI/demo code, model artifacts, split manifests, and protected result artifacts are READ-ONLY unless separately authorized.
-
-No new dependency is authorized. Use the existing declared stack.
-
----
-
-# 6. SCIENTIFIC / ARCHITECTURAL CONSTRAINTS
-
-M7-T01 must preserve all approved authority, including:
-
-- public prerecorded EEG / offline replay / simulated real-time BCI only;
-- D-040 through D-042 split/final-test protection;
-- D-048 through D-050 calibration policy;
-- D-051 through D-057 binary evidence, Bayesian, and shared-autonomy policy;
-- D-058 through D-060 adaptation policy;
-- D-061 through D-065 planning/risk/safety policy;
-- D-067 through D-070 human authority and navigation/replanning contracts;
-- D-074 through D-076 M6 replay/decoder runtime boundaries;
-- D-077 A/B/C/D matrix;
-- D-078 robustness contract;
-- D-079 inferential-statistics policy.
-
-No live EEG, physical hardware, physical robot, certified-safety, or real-world efficacy claim is authorized.
-
-A new scientifically meaningful ambiguity must not be decided by Codex. Stop and surface it for Project Owner approval.
-
----
-
-# 7. REQUIRED TESTING
-
-At minimum, focused tests must verify:
-
-1. exact A/B/C/D and ablation component membership;
-2. metric correctness on analytically checkable fixtures, including edge denominators;
-3. D-050 reliability/ECE binning and Brier behavior;
-4. D-078 R1 endpoints/intermediate values and R2 deterministic index selection/swap behavior;
-5. reproducibility under identical seeds and sensitivity where seeds should differ;
-6. subject-level aggregation with no pseudo-replication;
-7. paired bootstrap CI determinism and correct paired resampling;
-8. paired sign-flip/permutation behavior, including exact enumeration on small fixtures;
-9. Holm adjustment correctness;
-10. result/provenance schema validation and fail-closed malformed inputs;
-11. synthetic/development orchestration for both approved decoder-family labels where applicable;
-12. safety/planning metric accounting on controlled scenarios;
-13. protection against accidental protected-final-test execution/access in M7-T01;
-14. regression compatibility with accepted M1–M6 behavior.
-
-Run:
-
-```text
-focused M7-T01 tests
-relevant evaluation + M5/M6 integration regressions
-full pytest suite
-python/compiler/static import check as appropriate
-git diff --check
-```
-
-No reportable final-test result is required or permitted for acceptance.
-
----
-
-# 8. ACCEPTANCE CRITERIA
-
-M7-T01 may be submitted for review only if:
-
-- all required harness components above are implemented;
-- D-077/D-078/D-079 semantics are represented exactly;
-- metric denominators/evaluation units are explicit;
-- robustness and statistics are deterministic/reproducible;
-- no protected final-test result was accessed or produced;
-- no scientific policy was invented;
-- no production runtime module was modified outside authorization;
-- no new dependency was added;
-- focused and relevant regression tests pass;
-- the full pytest suite passes;
-- `git diff --check` passes;
-- the working tree is clean at candidate commit;
-- the candidate is pushed to `task/m7-t01-experiment-evaluation-harness`;
-- GitHub Actions verifies the exact candidate SHA successfully before acceptance.
-
----
-
-# 9. STOP CONDITIONS
-
-STOP and report BLOCKED if any of the following occurs:
-
-- a new scientific/experimental decision is required;
-- final-test access is required to implement or verify the harness;
-- a production scientific/runtime defect requires changing read-only M1–M6 modules;
-- an approved D-077/D-078/D-079 rule is ambiguous in a way that changes scientific meaning;
-- a new dependency appears necessary;
-- implementation would require changing split semantics, model fitting, calibration fitting, thresholds, adaptation policy, planning/safety policy, or human-authority semantics;
-- tests reveal a pre-existing production defect that cannot be handled strictly within evaluation code.
-
-Do not silently broaden scope.
-
----
-
-# 10. COMPLETION REPORT REQUIRED FROM CODEX
-
-Return:
-
-```text
-status: PASS / BLOCKED
+status: PASS / BLOCKED / PARTIAL
 branch
 starting SHA
+governance reconciliation commit SHA
+final execution-manifest identity/hash
 candidate SHA
 changed files
-implementation summary by subsystem
-scientific-policy conformance statement
-protected-final-test access statement
-new dependencies: yes/no
-focused test commands + exact results
-relevant regression commands + exact results
-full pytest exact result
-git diff --check result
+M7-T01 governance-close confirmation
+MASTER_PROJECT_SPEC reconciliation confirmation
+recorded M7-T02 decision IDs
+split-manifest identity and verified cohort counts
+model/checkpoint/calibrator artifact identities and hashes
+protected-final-test first-access point / audit statement
+E1–E9 execution status individually
+actual numerical results summary without selective omission
+negative/mixed/non-significant results explicitly listed
+R1/R2 execution summary
+S1–S7 planning/safety summary
+A/B/C/D results for both decoder families where valid
+ablation results
+adaptation results
+subject-level n and statistical outputs
+Holm families and adjusted p-values
+failure taxonomy summary
+result artifact paths
+figure/table paths
+focused test commands/results
+M5/M6 regression commands/results
+full pytest result
+import/compiler result
+git diff --check
 working-tree status
-GitHub Actions run ID + exact requested/resolved SHA + conclusion
-any warnings / known limitations
+GitHub Actions run ID
+requested/resolved candidate SHA
+Actions conclusion
+warnings/limitations
+confirmation that no final-test-driven tuning occurred
+confirmation that no live EEG / real-human / physical-robot claim was made
 ```
 
-Do not merge. ChatGPT must review the candidate before acceptance/merge.
+Do not merge the M7-T02 candidate. ChatGPT must review the actual GitHub diff, result artifacts, provenance, statistics, and exact-ref CI before M7 can be accepted/closed.
