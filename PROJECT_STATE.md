@@ -81,6 +81,8 @@ On 2026-09-13 the Project Owner explicitly approved:
 
 D-081 now resolves the previously reported M7-T02 episode-construction blocker. It freezes same-subject/same-run/same-intended-class, event-sample-ordered, non-overlapping five-trial blocks; explicit tail exclusions; identical A/B/C/D episode pairing; deterministic E9 ordering; and the protected-data-prefetch interpretation. M7-T02 remains ACTIVE / AUTHORIZED. E1–E9 remain unexecuted and protected final outcomes remain unaccessed at this decision point.
 
+D-082 now resolves the post-QC cohort-size blocker without changing D-035. M7-T02 must complete the fixed 150 µV QC audit for all 109 source subjects, freeze the actual post-QC eligible cohort, then assign every eligible subject using one ascending-sort/seed-42 shuffle and deterministic largest-remainder 70/15/15 allocation. The historical 76/16/17 counts and provisional final-subject list are not forced execution inputs.
+
 ---
 
 # 4. GOVERNANCE RECONCILIATION GATE
@@ -107,6 +109,7 @@ The following are frozen for the reportable M7 phase:
 - D-081 fixed-intent episode construction and A/B/C/D source-episode pairing;
 - D-081 deterministic E9 ordering and explicit incomplete-tail provenance;
 - the disclosed final-subject EDF retrieval is recorded as protected-data prefetch, not outcome access.
+- D-082 complete-source QC, actual eligible-cohort freeze, and deterministic allocation policy.
 
 ---
 
@@ -116,10 +119,10 @@ M7-T02 may access reportable protected final-test outcomes only after all pre-fi
 
 Required before first final-test outcome:
 
-- exact D-040–D-042 split manifest verified;
-- full approved 109-subject eligible cohort verified;
-- 76 train / 16 validation / 17 protected final-test subject split verified;
-- if eligible cohort != 109 or final cohort != 17, STOP for Project Owner review;
+- D-035 QC completed and audited for all 109 source subjects;
+- D-082 QC/eligibility manifest frozen with actual eligible `N` and all exclusion reasons;
+- D-040/D-041/D-042/D-082 split manifest frozen from one sorted-list seed-42 shuffle and largest-remainder 70/15/15 allocation;
+- partition disjointness/exhaustiveness, excluded-subject absence, hashes, and provenance verified;
 - decoder/checkpoint/calibrator artifacts proven train/validation-only and leakage-safe;
 - final execution manifest frozen with artifact hashes/provenance;
 - M7-T02 governance reconciliation committed.

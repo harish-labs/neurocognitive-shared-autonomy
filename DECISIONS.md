@@ -2247,7 +2247,7 @@ EEGNetDecoder.predict_logits()
 
 **Status:** APPROVED
 
-**Date:** 2026-09-13  
+**Date:** 2026-09-13
 **Resolves:** U-034
 
 **Decision:**
@@ -2464,7 +2464,7 @@ M7-T02 uses the deterministic final execution contract frozen in `CURRENT_TASK.m
 - the deterministic simulated-human software operator sends no command for PROCEED, confirms a correct CONFIRM proposal, explicitly overrides an incorrect CONFIRM proposal to the evaluation-only intended goal, and explicitly overrides a DEFER to the intended goal; PAUSE and STOP are injected only in dedicated controlled scenarios;
 - simulated-human feedback may reach adaptation only through the accepted explicit human-feedback API, while hidden intended-goal truth remains restricted to the simulated-human command choice and evaluation scoring;
 - operational randomness, the primary R2 population selection, deterministic environment/reset randomness where needed, and the D-079 paired bootstrap use seed 42 unless an accepted upstream artifact carries its own approved frozen seed;
-- protected final-test outcomes may be accessed only after governance reconciliation is committed, the 109-subject 76/16/17 split and leakage gate pass, decoder/calibrator artifacts are fitted or identified using train/validation data only and frozen with hashes/provenance, required pre-final tests pass, and the final execution manifest is frozen;
+- protected final-test outcomes may be accessed only after governance reconciliation is committed, the D-082 post-QC eligible cohort and deterministic 70/15/15 split are frozen and the leakage gate passes, decoder/calibrator artifacts are fitted or identified using train/validation data only and frozen with hashes/provenance, required pre-final tests pass, and the final execution manifest is frozen;
 - no model, checkpoint, calibrator, threshold, scenario, metric, perturbation, ablation, or policy may be selected or tuned in response to protected final-test outcomes;
 - all simulated interaction is an offline software evaluation and must not be interpreted as a real human-subject study.
 
@@ -2508,6 +2508,43 @@ Public EDF retrieval/cache creation alone is classified as protected-data prefet
 **Affected documents/modules:** `DECISIONS.md`, `CURRENT_TASK.md`, `PROJECT_STATE.md`, `RESEARCH_LOG.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, and authorized M7 evaluation code/artifacts only.
 
 **Implementation consequence:** D-081 resolves the M7-T02 episode-construction blocker. The episode and final execution manifests must be frozen before protected outcome access. It does not authorize changes to accepted production modules, new scientific methods, final-outcome-driven tuning, M8, or merging M7-T02.
+
+**Approved by:** Project Owner
+
+---
+
+## D-082 — Revised Post-QC Eligible Cohort and Deterministic 70/15/15 Allocation Policy
+
+**Status:** APPROVED
+
+**Date:** 2026-09-13
+**Supplements / revises execution under:** D-035, D-040, D-041, D-042, D-079, D-080, D-081
+
+**Decision:**
+
+D-082 does not weaken or supersede D-035. Apply the accepted preprocessing/QC pipeline to all 109 EEGBCI source subjects before freezing the cross-subject split: no ICA, no automatic bad-channel interpolation, and rejection of epochs with EEG peak-to-peak amplitude greater than 150 µV, with rejected epochs and reasons recorded. Do not introduce subject-specific thresholds, manual artifact rescue, automatic interpolation, removal of the 150 µV rule, or exceptions intended to restore a target sample size.
+
+Cross-subject eligibility is derived mechanically from retained post-QC data and the already-accepted binary-analysis requirements. Freeze a machine-readable QC/eligibility manifest covering every source subject, including requested and loaded runs, raw and retained T1/T2 counts, candidate and rejected epoch counts, rejection reasons, eligibility, exact exclusion reason, preprocessing/QC policy identifiers, code SHA, and data/run provenance. The actual eligible count `N` may differ from 109; no subject may be retained or excluded using decoder performance, confidence, loss, calibration, Bayesian/system outcomes, or cache presence.
+
+Generate the revised split solely from the actual eligible IDs. Sort them in ascending order, perform one deterministic shuffle with seed 42, and preserve the D-041 70/15/15 train/validation/final-test proportions. Convert ideal quotas to integers by flooring each quota and allocate remaining subjects by largest fractional remainder. For exactly tied fractional remainders, use the fixed order `final_test`, then `validation`, then `train`. Assign contiguous blocks from the single shuffled list and freeze a versioned manifest before model fitting.
+
+The split manifest must record D-040, D-041, D-042, and D-082; source count 109; actual eligible count and IDs; excluded IDs and reasons; seed and shuffle method; ideal quotas, floors, remainders, allocation method and tie-break order; exact partition IDs and counts; version; generating code SHA; and manifest hash. Partitions must be disjoint and exhaustive over the eligible cohort, and excluded subjects must not appear. Once frozen, the split may not be reshuffled or repaired by replacing/moving subjects. A post-freeze technical corruption that prevents evaluation of an otherwise eligible subject is a stop condition.
+
+The D-042 `76/16/17` allocation and its previously printed final-subject IDs remain historical outcomes for the hypothetical full 109-subject eligible cohort, not the M7-T02 execution manifest. If `N=109`, the D-082 method still yields `76/16/17`; if `N=105`, it yields `73/16/16` because the tied `.75` remainders are awarded to final test before validation.
+
+D-040 within-subject analysis remains separate at class-stratified 60/20/20 original-trial level. A subject whose retained data cannot support that split may be excluded only from the affected within-subject analysis under accepted implementation semantics, with its sample size and reason reported separately; this does not automatically change cross-subject eligibility.
+
+D-079 remains authoritative with the actual frozen `n_final`: subjects are the inferential unit, bootstrap uses 10,000 paired resamples and seed 42, and two-sided exact sign-flip enumeration uses `2^n_final` assignments whenever practical. The former `2^17=131072` value is a historical full-109 example, not a forced sample size.
+
+D-081 episode semantics remain unchanged. Build the episode manifest only after the revised cohort and split are frozen. Public EDF cache presence is ignored by split assignment and remains prefetch rather than protected performance-outcome access. The first protected outcome remains forbidden until the QC, split, artifacts, episode manifest, pre-final tests, and final execution manifest are frozen.
+
+**Context:** Applying the fixed D-035 QC policy showed that the full 109-source-subject population does not necessarily remain eligible. D-082 resolves the resulting allocation blocker without weakening QC or selecting subjects based on performance.
+
+**Rationale:** Letting pre-specified QC determine the cohort preserves scientific integrity. A single seeded shuffle and explicit largest-remainder rule provide a reproducible, exhaustive allocation for the observed eligible count while retaining the approved subject-held-out proportions.
+
+**Affected documents/modules:** `DECISIONS.md`, `CURRENT_TASK.md`, `PROJECT_STATE.md`, `RESEARCH_LOG.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, authorized M7 evaluation/split-manifest code and tests, and compact M7 result manifests.
+
+**Implementation consequence:** Complete QC for all 109 source subjects and freeze the actual eligibility and D-082 split manifests before fitting or protected outcome access. Do not modify accepted preprocessing modules or QC semantics, hard-code historical subject membership, replace subjects after freeze, start M8, or merge M7-T02.
 
 **Approved by:** Project Owner
 

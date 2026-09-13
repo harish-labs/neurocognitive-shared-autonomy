@@ -481,9 +481,19 @@ At the time of this decision E1–E9 remain unexecuted and no protected final ou
 
 ---
 
-# 5. OPEN RESEARCH QUEUE
+# 5. D-082 POST-QC COHORT AND ALLOCATION RESOLUTION
 
-No currently known M7-blocking scientific decision remains unresolved after D-077 through D-081.
+On 2026-09-13 the Project Owner approved D-082 after fixed D-035 QC demonstrated that the 109-source-subject population need not remain fully eligible. D-082 preserves the 150 µV epoch-rejection rule, no ICA, and no automatic interpolation. It requires QC/audit of all 109 source subjects and accepts the mechanically derived eligible cohort rather than weakening QC to force a sample size.
+
+The actual eligible IDs are sorted ascending, shuffled once with seed 42, and assigned contiguously under a deterministic largest-remainder 70/15/15 allocation. Exact fractional ties are awarded in the order final test, validation, train. The historical D-042 76/16/17 counts and provisional final IDs are not hard-coded execution inputs. The actual cohort, exclusions/reasons, split membership, allocation details, hashes, and provenance must be frozen before fitting.
+
+D-079 uses the actual final-subject count and exact `2^n_final` sign-flip enumeration whenever practical. D-081 episode construction remains unchanged. Public EDF prefetch/cache state has no role in eligibility or assignment, and no protected performance outcome has been accessed at this decision point.
+
+---
+
+# 6. OPEN RESEARCH QUEUE
+
+No currently known M7-blocking scientific decision remains unresolved after D-077 through D-082.
 
 M7-T02 execution is additionally frozen by D-080: deterministic S1–S7 scenarios, the accepted M6 mission map, deterministic simulated-human commands through the existing authority API, operational/bootstrap/R2 seed 42, and a hard pre-final split/artifact/manifest gate. This is an offline software evaluation, not a real human-subject study. Protected final outcomes must not influence fitting, selection, calibration, thresholds, scenarios, metrics, or policy.
 
@@ -502,7 +512,7 @@ Any new scientifically meaningful ambiguity discovered during M7 must be surface
 
 ---
 
-# 6. SOURCE QUALITY RULE
+# 7. SOURCE QUALITY RULE
 
 For critical methodology:
 

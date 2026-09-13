@@ -31,6 +31,8 @@ M7-T02 is therefore AUTHORIZED subject to the mandatory governance and leakage g
 
 On 2026-09-13 the Project Owner additionally approved D-081, resolving the fixed-intent real-EEG episode-construction blocker and approving the disclosed protected-data prefetch interpretation. M7-T02 remains ACTIVE / AUTHORIZED. E1–E9 have not yet been executed, and no protected final outcome has yet been accessed.
 
+On 2026-09-13 the Project Owner additionally approved D-082. The accepted D-035 preprocessing/QC boundary now determines the actual eligible cohort from all 109 source subjects. The cross-subject split must be frozen from that cohort using one ascending-sort/seed-42 shuffle and the D-082 largest-remainder 70/15/15 allocation. The historical D-042 `76/16/17` counts and provisional subject membership must not be forced when post-QC `N` differs from 109.
+
 ---
 
 # 2. PURPOSE
@@ -93,7 +95,7 @@ Preserve D-079 exactly:
 - paired raw subject-level effect;
 - 95% paired bootstrap CI with 10,000 resamples and a fixed recorded seed;
 - paired sign-flip/permutation test;
-- exact `2^17 = 131072` sign enumeration for the complete 17-subject final vector when available and practical;
+- exact `2^n_final` sign enumeration for the actual complete paired final-subject vector when practical (`2^17 = 131072` remains the historical full-109 example);
 - Holm correction within each experiment family;
 - no pseudo-replication using trials, observations, actions, maps, or neural seeds as subjects.
 
@@ -229,9 +231,9 @@ The disclosed retrieval/cache creation for final-subject public EDF files is pro
 
 Before first protected final-test evaluation:
 
-1. verify the exact D-040–D-042 split manifest and its hashes/provenance;
-2. verify the eligible cross-subject cohort is the approved full 109-subject cohort with 76 train / 16 validation / 17 protected final-test subjects under the frozen seed-42 manifest;
-3. if the eligible cohort is not 109 or the frozen final cohort is not exactly 17 subjects, STOP before final outcomes and return to the Project Owner;
+1. complete D-035 QC for all 109 source subjects and freeze the D-082 QC/eligibility manifest with counts, exclusions, reasons, policy IDs, code SHA, and run/data provenance;
+2. derive actual post-QC eligible count `N`, sort eligible IDs ascending, perform one deterministic seed-42 shuffle, allocate every eligible subject under the D-082 largest-remainder 70/15/15 rule, and freeze the versioned D-040/D-041/D-042/D-082 split manifest;
+3. verify split hashes/provenance, disjointness, exhaustive eligible-cohort coverage, exclusion of every ineligible subject, and absence of any post-freeze subject replacement;
 4. inventory all model/calibrator/checkpoint artifacts required for CSP+LDA and EEGNet;
 5. verify each artifact was fit/selected using only approved training/validation partitions;
 6. if an artifact must be produced because no accepted persisted artifact exists, fit/select/freeze it using training/validation only, record its exact configuration/hash/provenance, and freeze it before final-test access;
@@ -394,7 +396,7 @@ For real-EEG / subject-level paired system comparisons permitted by D-079:
 - exactly 10,000 bootstrap resamples;
 - bootstrap seed 42;
 - two-sided paired sign-flip test;
-- when all 17 final subjects have paired values, use exact 131072 sign assignments;
+- for a complete paired final-subject vector, use exact `2^n_final` sign assignments whenever practical and record the actual `n_final` and enumeration count;
 - Holm-adjust raw p-values within the same experiment family;
 - preserve raw and adjusted p-values;
 - report n subjects;
@@ -557,7 +559,7 @@ The experiment runner must be headless and deterministic given the frozen manife
 
 STOP and report BLOCKED before further protected evaluation if any of the following occurs:
 
-1. the eligible cross-subject cohort is not the approved 109-subject cohort or the protected final split is not exactly the frozen 17-subject cohort;
+1. complete 109-source-subject QC or the D-082 eligibility/split manifests cannot be produced and verified under accepted eligibility semantics;
 2. the split manifest cannot be verified exactly;
 3. a required model/calibrator artifact cannot be proven train/validation-only and leakage-safe;
 4. a new scientific/evaluation decision is required;

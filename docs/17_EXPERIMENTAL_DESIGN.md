@@ -824,7 +824,9 @@ After the approved preprocessing/QC boundary:
 3. freeze the subject IDs in a versioned split manifest before model fitting
 ```
 
-For a full eligible cohort of 109 EEGBCI subjects:
+Under D-082, first apply the fixed D-035 QC policy to all 109 source subjects and freeze the actual post-QC eligible count `N`. Sort eligible IDs ascending, shuffle once with seed 42, and allocate contiguous partitions using floor quotas plus largest fractional remainders. Exact remainder ties use `final_test`, then `validation`, then `train`.
+
+For the historical full-eligible-cohort case `N=109`, this method gives:
 
 ```text
 76 train
@@ -834,7 +836,7 @@ For a full eligible cohort of 109 EEGBCI subjects:
 
 Leave-one-subject-out or grouped subject K-fold may be added later only as explicitly authorized secondary analyses; they are not the primary cross-subject protocol.
 
-If preprocessing/QC yields an eligible cohort size other than 109, the final subject-count allocation returns to reviewer decision rather than being silently redefined in code.
+If preprocessing/QC yields `N != 109`, use the D-082 allocation mechanically; do not force 76/16/17 or preserve provisional membership. Freeze all exclusions and reasons, exact allocation calculations, subject IDs, hashes, and provenance before fitting. No post-freeze replacement is permitted.
 
 ---
 
@@ -1261,7 +1263,7 @@ For real-EEG and subject-generalization comparisons, the subject is the primary 
 
 # 77. PAIRED SIGN-FLIP POLICY
 
-Use exact sign enumeration when feasible; for the complete 17-subject final-test vector, enumerate all `2^17 = 131072` assignments. If exact enumeration is infeasible, use a deterministic recorded permutation sample. Trials, evidence observations, actions, maps, and neural-network seeds are not independent human subjects.
+Use exact sign enumeration when feasible; for the complete paired final-test vector, enumerate all `2^n_final` assignments and record actual `n_final`. The former `2^17 = 131072` is the historical full-109 example. If exact enumeration is infeasible, use a deterministic recorded permutation sample. Trials, evidence observations, actions, maps, and neural-network seeds are not independent human subjects.
 
 ---
 
@@ -1350,13 +1352,13 @@ No claim should exist without supporting experimental evidence.
 
 # 82. REMAINING EXECUTION-SPECIFIC ITEMS
 
-D-040 through D-081 resolve the scientific-policy items previously listed here. D-080 and `CURRENT_TASK.md` authorize and freeze M7-T02's exact final scenarios/maps, simulated-human rule, and operational seed policy; D-081 freezes fixed-intent episode construction, paired source episodes, tail handling, E9 ordering, and the protected-data-prefetch interpretation. Decoder/checkpoint/calibrator identities and the split/episode/execution manifests must still be frozen before protected outcomes are inspected.
+D-040 through D-082 resolve the scientific-policy items previously listed here. D-080 and `CURRENT_TASK.md` authorize and freeze M7-T02's exact final scenarios/maps, simulated-human rule, and operational seed policy; D-081 freezes fixed-intent episode construction, paired source episodes, tail handling, E9 ordering, and the protected-data-prefetch interpretation; D-082 freezes actual post-QC cohort derivation and deterministic allocation. Decoder/checkpoint/calibrator identities and the QC/split/episode/execution manifests must still be frozen before protected outcomes are inspected.
 
 ---
 
 # 83. DECISIONS REQUIRED BEFORE FINAL REPORTABLE EXPERIMENTS
 
-The scientific policies in items 1–11 and the subject-level statistical plan are approved in D-031 through D-079. M7-T02 is separately authorized by `CURRENT_TASK.md`, with its execution contract recorded by D-080 and fixed-intent episode semantics recorded by D-081. Its final execution manifest must freeze exact artifacts, inputs, episode manifest/hash, and approved execution definitions before protected results are accessed.
+The scientific policies in items 1–11 and the subject-level statistical plan are approved in D-031 through D-079. M7-T02 is separately authorized by `CURRENT_TASK.md`, with its execution contract recorded by D-080, fixed-intent episode semantics recorded by D-081, and post-QC cohort/allocation policy recorded by D-082. Its final execution manifest must freeze exact artifacts, inputs, QC/split/episode manifest hashes, actual cohort values, and approved execution definitions before protected results are accessed.
 
 ---
 
@@ -1385,7 +1387,7 @@ The experimental design is correctly implemented when:
 
 # 85. CURRENT EXPERIMENTAL DESIGN SUMMARY
 
-The project uses a layered experimental strategy. EEG experiments compare CSP+LDA and EEGNet on the same Left-vs-Right PhysioNet motor-imagery task. Calibration uses D-048 through D-050. Bayesian/shared-autonomy experiments use D-051 through D-057, while planning/safety experiments independently validate the accepted A*, D-061 through D-065 risk/safety behavior, action rejection, replanning, and emergency-stop behavior. D-077 freezes A/B/C/D, D-078 freezes robustness, D-079 freezes paired subject-level inference, and D-081 freezes fixed-intent real-EEG episode construction. M7-T01 built and verified the development-only harness; D-080 and `CURRENT_TASK.md` authorize M7-T02 under committed governance and hard split/episode/artifact/execution-manifest gates. All results must preserve provenance, explicit denominators, individual-subject structure, and negative or mixed outcomes.
+The project uses a layered experimental strategy. EEG experiments compare CSP+LDA and EEGNet on the same Left-vs-Right PhysioNet motor-imagery task. Calibration uses D-048 through D-050. Bayesian/shared-autonomy experiments use D-051 through D-057, while planning/safety experiments independently validate the accepted A*, D-061 through D-065 risk/safety behavior, action rejection, replanning, and emergency-stop behavior. D-077 freezes A/B/C/D, D-078 freezes robustness, D-079 freezes paired subject-level inference, D-081 freezes fixed-intent real-EEG episode construction, and D-082 freezes the actual post-QC cohort and deterministic 70/15/15 allocation. M7-T01 built and verified the development-only harness; D-080 and `CURRENT_TASK.md` authorize M7-T02 under committed governance and hard QC/split/episode/artifact/execution-manifest gates. All results must preserve provenance, explicit denominators, individual-subject structure, sample attrition, and negative or mixed outcomes.
 
 ---
 

@@ -1200,7 +1200,7 @@ Recommended:
 
 # 66. M8 — CROSS-SUBJECT AGGREGATION
 
-Under D-041 and D-042, the primary cross-subject evaluation uses a fixed 70/15/15 subject-held-out train/validation/final-test split with a seed-42 frozen subject manifest before model fitting. For a full eligible 109-subject cohort this corresponds to 76 train, 16 validation, and 17 final-test subjects.
+Under D-041, D-042, and D-082, the primary cross-subject evaluation uses a fixed 70/15/15 subject-held-out train/validation/final-test split frozen before model fitting. Apply fixed D-035 QC to all 109 source subjects, freeze actual eligible count `N`, sort eligible IDs ascending, shuffle once with seed 42, and allocate integer counts by largest remainder with exact ties resolved `final_test`, `validation`, `train`. For the historical `N=109` case this yields 76/16/17; actual M7-T02 counts derive from observed post-QC `N` and must not be forced.
 
 Cross-subject results must preserve individual-subject performance. Final-test subject results must not be used to fit or select models, calibration, thresholds, or adaptation parameters.
 
@@ -1579,7 +1579,7 @@ Resample paired subjects together, with replacement, for exactly 10,000 resample
 
 # 88. P-VALUE RULE
 
-Use the D-079 two-sided paired sign-flip/permutation test on subject-level differences. Exact enumeration is preferred when feasible and specifically for the complete 17-subject final-test vector (`2^17` assignments). Otherwise record the deterministic permutation sample size and seed. Report the exact raw p-value alongside effect and CI.
+Use the D-079 two-sided paired sign-flip/permutation test on subject-level differences. Exact enumeration is preferred when feasible and uses `2^n_subjects` assignments for the actual complete paired vector. The former 17-subject (`2^17`) value is the historical full-109 example. Otherwise record the deterministic permutation sample size and seed. Report actual `n_subjects`, assignment count, and exact raw p-value alongside effect and CI.
 
 ---
 
@@ -1818,7 +1818,7 @@ M7-T01 now fixes per-class precision/recall/F1 plus macro F1, D-050 calibration 
 
 # 104. DECISIONS REQUIRED BEFORE FINAL METRIC REPORTING
 
-The required metric and inferential rules are governed by D-050, D-062, and D-077 through D-081. D-080 and `CURRENT_TASK.md` authorize and freeze M7-T02 execution semantics; D-081 additionally freezes the sequential episode unit, pairing, tail handling, and protected-data-prefetch interpretation. The episode and execution manifests must freeze exact source and artifact identities/hashes before protected outcome access. Path efficiency must remain unavailable unless its reference formula is separately approved.
+The required metric and inferential rules are governed by D-050, D-062, and D-077 through D-082. D-080 and `CURRENT_TASK.md` authorize and freeze M7-T02 execution semantics; D-081 freezes the sequential episode unit, pairing, tail handling, and protected-data-prefetch interpretation; D-082 freezes actual cohort derivation and deterministic allocation. The QC, split, episode, and execution manifests must freeze exact source and artifact identities/hashes before protected outcome access. Path efficiency must remain unavailable unless its reference formula is separately approved.
 
 ---
 
@@ -1860,7 +1860,7 @@ Final evaluation is valid when:
 
 # 107. CURRENT METRICS & EVALUATION SUMMARY
 
-The project evaluates performance at distinct EEG, calibration, Bayesian/uncertainty, shared-autonomy, planning/safety, and full-system levels. M7-T01 implements per-class and macro EEG metrics, D-050 reliability/ECE and Brier metrics, posterior/confidence/entropy and decision counts, D-062 path risk/cost accounting, explicit denominators, and separated evidence versus navigation steps. For M7-T02, primary wrong-goal rate is wrong commitments divided by all evaluated episodes and the secondary conditional rate is wrong commitments divided by committed episodes. D-079 requires one paired metric per subject for primary inference, 10,000-resample paired bootstrap intervals, paired sign-flip/permutation p-values, and Holm correction within families. Robustness follows D-078. D-081 fixes the five-source-observation episode basis while keeping actual consumed evidence separate, preserves A/B/C/D pairing, and keeps subjects as the inferential unit. D-080/D-081 keep artifact, episode-manifest, execution-manifest, and protected-outcome gates explicit. Path efficiency remains intentionally unavailable pending a separate approved reference definition.
+The project evaluates performance at distinct EEG, calibration, Bayesian/uncertainty, shared-autonomy, planning/safety, and full-system levels. M7-T01 implements per-class and macro EEG metrics, D-050 reliability/ECE and Brier metrics, posterior/confidence/entropy and decision counts, D-062 path risk/cost accounting, explicit denominators, and separated evidence versus navigation steps. For M7-T02, primary wrong-goal rate is wrong commitments divided by all evaluated episodes and the secondary conditional rate is wrong commitments divided by committed episodes. D-079 requires one paired metric per subject for primary inference, 10,000-resample paired bootstrap intervals, paired sign-flip/permutation p-values, and Holm correction within families using actual subject counts. Robustness follows D-078. D-081 fixes the five-source-observation episode basis while keeping actual consumed evidence separate and preserves A/B/C/D pairing. D-082 requires transparent flow from 109 source subjects through fixed QC to actual eligible `N` and the deterministic split, with excluded reasons and no post-freeze replacement. D-080 through D-082 keep QC, split, artifact, episode-manifest, execution-manifest, and protected-outcome gates explicit. Path efficiency remains intentionally unavailable pending a separate approved reference definition.
 
 ---
 
