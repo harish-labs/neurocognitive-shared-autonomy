@@ -83,20 +83,9 @@ On 2026-09-13 the Project Owner explicitly approved:
 
 # 4. GOVERNANCE RECONCILIATION GATE
 
-A known governance mismatch remains at the moment M7-T02 is authorized:
+The M7-T02 Phase 0 governance reconciliation is complete on the authorized task branch: `MASTER_PROJECT_SPEC.md` is reconciled through D-079, D-080 records the already-approved frozen M7-T02 execution contract, and directly stale M7 planning/status wording is corrected.
 
-`MASTER_PROJECT_SPEC.md` still contains stale historical text saying U-034/U-035/U-036 are unresolved even though D-077/D-078/D-079 already resolved those items.
-
-The Project Owner has explicitly approved reconciliation through D-079.
-
-Therefore, before any protected final-test outcome is accessed, the M7-T02 branch must:
-
-1. reconcile `MASTER_PROJECT_SPEC.md` through D-079 without changing unrelated authority;
-2. record the approved M7-T02 execution contract in `DECISIONS.md`;
-3. reconcile any directly conflicting stale governance status text required for consistency;
-4. commit that governance reconciliation on the authorized task branch.
-
-Protected final-test access is forbidden until this gate is complete.
+This reconciliation must be committed before any protected final-test outcome is accessed. Its exact commit SHA is preserved in Git history and the M7-T02 completion report. Protected final-test access remains forbidden until that commit exists.
 
 ---
 

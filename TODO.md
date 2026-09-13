@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** M1, M4, and M5 accepted and merged; PRE-M6-R07B is the active documentation-only reconciliation task
+**Current stage:** M1–M6 and M7-T01 accepted and merged; M7-T02 final experiment execution and scientific audit is active and authorized
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -177,9 +177,9 @@ Do not infer authorization from this list.
 ## Experiments
 
 ```text
-[ ] U-034 — Freeze exact A/B/C/D component matrix
-[ ] U-035 — Freeze robustness perturbation levels
-[ ] U-036 — Freeze inferential-statistics policy
+[x] U-034 — Exact A/B/C/D component matrix resolved by D-077
+[x] U-035 — Robustness perturbation levels resolved by D-078
+[x] U-036 — Inferential-statistics policy resolved by D-079
 [ ] If eligible cross-subject cohort != 109, obtain reviewer decision before freezing a different final manifest
 ```
 

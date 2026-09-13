@@ -475,6 +475,8 @@ Deterministic planner/safety scenario validation remains primarily descriptive/e
 
 No currently known M7-blocking scientific decision remains unresolved after D-077 through D-079.
 
+M7-T02 execution is additionally frozen by D-080: deterministic S1–S7 scenarios, the accepted M6 mission map, deterministic simulated-human commands through the existing authority API, operational/bootstrap/R2 seed 42, and a hard pre-final split/artifact/manifest gate. This is an offline software evaluation, not a real human-subject study. Protected final outcomes must not influence fitting, selection, calibration, thresholds, scenarios, metrics, or policy.
+
 Current research/analysis queue is implementation- and evidence-dependent rather than parameter-decision-dependent:
 
 ```text

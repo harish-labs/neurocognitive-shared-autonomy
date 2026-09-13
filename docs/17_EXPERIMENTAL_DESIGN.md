@@ -454,7 +454,7 @@ S6 — Prohibited hazard
 S7 — Emergency stop
 ```
 
-Final reportable maps remain to be frozen before M7-T02; M7-T01 may use controlled deterministic development scenarios only.
+For M7-T02, D-080 and `CURRENT_TASK.md` freeze the exact deterministic S1–S7 maps, states, risks, events, probes, and expected safety behavior. M7-T01 remains limited to controlled deterministic development scenarios.
 
 ---
 
@@ -941,14 +941,14 @@ Randomness may affect:
 - data ordering;
 - noise injection.
 
-The final experiment design should define a seed policy.
+The M7-T02 seed policy is frozen by D-080 and `CURRENT_TASK.md`.
 
 Possible options:
 
 - one fixed seed for deterministic development;
 - multiple seeds for reportable neural/stochastic experiments.
 
-The exact number of seeds is not yet locked.
+Primary operational randomness, R2 population selection, environment/reset randomness where needed, and the paired bootstrap use seed 42. Accepted upstream training/checkpoint artifacts retain their already-approved frozen seeds; no extra neural seeds are created as inferential samples.
 
 ---
 
@@ -1187,9 +1187,7 @@ else:
     override
 ```
 
-The exact simulated-human policy remains unresolved.
-
-It must be explicitly documented before use.
+For M7-T02, D-080 and `CURRENT_TASK.md` freeze the deterministic simulated-human policy: no command for PROCEED; exact CONFIRM for a correct proposal; explicit OVERRIDE/correction for an incorrect CONFIRM proposal or DEFER; and PAUSE/STOP only in dedicated controlled scenarios. Hidden intended-goal truth is restricted to choosing that explicit command and evaluation scoring and must not enter inference or adaptation directly.
 
 ---
 
@@ -1348,13 +1346,13 @@ No claim should exist without supporting experimental evidence.
 
 # 82. REMAINING EXECUTION-SPECIFIC ITEMS
 
-D-040 through D-079 resolve the scientific-policy items previously listed here. Before M7-T02, the separately authorized frozen execution must still identify the exact final scenario/map set, any simulated-human rule actually used, complete artifact identities, and any repeated neural-network seed set beyond already-approved model seed policy. These execution artifacts must not be selected using protected final-test outcomes.
+D-040 through D-079 resolve the scientific-policy items previously listed here. D-080 and `CURRENT_TASK.md` authorize and freeze M7-T02's exact final scenarios/maps, simulated-human rule, and operational seed policy. Decoder/checkpoint/calibrator identities must still be identified or fitted from train/validation data only, hashed, and frozen in the execution manifest before protected outcomes are inspected.
 
 ---
 
 # 83. DECISIONS REQUIRED BEFORE FINAL REPORTABLE EXPERIMENTS
 
-The scientific policies in items 1–11 and the subject-level statistical plan are already approved in D-031 through D-079. M7-T02 still requires separate authorization and a frozen execution manifest covering exact artifacts, scenarios/maps, inputs, operational seeds, and any simulated-human behavior actually used.
+The scientific policies in items 1–11 and the subject-level statistical plan are approved in D-031 through D-079. M7-T02 is separately authorized by `CURRENT_TASK.md`, with its execution contract recorded by D-080. Its final execution manifest must freeze exact artifacts, inputs, hashes, and the already-approved execution definitions before protected results are accessed.
 
 ---
 
@@ -1383,7 +1381,7 @@ The experimental design is correctly implemented when:
 
 # 85. CURRENT EXPERIMENTAL DESIGN SUMMARY
 
-The project uses a layered experimental strategy. EEG experiments compare CSP+LDA and EEGNet on the same Left-vs-Right PhysioNet motor-imagery task. Calibration uses D-048 through D-050. Bayesian/shared-autonomy experiments use D-051 through D-057, while planning/safety experiments independently validate the accepted A*, D-061 through D-065 risk/safety behavior, action rejection, replanning, and emergency-stop behavior. D-077 freezes A/B/C/D, D-078 freezes the two probability-interface robustness families, and D-079 freezes paired subject-level inference. M7-T01 builds and verifies this infrastructure only with synthetic/development inputs; protected final-test execution remains reserved for separately authorized M7-T02. All results must preserve provenance, explicit denominators, individual-subject structure, and negative or mixed outcomes.
+The project uses a layered experimental strategy. EEG experiments compare CSP+LDA and EEGNet on the same Left-vs-Right PhysioNet motor-imagery task. Calibration uses D-048 through D-050. Bayesian/shared-autonomy experiments use D-051 through D-057, while planning/safety experiments independently validate the accepted A*, D-061 through D-065 risk/safety behavior, action rejection, replanning, and emergency-stop behavior. D-077 freezes A/B/C/D, D-078 freezes the two probability-interface robustness families, and D-079 freezes paired subject-level inference. M7-T01 built and verified the development-only harness; D-080 and `CURRENT_TASK.md` authorize M7-T02 under a committed governance reconciliation and hard split/artifact/manifest gates. All results must preserve provenance, explicit denominators, individual-subject structure, and negative or mixed outcomes.
 
 ---
 

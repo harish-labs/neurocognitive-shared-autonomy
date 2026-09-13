@@ -2447,6 +2447,41 @@ Negative, mixed, non-significant, or directionally unexpected results remain val
 
 ---
 
+## D-080 — M7-T02 Frozen Final Execution Contract
+
+**Status:** APPROVED
+
+**Date:** 2026-09-13
+**Supplements:** D-040 through D-079
+
+**Decision:**
+
+M7-T02 uses the deterministic final execution contract frozen in `CURRENT_TASK.md`:
+
+- the principal A/B/C/D matrix, ablations, robustness perturbations, and subject-level statistics remain exactly as approved by D-077, D-078, and D-079;
+- the controlled Search & Rescue validation suite is frozen as scenarios S1 through S7 with the exact grids, starts, goals, blocked cells, risk cells, dynamic replacement snapshot, prohibited-hazard probe, and emergency-stop timing stated in `CURRENT_TASK.md`;
+- primary full-system mission orchestration uses the accepted M6 3-by-5 two-goal map, start `(1,0)`, `victim_a=(1,4)`, `victim_b=(0,2)`, FREE baseline, and candidate order `(victim_a, victim_b)`;
+- the deterministic simulated-human software operator sends no command for PROCEED, confirms a correct CONFIRM proposal, explicitly overrides an incorrect CONFIRM proposal to the evaluation-only intended goal, and explicitly overrides a DEFER to the intended goal; PAUSE and STOP are injected only in dedicated controlled scenarios;
+- simulated-human feedback may reach adaptation only through the accepted explicit human-feedback API, while hidden intended-goal truth remains restricted to the simulated-human command choice and evaluation scoring;
+- operational randomness, the primary R2 population selection, deterministic environment/reset randomness where needed, and the D-079 paired bootstrap use seed 42 unless an accepted upstream artifact carries its own approved frozen seed;
+- protected final-test outcomes may be accessed only after governance reconciliation is committed, the 109-subject 76/16/17 split and leakage gate pass, decoder/calibrator artifacts are fitted or identified using train/validation data only and frozen with hashes/provenance, required pre-final tests pass, and the final execution manifest is frozen;
+- no model, checkpoint, calibrator, threshold, scenario, metric, perturbation, ablation, or policy may be selected or tuned in response to protected final-test outcomes;
+- all simulated interaction is an offline software evaluation and must not be interpreted as a real human-subject study.
+
+**Context:** D-077 through D-079 froze M7 methodology but intentionally did not authorize protected execution. The Project Owner subsequently approved the exact deterministic M7-T02 execution details and required a governance record before first final-test access.
+
+**Alternatives considered:** post-outcome artifact selection; stochastic or unspecified simulated-human behavior; changing scenario maps or operational seeds after viewing results; treating deterministic scenarios or neural seeds as human subjects.
+
+**Rationale:** A committed pre-final execution contract makes the reportable experiment reproducible and prevents protected outcomes from influencing scientific or operational selection.
+
+**Affected documents/modules:** `MASTER_PROJECT_SPEC.md`, `CURRENT_TASK.md`, `PROJECT_STATE.md`, `RESEARCH_LOG.md`, `TODO.md`, `EXPERIMENT_LOG.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, `src/evaluation/**`, optional minimal `scripts/**`, and compact `results/m7/**` artifacts.
+
+**Implementation consequence:** M7-T02 may implement and execute E1 through E9 only within `CURRENT_TASK.md`, after every stated pre-final gate passes. This decision does not authorize changes to accepted production modules, final-test-driven tuning, a real human study, M8, or merging the M7-T02 branch.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.

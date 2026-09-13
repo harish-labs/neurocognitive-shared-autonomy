@@ -525,10 +525,22 @@ and:
 G != controlled true goal
 ```
 
-Define:
+For M7-T02, define the primary rate over all evaluated episodes:
 
 \[
 WrongGoalRate
+=
+\frac{
+\text{wrong committed episodes}
+}{
+\text{all evaluated episodes}
+}
+\]
+
+Also report the secondary conditional rate:
+
+\[
+ConditionalWrongGoalRate
 =
 \frac{
 \text{wrong committed episodes}
@@ -537,7 +549,7 @@ WrongGoalRate
 }
 \]
 
-M7-T01 preserves both the wrong-commitment count and the committed-episode denominator as machine-readable fields. Task success separately uses all evaluated episodes, so deferrals are not hidden inside the wrong-goal denominator.
+Both rates must preserve their numerators and denominators as machine-readable fields. The primary rate prevents deferrals from disappearing from the evaluated-episode population; the conditional rate isolates correctness given that a commitment occurred.
 
 ---
 
@@ -1804,7 +1816,7 @@ M7-T01 now fixes per-class precision/recall/F1 plus macro F1, D-050 calibration 
 
 # 104. DECISIONS REQUIRED BEFORE FINAL METRIC REPORTING
 
-The required M7-T01 metric and inferential rules are governed by D-050, D-062, D-077 through D-079, and the authorized task. M7-T02 must separately freeze exact execution artifacts and presentation choices; path efficiency must remain unavailable unless its reference formula is approved.
+The required metric and inferential rules are governed by D-050, D-062, and D-077 through D-079. D-080 and `CURRENT_TASK.md` authorize and freeze M7-T02 execution semantics; the execution manifest must still freeze exact artifact identities and hashes before protected access. Path efficiency must remain unavailable unless its reference formula is separately approved.
 
 ---
 
@@ -1846,7 +1858,7 @@ Final evaluation is valid when:
 
 # 107. CURRENT METRICS & EVALUATION SUMMARY
 
-The project evaluates performance at distinct EEG, calibration, Bayesian/uncertainty, shared-autonomy, planning/safety, and full-system levels. M7-T01 implements per-class and macro EEG metrics, D-050 reliability/ECE and Brier metrics, posterior/confidence/entropy and decision counts, D-062 path risk/cost accounting, explicit wrong-goal/task-success/safety denominators, and separated evidence versus navigation steps. D-079 requires one paired metric per subject for primary inference, 10,000-resample paired bootstrap intervals, paired sign-flip/permutation p-values, and Holm correction within families. Robustness follows D-078 and all records preserve evaluation unit, seed/index provenance, and subject identity. Path efficiency remains intentionally unavailable pending a separate approved reference definition; protected final-test outcomes remain reserved for M7-T02.
+The project evaluates performance at distinct EEG, calibration, Bayesian/uncertainty, shared-autonomy, planning/safety, and full-system levels. M7-T01 implements per-class and macro EEG metrics, D-050 reliability/ECE and Brier metrics, posterior/confidence/entropy and decision counts, D-062 path risk/cost accounting, explicit denominators, and separated evidence versus navigation steps. For M7-T02, primary wrong-goal rate is wrong commitments divided by all evaluated episodes and the secondary conditional rate is wrong commitments divided by committed episodes. D-079 requires one paired metric per subject for primary inference, 10,000-resample paired bootstrap intervals, paired sign-flip/permutation p-values, and Holm correction within families. Robustness follows D-078 and all records preserve evaluation unit, seed/index provenance, and subject identity. D-080 freezes M7-T02 execution while keeping artifact and protected-access gates explicit. Path efficiency remains intentionally unavailable pending a separate approved reference definition.
 
 ---
 
