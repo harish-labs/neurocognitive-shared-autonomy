@@ -84,7 +84,6 @@ class AutonomyMetrics:
     correct_commitments: int
     commitment_correctness: RateMetric
     wrong_goal: RateMetric
-    conditional_wrong_goal: RateMetric
     task_success: RateMetric
     proceed: RateMetric
     confirm: RateMetric
@@ -214,8 +213,7 @@ def compute_autonomy_metrics(records: list[EpisodeRecord] | tuple[EpisodeRecord,
         committed_episodes=len(committed),
         correct_commitments=correct,
         commitment_correctness=_rate(correct, len(committed), "committed_episode"),
-        wrong_goal=_rate(wrong, total, "evaluated_episode"),
-        conditional_wrong_goal=_rate(wrong, len(committed), "committed_episode"),
+        wrong_goal=_rate(wrong, len(committed), "committed_episode"),
         task_success=_rate(success, total, "evaluated_episode"),
         proceed=_rate(mode_counts["PROCEED"], total, "evaluated_episode"),
         confirm=_rate(mode_counts["CONFIRM"], total, "evaluated_episode"),

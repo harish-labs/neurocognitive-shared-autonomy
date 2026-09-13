@@ -55,11 +55,8 @@ def test_full_system_rates_keep_wrong_goal_and_success_denominators_separate():
     )
     result = compute_autonomy_metrics(records)
     assert result.wrong_goal.numerator == 1
-    assert result.wrong_goal.denominator == 3
-    assert result.wrong_goal.denominator_unit == "evaluated_episode"
-    assert result.conditional_wrong_goal.numerator == 1
-    assert result.conditional_wrong_goal.denominator == 2
-    assert result.conditional_wrong_goal.denominator_unit == "committed_episode"
+    assert result.wrong_goal.denominator == 2
+    assert result.wrong_goal.denominator_unit == "committed_episode"
     assert result.task_success.numerator == 1
     assert result.task_success.denominator == 3
     assert result.task_success.denominator_unit == "evaluated_episode"

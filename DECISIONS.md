@@ -2247,7 +2247,7 @@ EEGNetDecoder.predict_logits()
 
 **Status:** APPROVED
 
-**Date:** 2026-09-13
+**Date:** 2026-09-13  
 **Resolves:** U-034
 
 **Decision:**
