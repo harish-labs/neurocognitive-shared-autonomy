@@ -491,9 +491,17 @@ D-079 uses the actual final-subject count and exact `2^n_final` sign-flip enumer
 
 ---
 
-# 6. OPEN RESEARCH QUEUE
+# 6. D-083 ELIGIBILITY AND SEQUENTIAL-PARTICIPATION RESOLUTION
 
-No currently known M7-blocking scientific decision remains unresolved after D-077 through D-082.
+On 2026-09-13 the Project Owner approved D-083. D-082 cross-subject eligibility is now exactly one or more retained T1 trials and one or more retained T2 trials after fixed D-035 QC. It does not require D-040 within-subject feasibility, five trials per class, or any D-081 episode. Eligibility uses QC counts only and never decoder/system performance.
+
+After the D-082 split is frozen, balanced sequential families include a subject only with at least one valid five-observation T1 episode and at least one valid five-observation T2 episode. Zero or one-class-only episode availability is recorded as experiment-specific nonparticipation and never changes frozen partition membership. D-079 uses the actual complete paired subject vector for each comparison.
+
+---
+
+# 7. OPEN RESEARCH QUEUE
+
+No currently known M7-blocking scientific decision remains unresolved after D-077 through D-083.
 
 M7-T02 execution is additionally frozen by D-080: deterministic S1–S7 scenarios, the accepted M6 mission map, deterministic simulated-human commands through the existing authority API, operational/bootstrap/R2 seed 42, and a hard pre-final split/artifact/manifest gate. This is an offline software evaluation, not a real human-subject study. Protected final outcomes must not influence fitting, selection, calibration, thresholds, scenarios, metrics, or policy.
 
@@ -512,7 +520,7 @@ Any new scientifically meaningful ambiguity discovered during M7 must be surface
 
 ---
 
-# 7. SOURCE QUALITY RULE
+# 8. SOURCE QUALITY RULE
 
 For critical methodology:
 

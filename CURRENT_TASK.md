@@ -33,6 +33,8 @@ On 2026-09-13 the Project Owner additionally approved D-081, resolving the fixed
 
 On 2026-09-13 the Project Owner additionally approved D-082. The accepted D-035 preprocessing/QC boundary now determines the actual eligible cohort from all 109 source subjects. The cross-subject split must be frozen from that cohort using one ascending-sort/seed-42 shuffle and the D-082 largest-remainder 70/15/15 allocation. The historical D-042 `76/16/17` counts and provisional subject membership must not be forced when post-QC `N` differs from 109.
 
+On 2026-09-13 the Project Owner additionally approved D-083. Cross-subject eligibility is exactly retained T1 `>=1` and retained T2 `>=1` after fixed D-035 QC. It does not require D-040 within-subject feasibility or a D-081 episode. After the D-082 split is frozen, balanced sequential families include only subjects with at least one valid five-observation T1 episode and at least one valid five-observation T2 episode; nonparticipation never changes frozen membership and must be reported per experiment.
+
 ---
 
 # 2. PURPOSE
@@ -239,6 +241,8 @@ Before first protected final-test evaluation:
 6. if an artifact must be produced because no accepted persisted artifact exists, fit/select/freeze it using training/validation only, record its exact configuration/hash/provenance, and freeze it before final-test access;
 7. freeze the complete M7-T02 execution manifest before inspecting final-test outcomes;
 8. record software Git SHA, split-manifest identity, model/checkpoint identity, calibrator identity, decoder family, condition/ablation, scenario ID, seeds, and scientific-policy IDs.
+
+Cross-subject eligibility at steps 1–2 is governed by D-083: retained T1 `>=1` and retained T2 `>=1`. Track D-040 within-subject feasibility separately. Only after the split is frozen, derive D-081 per-subject T1/T2 episode counts and experiment-specific balanced-sequential inclusion manifests; never remove or replace a frozen subject due to episode availability.
 
 No final-test result may influence model selection, calibration, threshold choice, artifact choice, scenario choice, perturbation levels, metric definitions, or report inclusion.
 

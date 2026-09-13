@@ -83,6 +83,8 @@ D-081 now resolves the previously reported M7-T02 episode-construction blocker. 
 
 D-082 now resolves the post-QC cohort-size blocker without changing D-035. M7-T02 must complete the fixed 150 µV QC audit for all 109 source subjects, freeze the actual post-QC eligible cohort, then assign every eligible subject using one ascending-sort/seed-42 shuffle and deterministic largest-remainder 70/15/15 allocation. The historical 76/16/17 counts and provisional final-subject list are not forced execution inputs.
 
+D-083 resolves the remaining eligibility ambiguity: cross-subject eligibility requires at least one retained T1 and one retained T2 trial after QC. D-040 within-subject feasibility and D-081 balanced-sequential participation remain separate. Episode availability is assessed only after split freeze and cannot remove, replace, reshuffle, or move a frozen subject.
+
 ---
 
 # 4. GOVERNANCE RECONCILIATION GATE
@@ -110,6 +112,7 @@ The following are frozen for the reportable M7 phase:
 - D-081 deterministic E9 ordering and explicit incomplete-tail provenance;
 - the disclosed final-subject EDF retrieval is recorded as protected-data prefetch, not outcome access.
 - D-082 complete-source QC, actual eligible-cohort freeze, and deterministic allocation policy.
+- D-083 one-per-class cross-subject eligibility and post-split experiment-specific sequential participation.
 
 ---
 

@@ -826,6 +826,8 @@ After the approved preprocessing/QC boundary:
 
 Under D-082, first apply the fixed D-035 QC policy to all 109 source subjects and freeze the actual post-QC eligible count `N`. Sort eligible IDs ascending, shuffle once with seed 42, and allocate contiguous partitions using floor quotas plus largest fractional remainders. Exact remainder ties use `final_test`, then `validation`, then `train`.
 
+D-083 defines cross-subject eligibility exactly as at least one retained T1 trial and at least one retained T2 trial after QC. Do not require D-040 within-subject feasibility, five trials per class, or a D-081 episode for cohort membership. Track within-subject feasibility separately.
+
 For the historical full-eligible-cohort case `N=109`, this method gives:
 
 ```text
@@ -837,6 +839,8 @@ For the historical full-eligible-cohort case `N=109`, this method gives:
 Leave-one-subject-out or grouped subject K-fold may be added later only as explicitly authorized secondary analyses; they are not the primary cross-subject protocol.
 
 If preprocessing/QC yields `N != 109`, use the D-082 allocation mechanically; do not force 76/16/17 or preserve provisional membership. Freeze all exclusions and reasons, exact allocation calculations, subject IDs, hashes, and provenance before fitting. No post-freeze replacement is permitted.
+
+After split freeze, derive D-081 episode counts independently. Balanced sequential families include only subjects with at least one valid T1 episode and at least one valid T2 episode. Subjects with zero or one-class-only episodes remain in their frozen partition and in valid single-trial analyses; report their experiment-specific exclusion without replacement or reshuffling.
 
 ---
 
@@ -1352,13 +1356,13 @@ No claim should exist without supporting experimental evidence.
 
 # 82. REMAINING EXECUTION-SPECIFIC ITEMS
 
-D-040 through D-082 resolve the scientific-policy items previously listed here. D-080 and `CURRENT_TASK.md` authorize and freeze M7-T02's exact final scenarios/maps, simulated-human rule, and operational seed policy; D-081 freezes fixed-intent episode construction, paired source episodes, tail handling, E9 ordering, and the protected-data-prefetch interpretation; D-082 freezes actual post-QC cohort derivation and deterministic allocation. Decoder/checkpoint/calibrator identities and the QC/split/episode/execution manifests must still be frozen before protected outcomes are inspected.
+D-040 through D-083 resolve the scientific-policy items previously listed here. D-080 and `CURRENT_TASK.md` authorize and freeze M7-T02's exact final scenarios/maps, simulated-human rule, and operational seed policy; D-081 freezes fixed-intent episode construction; D-082 freezes actual post-QC cohort derivation and deterministic allocation; D-083 freezes one-per-class cross-subject eligibility and post-split experiment-specific sequential participation. Decoder/checkpoint/calibrator identities and the QC/split/episode/execution manifests must still be frozen before protected outcomes are inspected.
 
 ---
 
 # 83. DECISIONS REQUIRED BEFORE FINAL REPORTABLE EXPERIMENTS
 
-The scientific policies in items 1–11 and the subject-level statistical plan are approved in D-031 through D-079. M7-T02 is separately authorized by `CURRENT_TASK.md`, with its execution contract recorded by D-080, fixed-intent episode semantics recorded by D-081, and post-QC cohort/allocation policy recorded by D-082. Its final execution manifest must freeze exact artifacts, inputs, QC/split/episode manifest hashes, actual cohort values, and approved execution definitions before protected results are accessed.
+The scientific policies in items 1–11 and the subject-level statistical plan are approved in D-031 through D-079. M7-T02 is separately authorized by `CURRENT_TASK.md`, with its execution contract recorded by D-080, fixed-intent episode semantics recorded by D-081, post-QC cohort/allocation policy recorded by D-082, and eligibility/participation policy recorded by D-083. Its final execution manifest must freeze exact artifacts, inputs, QC/split/episode/inclusion manifest hashes, actual cohort values, and approved execution definitions before protected results are accessed.
 
 ---
 

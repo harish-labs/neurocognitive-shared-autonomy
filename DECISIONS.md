@@ -2550,6 +2550,35 @@ D-081 episode semantics remain unchanged. Build the episode manifest only after 
 
 ---
 
+## D-083 — Cross-Subject Eligibility and Sequential-Analysis Participation Policy
+
+**Status:** APPROVED
+
+**Date:** 2026-09-13
+**Supplements:** D-035, D-040, D-041, D-042, D-079, D-081, D-082
+
+**Decision:**
+
+A subject is eligible for the D-082 cross-subject cohort if and only if approved D-035 QC across runs 4, 8, and 12 retains at least one T1 trial and at least one T2 trial. Zero retained trials in either class excludes the subject before D-082 partitioning. Cross-subject eligibility does not require three trials per class, five trials per class, or a valid D-081 episode, and it may use only fixed QC counts—not decoder or system performance.
+
+D-040 within-subject feasibility remains a separate class-stratified 60/20/20 original-trial requirement. A cross-subject-eligible subject may be infeasible for the within-subject track; record that fact without changing either eligibility rule or the frozen cross-subject cohort.
+
+D-081 sequential participation is evaluated only after the D-082 split is frozen. Balanced sequential families requiring both intended choices include a subject only when the subject has at least one valid same-subject/same-run/same-class, acquisition-ordered, non-overlapping exact-five T1 episode and at least one equivalent T2 episode. A frozen subject with no episodes or episodes for only one class remains in the frozen partition and remains available for appropriate single-trial analyses, but is excluded from the affected balanced sequential family with exact counts and reason recorded. Episode availability must never trigger removal, replacement, reshuffling, or partition movement.
+
+Every sequential experiment records its actual complete-pair subject count, included IDs, excluded IDs, and exclusion reasons. D-079 inference uses that actual paired `n`, 10,000 paired bootstrap resamples with seed 42, a two-sided paired sign-flip/permutation test, exact `2^n` enumeration when practical, and Holm correction within family. No implementation-time minimum sequential sample size is authorized; unexpectedly small samples are reported as limitations unless scientific interpretation requires a separately approved decision.
+
+**Context:** D-082 resolved allocation for an observed post-QC cohort but deliberately referred to accepted binary-analysis eligibility semantics. The accepted code fixed a three-trial-per-class minimum only for the separate within-subject track and did not specify cross-subject or D-081 participation minimums.
+
+**Rationale:** A one-per-class cross-subject minimum permits valid subject-held-out single-trial evaluation without conflating it with within-subject splitting or five-observation sequential feasibility. Experiment-specific complete-pair inclusion preserves the frozen split, prevents replacement bias, and keeps subject-level inference honest about its actual sample.
+
+**Affected documents/modules:** `DECISIONS.md`, `CURRENT_TASK.md`, `PROJECT_STATE.md`, `RESEARCH_LOG.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, authorized M7 evaluation manifests/code/tests, and compact M7 results.
+
+**Implementation consequence:** Resume M7-T02 using `retained T1 >= 1 AND retained T2 >= 1` for D-082 cohort eligibility. Freeze the split before D-081 participation assessment, preserve every frozen subject without replacement, and report experiment-specific paired samples. D-083 does not change D-035, authorize performance-driven selection, merge M7-T02, or start M8.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.
