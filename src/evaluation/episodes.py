@@ -552,7 +552,7 @@ def _validated_source_metadata(value: object) -> pd.DataFrame:
     )
     if mismatched.any():
         raise EpisodeConstructionError("Intended class and EEGBCI event code are inconsistent.")
-    metadata["source_file"] = metadata["source_file"].astype(str)
+    metadata["source_file"] = metadata["source_file"].astype(str).map(lambda value: Path(value).name)
     if (metadata["source_file"].str.len() == 0).any():
         raise EpisodeConstructionError("Every source trial requires source_file provenance.")
     metadata["canonical_trial_id"] = metadata.apply(_canonical_trial_id, axis=1)

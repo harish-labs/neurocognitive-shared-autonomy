@@ -378,7 +378,7 @@ def subject_eligibility_record(audit: SubjectAudit) -> SubjectEligibilityRecord:
         exclusion_reason=audit.exclusion_reason,
         within_subject_feasible=audit.within_subject_feasible,
         within_subject_infeasibility_reason=audit.within_subject_infeasibility_reason,
-        source_files=tuple(item.source_file for item in audit.run_audits),
+        source_files=tuple(Path(item.source_file).name for item in audit.run_audits),
         source_sha256=tuple(item.source_sha256 for item in audit.run_audits),
     )
 
