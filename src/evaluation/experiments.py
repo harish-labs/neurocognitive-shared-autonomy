@@ -10,7 +10,7 @@ from src.cognitive.adaptation import PriorPersonalizer
 from src.cognitive.bayes import COMMITMENT_THRESHOLD, INITIAL_PRIOR, BinaryBayesianGoalEpisode, EpisodeStatus, binary_goal_evidence_from_calibrated_probabilities
 from src.cognitive.uncertainty import estimate_binary_uncertainty
 from src.control.shared_autonomy import CONFIRMATION_THRESHOLD, AutonomyMode, decide_shared_autonomy
-from src.evaluation.conditions import ConditionId, get_condition
+from src.evaluation.conditions import ConditionDefinition, ConditionId, get_condition
 from src.evaluation.robustness import PerturbationResult, contaminate_contradictory_evidence, flatten_evidence
 from src.evaluation.schemas import ALLOWED_M7_T01_SPLITS, DECODER_FAMILIES
 
@@ -52,6 +52,29 @@ class ConditionEpisodeResult:
     perturbation: PerturbationResult | None
 
 
+@dataclass(frozen=True)
+class EpisodeEvidenceAssignment:
+    """One episode's immutable slice of a globally perturbed evidence population."""
+
+    episode_id: str
+    subject_key: str
+    global_indices: tuple[int, ...]
+    observation_ids: tuple[str, ...]
+    selected_global_indices: tuple[int, ...]
+    selected_observation_ids: tuple[str, ...]
+    original_evidence: tuple[tuple[float, float], ...]
+    perturbed_evidence: tuple[tuple[float, float], ...]
+
+
+@dataclass(frozen=True)
+class DevelopmentConditionBatchResult:
+    condition_id: str
+    condition_name: str
+    episode_results: tuple[ConditionEpisodeResult, ...]
+    population_perturbation: PerturbationResult | None
+    episode_assignments: tuple[EpisodeEvidenceAssignment, ...]
+
+
 def run_development_condition(
     episode_input: DevelopmentEpisodeInput,
     condition_id: ConditionId | str,
@@ -63,14 +86,123 @@ def run_development_condition(
 ) -> ConditionEpisodeResult:
     _validate_input(episode_input)
     condition = get_condition(condition_id)
-    source = "calibrated" if condition.components.calibration else "raw_identity"
-    evidence = np.asarray(
-        episode_input.calibrated_probabilities if condition.components.calibration else episode_input.raw_probabilities,
-        dtype=np.float64,
-    )[: condition.components.evidence_horizon]
-    perturbation = _perturb(evidence, perturbation_family, severity, perturbation_seed)
+    source, evidence = _condition_evidence(episode_input, condition)
+    perturbation = _perturb_episode(evidence, perturbation_family, severity, perturbation_seed)
     if perturbation is not None:
         evidence = np.asarray(perturbation.perturbed_evidence, dtype=np.float64)
+    return _evaluate_condition(episode_input, condition, source, evidence, perturbation, personalizer)
+
+
+def run_development_condition_batch(
+    episode_inputs: tuple[DevelopmentEpisodeInput, ...] | list[DevelopmentEpisodeInput],
+    condition_id: ConditionId | str,
+    *,
+    perturbation_family: str | None = None,
+    severity: float | None = None,
+    perturbation_seed: int | None = None,
+    personalizer: PriorPersonalizer | None = None,
+) -> DevelopmentConditionBatchResult:
+    """Run one condition with R2 selected once over the ordered batch population."""
+
+    inputs = tuple(episode_inputs)
+    if not inputs:
+        raise ExperimentError("A development condition batch must contain at least one episode.")
+    for episode_input in inputs:
+        _validate_input(episode_input)
+    _validate_batch_population(inputs)
+    condition = get_condition(condition_id)
+
+    if perturbation_family != "R2":
+        results = tuple(
+            run_development_condition(
+                episode_input,
+                condition.condition_id,
+                perturbation_family=perturbation_family,
+                severity=severity,
+                perturbation_seed=perturbation_seed,
+                personalizer=personalizer,
+            )
+            for episode_input in inputs
+        )
+        return DevelopmentConditionBatchResult(
+            condition_id=condition.condition_id.value,
+            condition_name=condition.name,
+            episode_results=results,
+            population_perturbation=None,
+            episode_assignments=(),
+        )
+
+    if severity is None:
+        raise ExperimentError("R2 population contamination requires severity.")
+    if perturbation_seed is None:
+        raise ExperimentError("R2 population contamination requires a recorded seed.")
+
+    sources_and_evidence = tuple(_condition_evidence(episode_input, condition) for episode_input in inputs)
+    population_rows: list[np.ndarray] = []
+    population_ids: list[str] = []
+    episode_ranges: list[tuple[int, int]] = []
+    for episode_input, (_, evidence) in zip(inputs, sources_and_evidence):
+        start = len(population_rows)
+        for local_index, row in enumerate(evidence):
+            population_rows.append(row)
+            population_ids.append(_observation_identity(episode_input, local_index))
+        episode_ranges.append((start, len(population_rows)))
+
+    population = np.asarray(population_rows, dtype=np.float64)
+    perturbation = contaminate_contradictory_evidence(
+        population,
+        severity,
+        seed=perturbation_seed,
+        observation_ids=population_ids,
+    )
+    perturbed_population = np.asarray(perturbation.perturbed_evidence, dtype=np.float64)
+    selected_indices = set(perturbation.selected_indices)
+    results: list[ConditionEpisodeResult] = []
+    assignments: list[EpisodeEvidenceAssignment] = []
+
+    for episode_input, (source, _), (start, stop) in zip(inputs, sources_and_evidence, episode_ranges):
+        global_indices = tuple(range(start, stop))
+        episode_selected = tuple(index for index in global_indices if index in selected_indices)
+        results.append(
+            _evaluate_condition(
+                episode_input,
+                condition,
+                source,
+                perturbed_population[start:stop],
+                None,
+                personalizer,
+            )
+        )
+        assignments.append(
+            EpisodeEvidenceAssignment(
+                episode_id=episode_input.episode_id,
+                subject_key=episode_input.subject_key,
+                global_indices=global_indices,
+                observation_ids=tuple(population_ids[start:stop]),
+                selected_global_indices=episode_selected,
+                selected_observation_ids=tuple(population_ids[index] for index in episode_selected),
+                original_evidence=perturbation.original_evidence[start:stop],
+                perturbed_evidence=perturbation.perturbed_evidence[start:stop],
+            )
+        )
+
+    return DevelopmentConditionBatchResult(
+        condition_id=condition.condition_id.value,
+        condition_name=condition.name,
+        episode_results=tuple(results),
+        population_perturbation=perturbation,
+        episode_assignments=tuple(assignments),
+    )
+
+
+def _evaluate_condition(
+    episode_input: DevelopmentEpisodeInput,
+    condition: ConditionDefinition,
+    source: str,
+    evidence: np.ndarray,
+    perturbation: PerturbationResult | None,
+    personalizer: PriorPersonalizer | None,
+) -> ConditionEpisodeResult:
 
     if condition.condition_id is ConditionId.A:
         initial_prior = None
@@ -145,6 +277,38 @@ def run_development_condition(
     )
 
 
+def _condition_evidence(
+    episode_input: DevelopmentEpisodeInput,
+    condition: ConditionDefinition,
+) -> tuple[str, np.ndarray]:
+    source = "calibrated" if condition.components.calibration else "raw_identity"
+    values = episode_input.calibrated_probabilities if condition.components.calibration else episode_input.raw_probabilities
+    evidence = np.asarray(values, dtype=np.float64)[: condition.components.evidence_horizon]
+    return source, evidence
+
+
+def _validate_batch_population(inputs: tuple[DevelopmentEpisodeInput, ...]) -> None:
+    first = inputs[0]
+    expected = (first.split.lower(), first.decoder_family, first.candidate_names)
+    identities: list[str] = []
+    for episode_input in inputs:
+        actual = (episode_input.split.lower(), episode_input.decoder_family, episode_input.candidate_names)
+        if actual != expected:
+            raise ExperimentError(
+                "A condition evidence population must use one split, decoder family, and ordered candidate pair."
+            )
+        identities.extend(
+            _observation_identity(episode_input, local_index)
+            for local_index in range(len(episode_input.raw_probabilities))
+        )
+    if len(set(identities)) != len(identities):
+        raise ExperimentError("Stable evidence observation identities must be unique within a condition batch.")
+
+
+def _observation_identity(episode_input: DevelopmentEpisodeInput, local_index: int) -> str:
+    return f"{episode_input.subject_key}::{episode_input.episode_id}::observation-{local_index:04d}"
+
+
 def _validate_input(value: object) -> None:
     if not isinstance(value, DevelopmentEpisodeInput):
         raise ExperimentError("Orchestration requires DevelopmentEpisodeInput.")
@@ -173,7 +337,12 @@ def _probabilities(values: object, name: str) -> np.ndarray:
     return array
 
 
-def _perturb(evidence: np.ndarray, family: str | None, severity: float | None, seed: int | None) -> PerturbationResult | None:
+def _perturb_episode(
+    evidence: np.ndarray,
+    family: str | None,
+    severity: float | None,
+    seed: int | None,
+) -> PerturbationResult | None:
     if family is None:
         if severity is not None or seed is not None:
             raise ExperimentError("Unperturbed orchestration cannot carry severity or perturbation_seed.")
@@ -185,7 +354,8 @@ def _perturb(evidence: np.ndarray, family: str | None, severity: float | None, s
             raise ExperimentError("Deterministic R1 flattening does not use a random seed.")
         return flatten_evidence(evidence, severity)
     if family == "R2":
-        if seed is None:
-            raise ExperimentError("R2 contamination requires a recorded seed.")
-        return contaminate_contradictory_evidence(evidence, severity, seed=seed)
+        raise ExperimentError(
+            "R2 contamination must be selected over an evaluation batch with "
+            "run_development_condition_batch()."
+        )
     raise ExperimentError("perturbation_family must be None, 'R1', or 'R2'.")

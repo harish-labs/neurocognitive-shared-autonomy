@@ -719,7 +719,7 @@ severity
 random seed
 ```
 
-R1 uses `p_epsilon = (1-epsilon)*p + epsilon*[0.5,0.5]`. R2 swaps `[pA,pB]` to `[pB,pA]` at deterministic recorded indices. Original/perturbed evidence, severity, seed/index rule, and selected indices must remain auditable; labels and evaluation-only true goals do not change.
+R1 uses `p_epsilon = (1-epsilon)*p + epsilon*[0.5,0.5]`. R2 swaps `[pA,pB]` to `[pB,pA]` at deterministic recorded indices selected once across the complete ordered evidence population for the condition/evaluation run; episode boundaries do not restart selection or round `q` independently. Provenance records requested `q`, seed, population size, stable global observation identities/indices, selection rule, realized count/fraction, and original/perturbed evidence. Labels and evaluation-only true goals do not change.
 
 ---
 

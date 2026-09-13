@@ -395,15 +395,16 @@ seed
 original evidence
 perturbed evidence
 labels unchanged?
-selection rule and selected indices
-realized contaminated fraction where applicable
+selection rule and selected global observation identities/indices
+evidence-population size and realized contamination count/fraction where applicable
 ```
 
 Frozen D-078 families:
 
 ```text
 R1 evidence flattening: epsilon = 0.00, 0.25, 0.50, 0.75, 1.00
-R2 contradictory-evidence swap: q = 0.00, 0.10, 0.20, 0.30, 0.40
+R2 contradictory-evidence swap: q = 0.00, 0.10, 0.20, 0.30, 0.40,
+selected once across the complete ordered condition/evaluation-run evidence population
 ```
 
 ---
@@ -419,7 +420,8 @@ decoder family
 split and evaluation track
 anonymous subject key
 all operational/statistical/perturbation seeds
-perturbation family, severity, selection rule, and selected indices
+perturbation family, requested severity, seed, population size, selection rule,
+selected global observation identities/indices, realized count/fraction, and original/perturbed evidence
 effective operational configuration
 scientific-policy identifiers
 input trial/evidence provenance

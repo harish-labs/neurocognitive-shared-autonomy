@@ -24,14 +24,28 @@ def test_r1_frozen_endpoints_and_intermediate_values():
 
 def test_r2_is_seed_reproducible_records_indices_and_swaps_only_selected_rows():
     evidence = np.asarray([[0.9 - i / 100, 0.1 + i / 100] for i in range(10)])
-    first = contaminate_contradictory_evidence(evidence, 0.3, seed=42)
-    second = contaminate_contradictory_evidence(evidence, 0.3, seed=42)
-    different = contaminate_contradictory_evidence(evidence, 0.3, seed=43)
+    observation_ids = tuple(f"global-{index}" for index in range(10))
+    first = contaminate_contradictory_evidence(evidence, 0.3, seed=42, observation_ids=observation_ids)
+    second = contaminate_contradictory_evidence(evidence, 0.3, seed=42, observation_ids=observation_ids)
+    different = contaminate_contradictory_evidence(evidence, 0.3, seed=43, observation_ids=observation_ids)
     assert first == second
+    assert first.requested_q == 0.3
+    assert first.population_size == 10
+    assert first.realized_count == 3
+    assert first.realized_fraction == 0.3
     assert len(first.selected_indices) == 3
+    assert first.selected_observation_ids == tuple(observation_ids[index] for index in first.selected_indices)
     assert first.selected_indices != different.selected_indices
     for index, (original, perturbed) in enumerate(zip(first.original_evidence, first.perturbed_evidence)):
         assert perturbed == (original[1], original[0]) if index in first.selected_indices else perturbed == original
+
+
+def test_r2_rejects_non_unique_or_misaligned_population_identities():
+    evidence = np.asarray([[0.8, 0.2], [0.7, 0.3]])
+    with pytest.raises(RobustnessError, match="one-to-one"):
+        contaminate_contradictory_evidence(evidence, 0.1, seed=1, observation_ids=("only-one",))
+    with pytest.raises(RobustnessError, match="unique"):
+        contaminate_contradictory_evidence(evidence, 0.1, seed=1, observation_ids=("same", "same"))
 
 
 def test_paired_subject_bootstrap_and_exact_sign_flip_are_deterministic():
