@@ -340,7 +340,7 @@ recovery after misleading evidence
 
 # 12. A/B/C/D EXPERIMENT TEMPLATE
 
-Freeze the exact component matrix before execution.
+D-077 freezes the exact component matrix. M7-T01 development checks are not reportable experiments; protected final execution remains reserved for separately authorized M7-T02.
 
 Then compare:
 
@@ -395,22 +395,46 @@ seed
 original evidence
 perturbed evidence
 labels unchanged?
+selection rule and selected indices
+realized contaminated fraction where applicable
 ```
 
-Examples:
+Frozen D-078 families:
 
 ```text
-probability corruption
-ambiguous evidence
-contradictory evidence
-signal degradation
-blocked route
-hazard changes
+R1 evidence flattening: epsilon = 0.00, 0.25, 0.50, 0.75, 1.00
+R2 contradictory-evidence swap: q = 0.00, 0.10, 0.20, 0.30, 0.40
 ```
 
 ---
 
-# 15. CROSS-SUBJECT RULE
+# 15. M7 MACHINE-READABLE RESULT REQUIREMENTS
+
+M7 result artifacts must preserve, where applicable:
+
+```text
+experiment family and ID
+condition and ablation
+decoder family
+split and evaluation track
+anonymous subject key
+all operational/statistical/perturbation seeds
+perturbation family, severity, selection rule, and selected indices
+effective operational configuration
+scientific-policy identifiers
+input trial/evidence provenance
+metric evaluation units, numerators, and denominators
+subject-level values before aggregation
+aggregate values
+paired statistics, raw p-values, and Holm-adjusted p-values
+caller-supplied software/Git SHA
+```
+
+M7-T01 records must be marked `DEVELOPMENT_ONLY` and must fail closed on protected final-test splits. They are not eligible for final performance claims.
+
+---
+
+# 16. CROSS-SUBJECT RULE
 
 For held-out-subject evaluation:
 
@@ -424,7 +448,7 @@ Do not summarize only with a single overall average.
 
 ---
 
-# 16. RESULT CLAIM RULE
+# 17. RESULT CLAIM RULE
 
 A result may be used in:
 
@@ -450,7 +474,7 @@ reproducibility is sufficient
 
 ---
 
-# 17. CURRENT LOG
+# 18. CURRENT LOG
 
 No reportable experiment has been executed yet.
 

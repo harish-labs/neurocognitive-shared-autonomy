@@ -6,7 +6,7 @@
 **Document ID:** I-01  
 **Document class:** Experiments & Evaluation / Experimental Design Specification  
 **Authority level:** Subordinate to all Master Authority, Scenario, Architecture, Data, Neuroscience, ML, Bayesian, Shared-Autonomy, Planning, Safety, Implementation, and Repository Architecture documents  
-**Status:** Authoritative experiment-design baseline; only U-034/U-035/U-036 remain unresolved and no reportable results exist
+**Status:** Authoritative experiment-design baseline reconciled through D-079; no reportable final results exist
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---
@@ -211,24 +211,9 @@ The experiment does not assume one must win.
 
 ---
 
-# 10. E1 MODEL-SELECTION RULE
+# 10. E1 DECODER REPORTING RULE
 
-The model used in the final end-to-end system should not be chosen solely on:
-
-```text
-highest accuracy
-```
-
-Selection may consider:
-
-- balanced accuracy;
-- probability quality;
-- calibration;
-- stability;
-- cross-subject behavior;
-- computational simplicity.
-
-The final selection rule must be frozen before final integration results are interpreted.
+D-077 requires both approved decoder families to be evaluated under A/B/C/D where valid. M7 evaluation must not select whichever decoder gives a convenient post-hoc system result. Decoder-family results remain separately identified and include balanced accuracy and calibration quality in addition to accuracy.
 
 ---
 
@@ -276,21 +261,7 @@ This must be tested independently for each decoder family where needed.
 
 The calibrator must not fit on final test labels.
 
-Valid structures may include:
-
-```text
-Train / Calibration / Test
-```
-
-or:
-
-```text
-Train / Validation-Calibration / Test
-```
-
-or an approved out-of-fold approach.
-
-The exact final strategy remains unresolved.
+D-049 fixes the existing validation partition as the calibration-fitting partition. Training remains the decoder-fitting partition, and test/final-test data remain excluded from fitting, calibration, and selection. D-048 fixes temperature scaling for EEGNet, sigmoid/Platt-style calibration for CSP+LDA, and an identity/no-calibration baseline. D-050 fixes 10 equal-width reliability/ECE bins and companion Brier reporting.
 
 ---
 
@@ -316,12 +287,7 @@ while holding the rest of the relevant pipeline constant.
 
 Determine whether sequential evidence accumulation improves goal-intent inference compared with direct/single-observation decision-making.
 
-Initial development should use synthetic likelihood sequences.
-
-Real EEG integration occurs only after:
-
-- goal-selection protocol approval;
-- likelihood-model approval.
+Synthetic likelihood sequences remain appropriate for analytical development validation. Real EEG integration follows the approved D-051 binary-choice protocol and D-052 calibrated-evidence likelihood construction.
 
 ---
 
@@ -386,14 +352,9 @@ This ensures mathematical correctness is separated from EEG quality.
 
 ---
 
-# 21. E3 REAL-EEG GATE
+# 21. E3 REAL-EEG BOUNDARY
 
-Real EEG-derived Bayesian experiments are blocked until the project explicitly approves:
-
-1. binary EEG-to-goal interaction protocol;
-2. exact likelihood-construction semantics.
-
-No experimental shortcut is allowed here.
+D-051 and D-052 resolve the interaction and likelihood semantics: each decision exposes exactly two valid candidates, calibrated Left evidence supports candidate A, calibrated Right evidence supports candidate B, and planning/risk must not alter the intent likelihood. Protected final-test execution remains reserved for M7-T02.
 
 ---
 
@@ -458,15 +419,9 @@ This hypothesis explicitly allows a trade-off rather than assuming unconditional
 
 ---
 
-# 26. E4 THRESHOLD BLOCKER
+# 26. E4 FROZEN POLICY
 
-Final experiments require approved:
-
-- confidence/entropy thresholds;
-- proceed/confirm/defer rule;
-- maximum evidence/timeout rule.
-
-These remain unresolved.
+D-054 through D-057 fix the maximum five accepted-evidence horizon and the posterior-authoritative policy: `>=0.90` PROCEED, after update five `>=0.75 and <0.90` CONFIRM, and `<0.75` DEFER. CONFIRM requires explicit human approval and DEFER holds position.
 
 ---
 
@@ -499,7 +454,7 @@ S6 — Prohibited hazard
 S7 — Emergency stop
 ```
 
-Exact maps remain to be frozen later.
+Final reportable maps remain to be frozen before M7-T02; M7-T01 may use controlled deterministic development scenarios only.
 
 ---
 
@@ -568,9 +523,7 @@ Purpose:
 
 > Establish the simplest direct BCI baseline.
 
-System A does not use full sequential Bayesian shared autonomy.
-
-The final exact direct-control mapping must be defined in Experimental Configuration after the binary-goal protocol is approved.
+Under D-077, System A uses the first accepted identity/no-calibration evidence observation, commits its evidence argmax directly, uses no Bayes or uncertainty refusal, and otherwise retains the common planner, risk, safety, and human emergency-authority stack.
 
 ---
 
@@ -588,7 +541,7 @@ Purpose:
 
 > Isolate the effect of confidence-aware rejection/deferral.
 
-No full sequential Bayesian goal inference.
+Under D-077, System B uses one model-specifically calibrated observation and no sequential Bayes. It applies `>=0.90` PROCEED, `>=0.75 and <0.90` CONFIRM, and `<0.75` DEFER.
 
 ---
 
@@ -606,7 +559,7 @@ Purpose:
 
 > Evaluate sequential intent inference and shared autonomous execution.
 
-The exact presence of calibration/uncertainty/safety must be frozen so the comparison is scientifically interpretable.
+Under D-077, System C uses calibration, up to five observations, D-053/D-054 sequential Bayesian accumulation, and D-055 through D-057 uncertainty/shared-autonomy behavior. Adaptation is disabled. The common planner/risk/safety/human-authority stack remains enabled.
 
 ---
 
@@ -624,30 +577,26 @@ EEG
 + adaptation where implemented
 ```
 
-Purpose:
-
-> Evaluate the full approved architecture.
+System D is System C with D-058 through D-060 adaptation enabled. Adaptation uses only legitimate explicit human-approved feedback and never hidden evaluation truth.
 
 ---
 
-# 37. A/B/C/D COMPONENT MATRIX — TO BE FROZEN
+# 37. A/B/C/D COMPONENT MATRIX — FROZEN BY D-077
 
-Before running reportable E6 experiments, create a final matrix such as:
-
-| Component | A | B | C | D |
+| Component | A — Direct EEG | B — Confidence-Aware | C — Bayesian Shared Autonomy | D — Full System |
 |---|---:|---:|---:|---:|
-| EEG decoder | Yes | Yes | Yes | Yes |
-| Calibration | TBD | TBD | TBD | Yes |
-| Bayesian accumulation | No | No | Yes | Yes |
-| Uncertainty gating | No | Yes | TBD | Yes |
-| Shared autonomy | Minimal/direct | Confidence-aware | Yes | Yes |
-| A* navigation | TBD | TBD | Yes | Yes |
-| Safety | TBD | TBD | TBD | Yes |
-| Adaptation | No | No | No | If implemented |
+| Same frozen decoder evidence | Yes | Yes | Yes | Yes |
+| Calibration | Identity / OFF | ON | ON | ON |
+| Evidence horizon | 1 | 1 | Up to 5 | Up to 5 |
+| Sequential Bayesian accumulation | No | No | Yes | Yes |
+| Uncertainty gating | No | Yes | Yes | Yes |
+| Human CONFIRM / DEFER behavior | No | Yes | Yes | Yes |
+| A* navigation / same risk model | Yes | Yes | Yes | Yes |
+| Hard safety controller | Yes | Yes | Yes | Yes |
+| Human STOP / PAUSE / OVERRIDE authority | Yes | Yes | Yes | Yes |
+| Adaptation | No | No | No | Yes |
 
-The `TBD` entries are intentional.
-
-The final matrix must be approved before experimentation.
+Both `CSP+LDA` and `EEGNet` are evaluated under all four principal conditions where valid.
 
 ---
 
@@ -745,29 +694,16 @@ Do not change multiple unrelated factors simultaneously unless the experiment ex
 
 Determine how the system degrades as neural evidence becomes less reliable.
 
-Potential perturbation locations:
-
-- EEG signal;
-- decoder probability;
-- another explicitly defined evidence layer.
-
-The exact noise model remains unresolved.
+Primary M7 robustness is applied at the normalized two-candidate probability/evidence interface after the condition's identity/model-specific calibration stage and before its decision, confidence, or Bayesian policy. Signal-level physiological noise is not a core M7-T01 requirement.
 
 ---
 
-# 44. NOISE LEVELS — NOT LOCKED
-
-Earlier examples included:
+# 44. D-078 FROZEN ROBUSTNESS LEVELS
 
 ```text
-10%
-20%
-30%
+R1 evidence flattening epsilon = 0.00, 0.25, 0.50, 0.75, 1.00
+R2 contradictory-evidence contamination q = 0.00, 0.10, 0.20, 0.30, 0.40
 ```
-
-These are not authoritative.
-
-Final severity levels must be approved after the perturbation model is defined.
 
 ---
 
@@ -783,13 +719,7 @@ severity
 random seed
 ```
 
-Example categories may include:
-
-- controlled probability flattening;
-- label-independent probability noise;
-- signal-level perturbation.
-
-No method is approved here.
+R1 uses `p_epsilon = (1-epsilon)*p + epsilon*[0.5,0.5]`. R2 swaps `[pA,pB]` to `[pB,pA]` at deterministic recorded indices. Original/perturbed evidence, severity, seed/index rule, and selected indices must remain auditable; labels and evaluation-only true goals do not change.
 
 ---
 
@@ -918,7 +848,7 @@ test subject labels
 
 unless the experiment explicitly studies post-calibration personalization rather than zero-shot generalization.
 
-The exact calibration method and fitting partition remain governed by U-016 and U-017.
+Calibration method and fitting partition are governed by D-048 and D-049; protected subject labels never fit the calibrator.
 
 # 53. WITHIN-SUBJECT VS CROSS-SUBJECT
 
@@ -1321,44 +1251,21 @@ They strengthen scientific credibility.
 
 ---
 
-# 76. STATISTICAL REPORTING
+# 76. D-079 SUBJECT-LEVEL STATISTICAL REPORTING
 
-The project should report:
-
-- individual observations where relevant;
-- central tendency;
-- variability across subjects/seeds/folds.
-
-The exact statistical tests are not yet locked.
-
-Do not add significance tests automatically without checking assumptions and sample structure.
+For real-EEG and subject-generalization comparisons, the subject is the primary inferential unit. Report the paired raw subject-level effect, individual subject values where practical, subject count, 95% paired bootstrap CI using 10,000 resamples and a recorded seed, and a two-sided paired sign-flip/permutation raw p-value.
 
 ---
 
-# 77. SIGNIFICANCE TESTING — OPTIONAL
+# 77. PAIRED SIGN-FLIP POLICY
 
-Statistical significance tests may be useful for final comparisons.
-
-However, they are not automatically required.
-
-If used:
-
-- choose a test appropriate to paired/repeated structure;
-- state assumptions;
-- report effect size where appropriate;
-- avoid treating p-value alone as practical importance.
-
-The final decision belongs in the Metrics/Evaluation document.
+Use exact sign enumeration when feasible; for the complete 17-subject final-test vector, enumerate all `2^17 = 131072` assignments. If exact enumeration is infeasible, use a deterministic recorded permutation sample. Trials, evidence observations, actions, maps, and neural-network seeds are not independent human subjects.
 
 ---
 
 # 78. MULTIPLE COMPARISONS
 
-If many statistical tests are performed, multiple-comparison issues may arise.
-
-This should be addressed if significance testing becomes part of the final methodology.
-
-No correction method is currently locked.
+Apply Holm correction across formal tests within the same experiment family. Preserve raw p-values and Holm-adjusted values. Deterministic planning/safety scenario validation remains descriptive/exhaustive absent a separately approved stochastic design.
 
 ---
 
@@ -1439,57 +1346,15 @@ No claim should exist without supporting experimental evidence.
 
 ---
 
-# 82. OPEN EXPERIMENTAL DECISIONS — MUST REMAIN OPEN
+# 82. REMAINING EXECUTION-SPECIFIC ITEMS
 
-The following are still unresolved:
-
-1. final train/validation/test protocol;
-2. final cross-subject protocol;
-3. number of development/final subjects;
-4. calibration partition;
-5. number of random seeds/repeats;
-6. final calibration method;
-7. binary EEG-to-goal interaction protocol;
-8. exact Bayesian likelihood construction;
-9. commitment/stopping thresholds;
-10. confidence-state thresholds;
-11. adaptation mechanism;
-12. simulated-human policy;
-13. noise model;
-14. noise severity levels;
-15. final hazard/risk scale;
-16. \(\lambda\);
-17. final A/B/C/D component matrix;
-18. exact safety treatment in baseline systems;
-19. final test maps;
-20. final statistical-test policy.
-
-No implementation or experiment may silently finalize these.
+D-040 through D-079 resolve the scientific-policy items previously listed here. Before M7-T02, the separately authorized frozen execution must still identify the exact final scenario/map set, any simulated-human rule actually used, complete artifact identities, and any repeated neural-network seed set beyond already-approved model seed policy. These execution artifacts must not be selected using protected final-test outcomes.
 
 ---
 
 # 83. DECISIONS REQUIRED BEFORE FINAL REPORTABLE EXPERIMENTS
 
-Before final experimentation, explicitly approve and record:
-
-1. EEG preprocessing protocol;
-2. subject/split protocol;
-3. model-selection procedure;
-4. calibration method/partition;
-5. BCI goal-selection protocol;
-6. Bayesian likelihood model;
-7. confidence policy;
-8. adaptation mechanism or explicit omission;
-9. risk/safety policies;
-10. A/B/C/D matrix;
-11. noise model;
-12. seed/repeat policy;
-13. final metrics;
-14. experiment maps;
-15. simulated-human rule;
-16. statistical-analysis plan.
-
-These belong in `DECISIONS.md`.
+The scientific policies in items 1–11 and the subject-level statistical plan are already approved in D-031 through D-079. M7-T02 still requires separate authorization and a frozen execution manifest covering exact artifacts, scenarios/maps, inputs, operational seeds, and any simulated-human behavior actually used.
 
 ---
 
@@ -1518,7 +1383,7 @@ The experimental design is correctly implemented when:
 
 # 85. CURRENT EXPERIMENTAL DESIGN SUMMARY
 
-The project uses a layered experimental strategy. EEG experiments first compare CSP+LDA and EEGNet on the same Left-vs-Right PhysioNet motor-imagery task. Calibration experiments then compare raw and calibrated probability reliability. Bayesian experiments validate sequential belief updating first with analytically controlled synthetic likelihoods and later with real EEG-derived evidence after the EEG-to-goal mapping and likelihood semantics are explicitly approved. Shared-autonomy experiments compare direct decisions against confidence-aware and Bayesian control, while planning/safety experiments independently validate A*, risk-aware routing, action rejection, replanning, and emergency-stop behavior. The principal end-to-end evaluation uses the approved A/B/C/D systems, supported by component ablations, controlled noise/degradation tests, subject-wise and cross-subject evaluation, and adaptation ON/OFF comparisons if adaptation is implemented. All experiments must protect the final test data, preserve configuration and Git state, save machine-readable artifacts, and permit negative or mixed outcomes. The final subject split, calibration partition, goal mapping, likelihood model, thresholds, adaptation method, noise model, risk parameters, seed policy, and A/B/C/D component matrix remain unresolved until explicitly approved.
+The project uses a layered experimental strategy. EEG experiments compare CSP+LDA and EEGNet on the same Left-vs-Right PhysioNet motor-imagery task. Calibration uses D-048 through D-050. Bayesian/shared-autonomy experiments use D-051 through D-057, while planning/safety experiments independently validate the accepted A*, D-061 through D-065 risk/safety behavior, action rejection, replanning, and emergency-stop behavior. D-077 freezes A/B/C/D, D-078 freezes the two probability-interface robustness families, and D-079 freezes paired subject-level inference. M7-T01 builds and verifies this infrastructure only with synthetic/development inputs; protected final-test execution remains reserved for separately authorized M7-T02. All results must preserve provenance, explicit denominators, individual-subject structure, and negative or mixed outcomes.
 
 ---
 

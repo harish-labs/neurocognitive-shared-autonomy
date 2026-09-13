@@ -6,7 +6,7 @@
 **Document ID:** I-02  
 **Document class:** Experiments & Evaluation / Metrics Specification  
 **Authority level:** Subordinate to all Master Authority, Scenario, Architecture, Data, Neuroscience, ML, Bayesian, Shared-Autonomy, Planning, Safety, Implementation, Repository, and Experimental Design documents  
-**Status:** Authoritative metrics baseline; any still-unapproved metric formulation remains explicitly unresolved  
+**Status:** Authoritative metrics baseline reconciled through D-079 and M7-T01; no protected final results exist
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---
@@ -206,17 +206,13 @@ Possible aggregation conventions include:
 - weighted average;
 - per-class reporting.
 
-The exact final reporting convention is **not yet locked**.
-
-Recommended minimum:
+The M7-T01 reporting convention is:
 
 ```text
 per-class values
 +
 macro F1
 ```
-
-or another explicitly approved convention.
 
 Do not report “F1” without stating the averaging strategy.
 
@@ -322,14 +318,9 @@ acc(B_m)=conf(B_m)
 
 ---
 
-# 16. RELIABILITY BINNING — UNRESOLVED
+# 16. RELIABILITY BINNING — FROZEN BY D-050
 
-Still unresolved:
-
-- number of bins;
-- equal-width vs equal-frequency/adaptive bins.
-
-The final chosen binning rule must be fixed before reportable calibration comparisons.
+Primary reliability data and ECE use 10 equal-width bins over `[0,1]`. The final bin includes confidence `1.0`. Do not tune bin count or strategy using protected-test performance.
 
 ---
 
@@ -546,9 +537,7 @@ WrongGoalRate
 }
 \]
 
-An alternative denominator could use all evaluated episodes.
-
-The final denominator convention is **not yet locked** and must be frozen before reporting.
+M7-T01 preserves both the wrong-commitment count and the committed-episode denominator as machine-readable fields. Task success separately uses all evaluated episodes, so deferrals are not hidden inside the wrong-goal denominator.
 
 ---
 
@@ -677,13 +666,7 @@ ConfirmationRate
 }
 \]
 
-or:
-
-\[
-\frac{\text{confirmation events}}{\text{selection events}}
-\]
-
-The final denominator must be explicitly selected.
+M7-T01 uses evaluated episodes as the rate denominator and preserves the raw confirmation-event count separately.
 
 ---
 
@@ -707,13 +690,7 @@ Overrides should be separated from:
 
 A deferral occurs when the controller intentionally avoids commitment due to insufficient confidence/uncertainty.
 
-Possible reporting:
-
-- deferrals per episode;
-- episodes containing at least one deferral;
-- total defer states.
-
-The final preferred formulation is not yet locked.
+M7-T01 reports the total deferral-event count and the count/rate of evaluated episodes whose terminal autonomy mode is DEFER. The episode denominator is stored explicitly.
 
 ---
 
@@ -813,17 +790,7 @@ PathLength
 \text{number of movement steps from start to goal}
 \]
 
-The treatment of `WAIT` is unresolved.
-
-Recommended:
-
-```text
-navigation path length excludes WAIT
-```
-
-while WAIT contributes to completion time/interaction latency.
-
-This recommendation must still be approved before final reporting.
+M7-T01 reports path length from accepted planner/navigation movement actions. The accepted A* planner does not generate `WAIT`; any caller-supplied WAIT/event time must remain separate from path length.
 
 ---
 
@@ -843,7 +810,7 @@ If a different movement model is approved, update this definition.
 
 # 44. RISK COST
 
-Conceptually:
+Under D-062:
 
 \[
 RiskCost
@@ -851,29 +818,13 @@ RiskCost
 \sum_{cell\in path} r(cell)
 \]
 
-or:
-
-\[
-\lambda
-\sum_{cell\in path}r(cell)
-\]
-
-depending on whether the project wants to report:
-
-- raw risk exposure;
-- weighted planner risk contribution.
-
-Recommended:
-
-> report both separately if useful.
-
-The final risk formulation remains unresolved until the hazard policy is approved.
+Risk is the sum of destination-cell risk for every executed move; the start is not charged again. Report raw cumulative risk separately from the D-063 weighted risk contribution/path cost.
 
 ---
 
 # 45. TOTAL PATH COST
 
-Under the approved conceptual model:
+Under D-063:
 
 \[
 J
@@ -883,7 +834,7 @@ MovementCost
 \lambda \cdot RiskExposure
 \]
 
-The exact implementation depends on final risk semantics.
+with `lambda = 2.0` for the primary planner.
 
 ---
 
@@ -1008,13 +959,7 @@ unsafe attempts
 
 would answer a different question.
 
-The final denominator is **not yet locked**.
-
-Recommended reporting:
-
-- raw count;
-- denominator;
-- normalized rate.
+M7-T01 reports the raw executed-violation count, total executed-action denominator, and their rate as separate machine-readable fields. Unsafe attempts retain their own proposal-level count.
 
 ---
 
@@ -1079,7 +1024,7 @@ RiskExposure
 \sum_{visited\ cells} r(cell)
 \]
 
-The exact treatment of repeated visits or time spent in one cell remains to be frozen.
+Under D-062, repeated entries are charged once per entered-cell move; the start cell is excluded unless later re-entered by an executed move.
 
 ---
 
@@ -1141,9 +1086,7 @@ AND
 episode does not terminate in failure
 ```
 
-However, whether a soft-risk exposure affects success is unresolved.
-
-Recommended core binary definition:
+The M7-T01 core binary definition is:
 
 \[
 TaskSuccess
@@ -1153,9 +1096,7 @@ correct\ goal\ reached
 )
 \]
 
-with safety reported separately.
-
-This avoids hiding unsafe behavior inside one combined metric.
+with safety reported separately. This avoids hiding unsafe behavior inside one combined metric.
 
 ---
 
@@ -1189,12 +1130,7 @@ or:
 simulated replay/runtime time
 ```
 
-Recommended:
-
-- report environment steps for deterministic system comparison;
-- optionally report simulated/real wall-clock time separately.
-
-Exact final convention remains to be frozen.
+M7-T01 keeps discrete accepted-evidence decision latency separate from navigation/environment steps. Wall-clock runtime, if later reported, is a separate secondary metric with environment context.
 
 ---
 
@@ -1256,7 +1192,7 @@ Cross-subject results must preserve individual-subject performance. Final-test s
 
 Within-subject and cross-subject results must be reported separately.
 
-Recommended outputs:
+Required primary outputs under D-079:
 
 ```text
 subject metric
@@ -1266,7 +1202,7 @@ median optionally
 range / distribution plot
 ```
 
-The exact final summary statistics are not yet locked.
+The primary inferential comparison aggregates contributing trials/events to one metric per subject before paired analysis. Descriptive macro subject means may accompany the individual values.
 
 ---
 
@@ -1308,9 +1244,7 @@ pooled-trial metric
 
 answer different questions.
 
-Recommended:
-
-> preserve subject-wise metrics and report macro aggregation as the primary cross-subject summary unless later decided otherwise.
+Preserve subject-wise metrics and use one value per subject for D-079 primary paired inference. A pooled-trial metric may be secondary but cannot replace the subject-level analysis.
 
 ---
 
@@ -1408,7 +1342,7 @@ negative Δ wrong-goal rate
 
 would indicate improvement.
 
-The exact adaptation comparison protocol remains unresolved.
+D-077 supports the primary fixed-versus-adaptive contrast through System C versus System D and the equivalent `Full` versus `Full - adaptation` ablation while holding evidence and unrelated components constant. Any adaptation episode/evaluation sequencing must continue to obey D-058 through D-060 and the separation rule in the experimental design.
 
 ---
 
@@ -1603,17 +1537,9 @@ This is more scientifically credible.
 
 ---
 
-# 85. STATISTICAL REPORTING
+# 85. D-079 STATISTICAL REPORTING
 
-At minimum, report:
-
-- sample count;
-- evaluation unit;
-- mean/median as appropriate;
-- variability;
-- subject-wise/fold-wise/seed-wise results where relevant.
-
-Statistical significance testing remains optional until explicitly approved.
+For real-EEG and subject-generalization condition comparisons, report the subject count and keys, paired subject values and raw differences, mean paired raw effect, 95% paired bootstrap CI from 10,000 resamples with a fixed recorded seed, two-sided paired sign-flip/permutation raw p-value, and Holm-adjusted p-value when the experiment family contains multiple formal tests.
 
 ---
 
@@ -1631,36 +1557,21 @@ No effect-size method is currently locked.
 
 ---
 
-# 87. CONFIDENCE INTERVALS — OPTIONAL
+# 87. PAIRED BOOTSTRAP CONFIDENCE INTERVAL
 
-Confidence intervals may be useful for:
-
-- subject-level averages;
-- seed averages.
-
-Method remains unresolved.
-
-No bootstrap procedure is currently approved.
+Resample paired subjects together, with replacement, for exactly 10,000 resamples. Report the 2.5th and 97.5th percentiles of the paired raw-effect distribution and record the fixed seed. Never resample individual trials as though they were independent subjects.
 
 ---
 
 # 88. P-VALUE RULE
 
-If hypothesis tests are later used:
-
-- state test;
-- state assumptions;
-- report exact p-value;
-- do not use p-value as the only evidence;
-- consider effect magnitude.
+Use the D-079 two-sided paired sign-flip/permutation test on subject-level differences. Exact enumeration is preferred when feasible and specifically for the complete 17-subject final-test vector (`2^17` assignments). Otherwise record the deterministic permutation sample size and seed. Report the exact raw p-value alongside effect and CI.
 
 ---
 
 # 89. MULTIPLE COMPARISONS
 
-If many tests are run, a multiple-comparison correction may become necessary.
-
-No correction method is currently locked.
+Apply Holm correction across formal tests within the same experiment family. Preserve both raw and adjusted p-values.
 
 ---
 
@@ -1885,49 +1796,15 @@ Do not mix both formats within one column/table.
 
 ---
 
-# 103. OPEN METRIC DECISIONS — MUST REMAIN OPEN
+# 103. REMAINING OPTIONAL / EXECUTION-SPECIFIC METRIC ITEMS
 
-The following are still unresolved:
-
-1. final precision/recall/F1 averaging convention;
-2. reliability-diagram bin count;
-3. reliability binning strategy;
-4. normalized entropy on/off;
-5. wrong-goal-rate denominator;
-6. path-efficiency formula;
-7. WAIT treatment in path length;
-8. completion-time definition;
-9. risk-exposure formula details;
-10. safety-violation-rate denominator;
-11. human-intervention aggregate formula;
-12. primary cross-subject aggregation rule;
-13. number of seeds/folds for final aggregation;
-14. confidence intervals/statistical tests;
-15. adaptation comparison metrics;
-16. final report decimal precision.
-
-No implementation agent may silently choose these as scientific standards.
+M7-T01 now fixes per-class precision/recall/F1 plus macro F1, D-050 calibration bins, explicit wrong-goal/task-success/safety denominators, D-062 risk exposure, separated evidence/navigation latency, subject-level primary inference, paired bootstrap/sign-flip tests, and Holm correction. Path efficiency remains unavailable until a reference formula is separately approved. Normalized entropy, safety-intervention rate, adaptation presentation details, repeated-seed summaries, and final display precision remain optional or execution-specific and must not replace the required core metrics.
 
 ---
 
 # 104. DECISIONS REQUIRED BEFORE FINAL METRIC REPORTING
 
-Explicitly approve:
-
-1. EEG metric averaging convention;
-2. calibration binning;
-3. entropy reporting;
-4. wrong-goal denominator;
-5. task-success definition;
-6. path-efficiency formula;
-7. risk-exposure definition;
-8. completion-time definition;
-9. safety normalized rates;
-10. subject/fold/seed aggregation;
-11. statistical-analysis plan;
-12. adaptation metrics if adaptation exists.
-
-Record these in `DECISIONS.md`.
+The required M7-T01 metric and inferential rules are governed by D-050, D-062, D-077 through D-079, and the authorized task. M7-T02 must separately freeze exact execution artifacts and presentation choices; path efficiency must remain unavailable unless its reference formula is approved.
 
 ---
 
@@ -1969,7 +1846,7 @@ Final evaluation is valid when:
 
 # 107. CURRENT METRICS & EVALUATION SUMMARY
 
-The project evaluates performance at multiple distinct levels. EEG decoding is measured using accuracy, balanced accuracy, precision, recall, F1, and confusion matrices. Probability reliability is evaluated separately through reliability diagrams, Expected Calibration Error, and Brier Score. Bayesian intent inference is assessed through goal inference accuracy, posterior confidence, entropy, wrong-goal commitment, and evidence updates/decision latency. Shared autonomy is evaluated through confirmation, override, deferral, pause, stop, and intervention counts. Planning is evaluated through path success, path length, path cost, risk exposure, and replanning. Safety is evaluated through unsafe action attempts, executed safety violations, safety overrides, hazard entry, emergency-stop success, and no-safe-path events. Full-system evaluation combines task success, wrong-goal commitment, decision latency, human intervention, navigation efficiency, and safety outcomes while keeping each metric individually interpretable. Cross-subject, seed, fold, robustness, and adaptation results must preserve their underlying evaluation units rather than being collapsed into misleading single numbers. Several normalization/aggregation formulas—especially path efficiency, wrong-goal denominator, reliability binning, completion time, safety rates, and cross-subject aggregation—remain explicitly unresolved until final experiment decisions are approved.
+The project evaluates performance at distinct EEG, calibration, Bayesian/uncertainty, shared-autonomy, planning/safety, and full-system levels. M7-T01 implements per-class and macro EEG metrics, D-050 reliability/ECE and Brier metrics, posterior/confidence/entropy and decision counts, D-062 path risk/cost accounting, explicit wrong-goal/task-success/safety denominators, and separated evidence versus navigation steps. D-079 requires one paired metric per subject for primary inference, 10,000-resample paired bootstrap intervals, paired sign-flip/permutation p-values, and Holm correction within families. Robustness follows D-078 and all records preserve evaluation unit, seed/index provenance, and subject identity. Path efficiency remains intentionally unavailable pending a separate approved reference definition; protected final-test outcomes remain reserved for M7-T02.
 
 ---
 
