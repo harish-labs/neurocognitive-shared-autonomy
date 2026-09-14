@@ -4,7 +4,7 @@
 ### Reproducible Experiment Register
 
 **Purpose:** Record experiments that were actually executed  
-**Current status:** No valid experiments executed yet  
+**Current status:** R02 candidate results executed; scientific review pending.  
 **Rule:** Hypothetical, planned, or synthetic examples must not be logged as completed reportable experiments
 
 ---
@@ -13,13 +13,13 @@
 
 ```text
 Validated experiments:
-NONE
+NONE — no final scientific claim is approved pending review.
 
 Invalidated experiments:
-NONE
+M7-T02 v1 and v2 (preserved; invalid implementation contracts)
 
 Current active experiment:
-NONE
+M7-T02-R02 candidate v3
 ```
 
 ---
@@ -527,3 +527,11 @@ Execution stopped before artifact fitting, final-execution-manifest freeze, or E
 - execution manifest: `results/m7/manifest/m7-final-execution-v5-d084-r01.json` (`5980ff27c2459f22210c035b776d05a16ad00855a7b498916f90f43a8888252c`)
 - corrected result: `results/m7/final/m7-final-results-v2.json` (`917f48b96ae47e8d38a867c1a9adc41b08607a3fc07cd2c0c2c5528aa5ba26e2`)
 - sequential subjects: `89,16,34,29,31,93,21,76`; subjects `57,84` excluded from sequential analyses.
+
+## M7-T02-R02 mission-orchestration correction
+
+- v2 `results/m7/final/m7-final-results-v2.json` (`917f48b96ae47e8d38a867c1a9adc41b08607a3fc07cd2c0c2c5528aa5ba26e2`) is preserved as `INVALID_IMPLEMENTATION_CONTRACT` because E6 used S1-S7 instead of the per-episode frozen M6 mission map, and E7 safety was not mission-local.
+- R02 is an implementation-contract correction only: no refitting, split change, threshold change, metric change, or result-driven tuning occurred.
+- execution manifest: `results/m7/manifest/m7-final-execution-v5-d084-r02.json` (`cf99aac9a82c15b1cd2afb26490e976c324c90581007361e8e6bdd8fffa6ef6e`)
+- corrected v3 result: `results/m7/final/m7-final-results-v3.json` (`be16490455e8c19e37378083db0332f91cbeb4d8aa111755fed341a43798e962`)
+- E5 remains the frozen S1-S7 controlled planning/safety suite. E6 and the Full/Full-minus-safety E7 comparisons execute each episode's actual approved goal on the frozen two-goal M6 mission map.

@@ -1,7 +1,7 @@
 {
-  "schema_version": "m7-t02-result-index-v2",
-  "status": "R01_REVIEW_REQUIRED",
-  "generating_software_sha": "07ac984",
+  "schema_version": "m7-t02-result-index-v3",
+  "status": "R02_REVIEW_REQUIRED",
+  "generating_software_sha": "968ad09",
   "protected_outcomes_accessed": true,
   "manifests": {
     "qc_eligibility": {
@@ -21,9 +21,9 @@
       "sha256": "8de4367ab2d274c28dff38c331c1af22e0a52815be6914f208d3c0225da11286"
     },
     "final_execution": {
-      "path": "results/m7/manifest/m7-final-execution-v5-d084-r01.json",
-      "sha256": "5980ff27c2459f22210c035b776d05a16ad00855a7b498916f90f43a8888252c",
-      "software_sha": "07ac984"
+      "path": "results/m7/manifest/m7-final-execution-v5-d084-r02.json",
+      "sha256": "cf99aac9a82c15b1cd2afb26490e976c324c90581007361e8e6bdd8fffa6ef6e",
+      "software_sha": "968ad09"
     }
   },
   "cohort_flow": "results/m7/cohort_flow.json",
@@ -40,27 +40,33 @@
       "sha256": "c931f58b92b676bfbb8a184446ddb39da5011f279d84d419245503d8db139c5c",
       "status": "INVALID_IMPLEMENTATION_CONTRACT",
       "reasons": ["D-083 sequential participation leakage", "E7 adaptation and safety ablations were not faithful", "E7/E8 family assignment was incorrect"]
+    },
+    {
+      "path": "results/m7/final/m7-final-results-v2.json",
+      "sha256": "917f48b96ae47e8d38a867c1a9adc41b08607a3fc07cd2c0c2c5528aa5ba26e2",
+      "status": "INVALID_IMPLEMENTATION_CONTRACT",
+      "reasons": ["E6 used the S1-S7 controlled scenario suite instead of per-episode two-goal M6 mission execution", "E7 safety ablation was not within full-system mission orchestration"]
     }
   ],
   "result": {
-    "path": "results/m7/final/m7-final-results-v2.json",
-    "sha256": "917f48b96ae47e8d38a867c1a9adc41b08607a3fc07cd2c0c2c5528aa5ba26e2",
-    "status": "R01_CANDIDATE_REVIEW"
+    "path": "results/m7/final/m7-final-results-v3.json",
+    "sha256": "be16490455e8c19e37378083db0332f91cbeb4d8aa111755fed341a43798e962",
+    "status": "R02_CANDIDATE_REVIEW"
   },
   "sequential_subject_ids": [89, 16, 34, 29, 31, 93, 21, 76],
   "protected_final_subject_ids": [89, 16, 34, 29, 84, 57, 31, 93, 21, 76],
   "experiment_status": {
-    "E1": "NOT_EXECUTED_PREFINAL_BLOCK",
-    "E2": "NOT_EXECUTED_PREFINAL_BLOCK",
-    "E3": "NOT_EXECUTED_PREFINAL_BLOCK",
-    "E4": "NOT_EXECUTED_PREFINAL_BLOCK",
-    "E5": "NOT_EXECUTED_AS_REPORTABLE_EXPERIMENT",
-    "E6": "NOT_EXECUTED_PREFINAL_BLOCK",
-    "E7_ablation": "EXECUTED_R01",
-    "E7_robustness": "EXECUTED_R01",
-    "E8": "EXECUTED_R01_HELD_OUT_CROSS_SUBJECT",
-    "E9": "NOT_EXECUTED_PREFINAL_BLOCK",
-    "statistics": "EXECUTED_R01_SUBJECT_LEVEL",
+    "E1": "EXECUTED_R02",
+    "E2": "EXECUTED_R02",
+    "E3": "EXECUTED_R02",
+    "E4": "EXECUTED_R02",
+    "E5": "EXECUTED_R02_S1_S7",
+    "E6": "EXECUTED_R02_PER_EPISODE_M6_MISSION",
+    "E7_ablation": "EXECUTED_R02_MISSION_ABLATION",
+    "E7_robustness": "EXECUTED_R02",
+    "E8": "EXECUTED_R02_HELD_OUT_CROSS_SUBJECT",
+    "E9": "EXECUTED_R02",
+    "statistics": "EXECUTED_R02_SUBJECT_LEVEL",
     "failures": "PREFINAL_BLOCKER_ONLY",
     "figures": "NOT_GENERATED_NO_RESULTS",
     "tables": "COHORT_FLOW_ONLY"

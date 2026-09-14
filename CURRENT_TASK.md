@@ -2,7 +2,7 @@
 
 ## Current Codex Implementation Authority
 
-**Current status:** ACTIVE / AUTHORIZED — R01 CANDIDATE REVIEW
+**Current status:** ACTIVE / AUTHORIZED — R02 CANDIDATE REVIEW
 **Current milestone:** M7 — Experiments / Ablations / Robustness  
 **Task ID:** M7-T02  
 **Task title:** Frozen Final Experiment Execution & Scientific Audit  

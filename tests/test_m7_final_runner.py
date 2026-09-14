@@ -72,3 +72,12 @@ def test_e6_system_navigation_is_episode_mission_execution_not_scenario_aggregat
     assert navigation["mission_execution_count"] == 1
     assert navigation["environment_steps"] == 4
     assert navigation["episodes"][0]["mission_map"]["rows"] == 3
+
+
+def test_safety_off_mission_ablation_preserves_emergency_stop_authority():
+    full = _execute_full_system_mission("victim_a", safety_enabled=True, emergency_stop=True)
+    without_safety = _execute_full_system_mission("victim_a", safety_enabled=False, emergency_stop=True)
+    assert full["final_status"] == "HALTED"
+    assert without_safety["final_status"] == "HALTED"
+    assert full["safety_decision_count"] == 1
+    assert without_safety["safety_decision_count"] == 0

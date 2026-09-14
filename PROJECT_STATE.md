@@ -47,7 +47,7 @@ Current task:
 
 Task status:
 
-**ACTIVE / AUTHORIZED — R01 CANDIDATE REVIEW**
+**ACTIVE / AUTHORIZED — R02 CANDIDATE REVIEW**
 
 Authorized task branch:
 
@@ -85,7 +85,7 @@ D-082 now resolves the post-QC cohort-size blocker without changing D-035. M7-T0
 
 D-083 resolves the remaining eligibility ambiguity: cross-subject eligibility requires at least one retained T1 and one retained T2 trial after QC. D-040 within-subject feasibility and D-081 balanced-sequential participation remain separate. Episode availability is assessed only after split freeze and cannot remove, replace, reshuffle, or move a frozen subject.
 
-D-084 resolves the former E7 ablation-semantics blocker. `Full - Bayes` now uses a cumulative arithmetic mean over the calibrated D-081 evidence and the approved threshold policy; `Full - uncertainty` consumes all five Bayesian updates and commits only the final posterior argmax without uncertainty gates. M7-T02-R01 corrected the execution contract, preserved v1 as `INVALID_IMPLEMENTATION_CONTRACT`, and generated a v2 candidate for review.
+D-084 resolves the former E7 ablation-semantics blocker. `Full - Bayes` now uses a cumulative arithmetic mean over the calibrated D-081 evidence and the approved threshold policy; `Full - uncertainty` consumes all five Bayesian updates and commits only the final posterior argmax without uncertainty gates. M7-T02-R02 corrected E6/E7 per-episode mission orchestration, preserves v1/v2 as invalid, and generated v3 for review.
 
 Pre-final audit state at the block:
 
