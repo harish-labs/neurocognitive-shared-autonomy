@@ -153,6 +153,8 @@ def _evaluate(row, system, *, adaptation=None, evidence_override=None, safety_en
         episode = BinaryBayesianGoalEpisode(candidate_a=CANDIDATES[0], candidate_b=CANDIDATES[1], initial_prior=prior)
         mode = "DEFER"; goal = None; count = 0
         for p in evidence:
+            p = np.asarray(p, dtype=float)
+            p = p / float(p.sum())
             update = episode.accept_evidence(binary_goal_evidence_from_calibrated_probabilities(p)); count = episode.update_count
             decision = decide_shared_autonomy(update, estimate_binary_uncertainty(update.posterior))
             if decision.mode.value != "WAITING": mode, goal = decision.mode.value, decision.approved_goal or decision.candidate_goal; break
