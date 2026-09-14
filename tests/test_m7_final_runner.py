@@ -1,6 +1,9 @@
 import types
 
-from src.evaluation.final_runner import _ablations, _evaluate, _execute_full_system_mission, _robustness, _sequential_rows, _statistics, _systems
+import numpy as np
+import pytest
+
+from src.evaluation.final_runner import _ablations, _evaluate, _execute_full_system_mission, _normalized_binary_probability, _robustness, _sequential_rows, _statistics, _systems
 
 
 def _rows(n=20):
@@ -98,3 +101,20 @@ def test_robustness_has_all_conditions_per_family():
     result = _robustness(_rows(5), manifest)
     assert set(result["R1_evidence_flattening"]["csp_lda"]) == {"A", "B", "C", "D"}
     assert set(result["R2_contradictory_evidence"]["csp_lda"]) == {"A", "B", "C", "D"}
+
+
+def test_entropy_boundary_normalizes_near_normalized_binary_probability():
+    value = _normalized_binary_probability([0.8000001, 0.2000001])
+    assert np.isclose(value.sum(), 1.0)
+    assert value[0] > value[1]
+
+
+def test_entropy_boundary_preserves_normalized_binary_probability():
+    value = _normalized_binary_probability([0.8, 0.2])
+    assert np.allclose(value, [0.8, 0.2], rtol=0.0, atol=1e-15)
+
+
+@pytest.mark.parametrize("value", ([np.nan, 1.0], [0.0, 0.0], [-0.1, 1.1]))
+def test_entropy_boundary_rejects_invalid_binary_probability(value):
+    with pytest.raises(ValueError):
+        _normalized_binary_probability(value)

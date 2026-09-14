@@ -287,7 +287,7 @@ def _evaluate(row, system, *, adaptation=None, evidence_override=None, safety_en
             if decision.mode.value != "WAITING": mode, goal = decision.mode.value, decision.approved_goal or decision.candidate_goal; break
         proposed_goal = decision.candidate_goal if 'decision' in locals() else None
         final_vector = np.asarray(update.posterior, dtype=float)
-    posterior = final_vector
+    posterior = _normalized_binary_probability(final_vector)
     entropy = float(estimate_binary_uncertainty(posterior).entropy_bits)
     if system in {"B", "C", "D", "raw_D", "minus_bayes"} and mode in {"CONFIRM", "DEFER"}:
             deferrals = int(mode == "DEFER")
@@ -297,6 +297,17 @@ def _evaluate(row, system, *, adaptation=None, evidence_override=None, safety_en
             if adaptation is not None and human.explicit_feedback is not None:
                 feedback_record = adaptation.record_explicit_feedback(feedback_for_subject(human, str(row["subject_id"])))
     return {"subject_id": row["subject_id"], "episode_id": row["episode_id"], "mode": mode, "goal": goal, "proposed_goal": proposed_goal, "correct": goal == row["intended_goal"], "intended_goal": row["intended_goal"], "evidence_count": count, "initial_prior": list(initial_prior), "final_vector": [float(x) for x in posterior], "posterior_confidence": float(max(posterior)), "entropy_bits": entropy, "human_action": human_action, "confirmations": confirmations, "overrides": overrides, "deferrals": deferrals, "adaptation_update": None if feedback_record is None else asdict(feedback_record)}
+
+
+def _normalized_binary_probability(value):
+    """Evaluation-boundary normalization for descriptive entropy; preserves binary class ordering."""
+    vector = np.asarray(value, dtype=float)
+    if vector.shape != (2,) or not np.isfinite(vector).all() or (vector < 0.0).any():
+        raise ValueError("Binary probability vector must be finite, non-negative, and length two.")
+    mass = float(vector.sum())
+    if not np.isfinite(mass) or mass <= 0.0:
+        raise ValueError("Binary probability vector must have positive finite mass.")
+    return vector / mass
 
 
 def _robustness(rows, manifest):
