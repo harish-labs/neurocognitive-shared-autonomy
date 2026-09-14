@@ -507,3 +507,12 @@ Manifest file hashes:
 - participation: `8de4367ab2d274c28dff38c331c1af22e0a52815be6914f208d3c0225da11286`
 
 Execution stopped before artifact fitting, final-execution-manifest freeze, or E1–E9 because the approved authorities do not define executable replacement decision semantics for `Full - Bayes` and `Full - uncertainty`. No result, probability, logit, prediction, calibration outcome, or downstream intent outcome from the protected final cohort was computed. This is a pre-final audit checkpoint, not a reportable efficacy experiment.
+# M7-T02 protected execution (first outcome access)
+
+- execution manifest: `results/m7/manifest/m7-final-execution-v5-d084-runner2.json`
+- manifest SHA-256: `a5a552fc09055f812ab6bee10ba8622c419d19bf291c5707991fa368ef1429fa`
+- runner/software SHA: `f1724f3`
+- result artifact: `results/m7/final/m7-final-results-v1.json`
+- result SHA-256: `c931f58b92b676bfbb8a184446ddb39da5011f279d84d419245503d8db139c5c`
+- protected final subjects: `89,16,34,29,84,57,31,93,21,76`
+- validity: E1-E9 executed from frozen D-084 contract; no subsequent scientific tuning
