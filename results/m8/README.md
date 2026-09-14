@@ -17,7 +17,7 @@ Empirical figures read only the accepted M7 result package through `src/app/resu
 Explanatory figures are explicitly labeled non-empirical:
 
 - `system_architecture.png` — architecture diagram.
-- `sar_route_safety_demo.png` — fixed fixture executed through the accepted Bayes, uncertainty, shared-autonomy, and A* interfaces; no protected EEG is accessed.
+- `sar_route_safety_demo.png` — fixed-probability fixture executed through the accepted Bayes, uncertainty, shared-autonomy, human-authorization, A*, safety, and environment interfaces; no decoder/calibrator or protected EEG is invoked.
 
 Accepted input identities:
 

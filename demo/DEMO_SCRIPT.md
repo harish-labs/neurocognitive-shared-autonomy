@@ -46,6 +46,6 @@ Show **Reproducibility / Provenance**. Point to the result hash, manifest hash, 
 
 ## 7:20–8:00 — Deterministic mission demo
 
-Show **Interactive Demo**. “Fixed calibrated evidence is accumulated by the production Bayesian interface; entropy falls; the policy proceeds to victim A; production A* generates the displayed route. This fixture explains the interfaces and is not an empirical result.”
+Show **Interactive Demo**. “This begins with fixed presentation probabilities, not decoder or protected EEG output. At the documented goal-evidence boundary, the production Bayesian interface accumulates evidence, entropy falls, and the policy proceeds to victim A. The production human-authorization boundary adopts that exact symbolic goal; A* plans; safety approves each proposed action before the environment moves; and the trace terminates at victim A. This explains the accepted runtime interfaces and is not an empirical result.”
 
 Close: “The contribution is not a claim that the full system always wins. It is an auditable platform showing when uncertain neural evidence, human intervention, and safety-aware autonomy help—and what they cost.”

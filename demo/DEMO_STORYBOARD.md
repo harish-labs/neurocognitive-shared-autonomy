@@ -15,7 +15,7 @@
 | 11 | Statistics | paired effects and adjusted p | neither significant after Holm |
 | 12 | Failure Cases & Limitations | failure registry | counts not aggregated in v5 |
 | 13 | Reproducibility / Provenance | hashes and SHAs | v5 accepted; v1–v4 audit only |
-| 14 | Interactive Demo | evidence → posterior → route | deterministic explanatory fixture |
+| 14 | Interactive Demo | fixed probabilities → posterior/entropy → authorization → plan → safety checks → executed positions → terminal goal | deterministic explanatory fixture; no decoder/calibrator or protected EEG output |
 
 ## Recording checklist
 

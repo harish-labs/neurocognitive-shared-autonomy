@@ -40,7 +40,6 @@ def render_dashboard(st: Any, data: PresentationData, section: str) -> None:
     """Render one selected section; all empirical values come from ``data``."""
     metrics = headline_metrics(data)
     figures = data.repository_root / "results/m8/figures"
-    m7_figures = data.repository_root / "results/m7/figures"
     st.title("NeuroCognitive Shared Autonomy for Search & Rescue")
     st.caption("Software-only research prototype · Public prerecorded EEG · Offline EEG Replay / Simulated Real-Time BCI")
 
@@ -73,7 +72,7 @@ def render_dashboard(st: Any, data: PresentationData, section: str) -> None:
     elif section == "Calibration":
         st.subheader("Identity vs model-specific calibration (E2)")
         st.dataframe(_rows(data, "e2_calibration.csv"), use_container_width=True, hide_index=True)
-        _image_if_present(st, m7_figures / "e2_calibration_reliability.png", "Accepted M7 reliability diagram")
+        _image_if_present(st, data.reused_figures["e2_calibration_reliability.png"], "Accepted M7 reliability diagram (hash verified)")
         st.warning("Mixed result: CSP+LDA ECE improved while Brier worsened; EEGNet improved on both stored metrics.")
     elif section == "Bayesian Intent & Uncertainty":
         st.markdown(
@@ -102,8 +101,8 @@ def render_dashboard(st: Any, data: PresentationData, section: str) -> None:
         st.subheader("Six frozen ablations")
         st.dataframe(_rows(data, "e7_ablations.csv"), use_container_width=True, hide_index=True)
         st.subheader("R1 evidence flattening and R2 contradictory evidence")
-        _image_if_present(st, m7_figures / "e7_r1_robustness.png", "Accepted R1 robustness")
-        _image_if_present(st, m7_figures / "e7_r2_robustness.png", "Accepted R2 robustness")
+        _image_if_present(st, data.reused_figures["e7_r1_robustness.png"], "Accepted R1 robustness (hash verified)")
+        _image_if_present(st, data.reused_figures["e7_r2_robustness.png"], "Accepted R2 robustness (hash verified)")
         st.warning("Degradation is non-monotonic in several conditions because the simulated-human correction policy can turn uncertainty into successful intervention.")
     elif section == "Cross-Subject Evaluation":
         st.subheader("Subject heterogeneity (E8, all n=10 protected subjects)")
@@ -113,7 +112,7 @@ def render_dashboard(st: Any, data: PresentationData, section: str) -> None:
     elif section == "Adaptation":
         st.subheader("Bounded prior personalization (E9)")
         st.markdown("Adaptation uses explicit simulated feedback only, after a three-event warm-up, with priors bounded to [0.25, 0.75].")
-        _image_if_present(st, m7_figures / "e9_adaptation_trajectory.png", "Accepted adaptation trajectory")
+        _image_if_present(st, data.reused_figures["e9_adaptation_trajectory.png"], "Accepted adaptation trajectory (hash verified)")
         st.dataframe(_rows(data, "e9_adaptation_trajectory.csv"), use_container_width=True, hide_index=True)
         st.warning("C and personalized D had identical success counts: 32/38 for CSP+LDA and 36/38 for EEGNet. No efficacy improvement is claimed.")
     elif section == "Statistics":
@@ -139,6 +138,8 @@ def render_dashboard(st: Any, data: PresentationData, section: str) -> None:
             f"result sha256: {data.result_sha256}\n"
             f"manifest: {data.manifest_path.relative_to(data.repository_root)}\n"
             f"manifest sha256: {data.manifest_sha256}\n"
+            f"report artifacts: {data.report_manifest_path.relative_to(data.repository_root)}\n"
+            f"report-artifact manifest sha256: {data.report_manifest_sha256}\n"
             f"software sha: {data.manifest['software_sha']}"
         )
         st.json(
@@ -151,12 +152,31 @@ def render_dashboard(st: Any, data: PresentationData, section: str) -> None:
         )
         st.caption("v1–v3 remain invalid implementation-contract artifacts; v4 remains invalid provenance binding. They are preserved for audit, not reporting.")
     elif section == "Interactive Demo":
-        st.warning("Deterministic explanatory demonstration — not a new experiment and not protected EEG output.")
+        st.warning("Deterministic explanatory demo — not an empirical experiment and not protected EEG output.")
         trace = build_demo_trace()
+        st.subheader("1. Fixture provenance and runtime entry boundary")
+        st.json(_thaw(trace["fixture_metadata"]), expanded=True)
+        st.subheader("2. Posterior, entropy, and autonomy trajectory")
         st.dataframe(list(trace["updates"]), use_container_width=True, hide_index=True)
+        st.subheader("3. Final autonomy decision and human-authority boundary")
         st.json(_thaw(trace["decision"]), expanded=True)
+        st.json(_thaw(trace["human_authority"]), expanded=True)
+        st.subheader("4. Approved goal and A* plan")
+        st.write(f"Approved symbolic goal: `{trace['approved_goal']}`")
         st.json(_thaw(trace["plan"]), expanded=True)
-        st.markdown("The fixed evidence commits `victim_a`; accepted production Bayes/entropy/policy/A* interfaces generate the displayed trace.")
+        st.subheader("5. Per-action safety checks")
+        st.dataframe(list(trace["safety_decisions"]), use_container_width=True, hide_index=True)
+        st.subheader("6. Executed trajectory and terminal simulated outcome")
+        st.json(_thaw(trace["execution"]), expanded=True)
+        st.success(
+            f"Mission status: {trace['execution']['status']} · "
+            f"goal reached: {trace['execution']['goal_reached']} · "
+            f"terminal position: {trace['execution']['terminal_position']}"
+        )
+        st.caption(
+            "The fixture does not run a decoder or calibrator. From the documented probability boundary onward, "
+            "accepted production authorization, planning, safety, and environment interfaces generate the trace."
+        )
     else:
         raise ValueError(f"Unknown dashboard section: {section}")
 
@@ -187,7 +207,10 @@ def smoke() -> int:
     data = load_presentation_data()
     assert len(SECTIONS) == 14
     assert headline_metrics(data)["eeg_trials"] == 303
-    assert build_demo_trace()["plan"]["status"] == "SUCCESS"
+    trace = build_demo_trace()
+    assert trace["plan"]["status"] == "SUCCESS"
+    assert trace["execution"]["status"] == "SUCCESS"
+    assert trace["execution"]["goal_reached"] is True
     print("M8 dashboard smoke PASS: accepted data, 14 sections, deterministic demo")
     return 0
 

@@ -63,7 +63,7 @@ python -m streamlit run src/app/dashboard.py
 
 The dashboard has 14 inspection sections covering architecture, accepted EEG/calibration/system results, Bayesian uncertainty, planning/safety, robustness, subject heterogeneity, adaptation, statistics, limitations, provenance, and a deterministic end-to-end demo.
 
-The demo fixture uses fixed explanatory probabilities and the accepted production Bayes, entropy, shared-autonomy, and A* interfaces. It is explicitly non-empirical and does not read protected EEG or create a new experiment.
+The demo begins at an explicitly labeled fixed calibrated-probability representation; it does not invoke a decoder or calibrator and does not claim that protected EEG produced those values. From that boundary onward it uses the accepted production goal-evidence/Bayes, entropy, shared-autonomy, human-authorization, A*, per-action safety, and environment-execution interfaces. The resulting terminal mission trace is deterministic, non-empirical, and not a new experiment.
 
 Headless smoke:
 
@@ -94,7 +94,7 @@ python -m src.app.dashboard --smoke
 python -m src.app.generate_figures
 ```
 
-The M8 result loader checks the accepted result and manifest SHA-256 identities, schema, software provenance, E1–E9 presence, sample sizes, and required tables. It cannot select v1–v4 or invoke experiment execution.
+The M8 result loader checks the accepted result, execution manifest, and final-report artifact-manifest SHA-256 identities; validates source-result binding, schema, software provenance, E1–E9 presence, and sample sizes; and verifies all 11 consumed tables plus all 4 reused M7 figures against the frozen report manifest before presentation. It cannot select v1–v4 or invoke experiment execution.
 
 ## Repository layout
 
@@ -119,6 +119,8 @@ demo/             runnable walkthrough and recording plan
 - result SHA-256: `b5c7cc2efdbbbab53c65d54aa77542a2e69a71c42d5bdc670e2fd8c34af2dd9b`
 - accepted manifest: `results/m7/manifest/m7-final-execution-v6-d084-r03-final.json`
 - manifest SHA-256: `f837258312adf17ec1a04079c71c5461838a4aff5096541acd993bb94da24306`
+- accepted report-artifact manifest: `results/m7/manifest/m7-final-report-artifacts-v5.json`
+- report-artifact manifest SHA-256: `bfe753c689ad3a2cd00c3ae0c2c891ab0113e614e2b2d7165c1b92fad1a496b2`
 - generating software SHA: `a1a696204a8b06263efa8bb57abc610af3f7361e`
 - accepted candidate/merge SHA: `61af5226e7214f5b858e6e1faec4b042d340bdd8`
 - exact-ref CI: run `34840393388`, 511 passed, 16 warnings

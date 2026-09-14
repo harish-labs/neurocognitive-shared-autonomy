@@ -1,6 +1,6 @@
 # Final Demonstration
 
-The dashboard combines accepted M7 result inspection with a deterministic explanatory end-to-end fixture. The fixture calls the accepted production Bayes, entropy, shared-autonomy, and A* interfaces, but uses fixed probabilities; it is not a new experiment and does not access protected EEG.
+The dashboard combines hash-verified accepted M7 result inspection with a deterministic explanatory end-to-end fixture. The fixture begins at a fixed calibrated Left/Right probability representation; it does not run a decoder or calibrator, and the values are not protected EEG output. From the goal-evidence boundary onward it calls the accepted production Bayes, entropy, shared-autonomy, human-authorization, A*, safety, and environment-execution interfaces. It records every safety decision, visited position, and the terminal simulated mission outcome. It is not a new experiment and creates no reportable metric.
 
 ## Run
 

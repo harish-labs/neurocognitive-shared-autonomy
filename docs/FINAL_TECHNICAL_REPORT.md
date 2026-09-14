@@ -108,7 +108,7 @@ Internal-validity protections include frozen splits, validation-only fitting/cal
 - sequential participants: 8; episodes: 38
 - operational/bootstrap/R2 seed: 42
 
-The M8 loader verifies these identities and reads tables without importing experiment execution or model fitting.
+The M8 loader verifies the accepted result, execution manifest, and final-report artifact-manifest identities. It validates the artifact manifest's v5 source-result binding, then hash-checks every consumed table and reused M7 figure before presentation, without importing experiment execution or model fitting. The dashboard's separate deterministic demo begins at a fixed calibrated-probability representation—not decoder or protected EEG output—and then exercises the accepted authorization, planning, per-action safety, and environment-execution interfaces through a terminal simulated goal.
 
 ## 19. Conclusion and future work
 
