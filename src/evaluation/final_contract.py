@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from src.evaluation.conditions import ABLATIONS, PRINCIPAL_CONDITIONS
+from src.evaluation.ablation_semantics import D084_ABLATION_SEMANTICS
 from src.evaluation.cohort import (
     D082_SPLIT_MANIFEST_VERSION,
     D082_SPLIT_SEED,
@@ -36,7 +37,7 @@ from src.evaluation.episodes import (
 from src.evaluation.robustness import R1_SEVERITIES, R2_SEVERITIES
 
 
-M7_EXECUTION_MANIFEST_VERSION = "m7-t02-final-execution-v4-d083"
+M7_EXECUTION_MANIFEST_VERSION = "m7-t02-final-execution-v5-d084"
 M7_RESULT_SCHEMA_VERSION = "m7-final-results-v1"
 M7_SCENARIO_VERSION = "m7-t02-s1-s7-v1"
 SIMULATED_HUMAN_POLICY_ID = "m7-t02-deterministic-simulated-human-v1"
@@ -225,6 +226,7 @@ class M7FinalExecutionManifest:
     artifacts: tuple[ArtifactRecord, ...]
     principal_conditions: Mapping[str, Any]
     ablations: Mapping[str, Any]
+    ablation_semantics: Mapping[str, Any]
     r1_severities: tuple[float, ...]
     r2_severities: tuple[float, ...]
     r2_seed: int
@@ -297,8 +299,8 @@ class M7FinalExecutionManifest:
             raise FinalContractError("Unexpected simulated-human policy identifier.")
         if self.experiment_families != EXPECTED_EXPERIMENT_FAMILIES:
             raise FinalContractError("Final manifest must list E1 through E9 exactly.")
-        if self.statistical_policy_ids != ("D-079", "D-080", "D-081", "D-082", "D-083"):
-            raise FinalContractError("Final manifest must preserve D-079 through D-083 execution policy IDs.")
+        if self.statistical_policy_ids != ("D-079", "D-080", "D-081", "D-082", "D-083", "D-084"):
+            raise FinalContractError("Final manifest must preserve D-079 through D-084 execution policy IDs.")
         if self.protected_access_status != "NOT_ACCESSED_AT_FREEZE":
             raise FinalContractError("The manifest must be frozen before protected outcomes are accessed.")
         if self.protected_data_prefetch_audit.get("classification") != "protected_data_prefetch_not_outcome_access":
@@ -309,6 +311,8 @@ class M7FinalExecutionManifest:
             raise FinalContractError("The final manifest must contain the exact A/B/C/D registry.")
         if set(self.ablations) != set(ABLATIONS):
             raise FinalContractError("The final manifest must contain the exact approved ablation registry.")
+        if _plain(self.ablation_semantics) != _plain(D084_ABLATION_SEMANTICS):
+            raise FinalContractError("Final manifest must preserve D-084 ablation execution semantics exactly.")
         artifact_keys = {(item.decoder_family, item.artifact_type) for item in self.artifacts}
         expected_artifacts = {
             ("csp_lda", "decoder"),
@@ -466,6 +470,7 @@ def build_final_manifest(
         artifacts=tuple(artifacts),
         principal_conditions={key.value: asdict(value) for key, value in PRINCIPAL_CONDITIONS.items()},
         ablations={key: asdict(value) for key, value in ABLATIONS.items()},
+        ablation_semantics={key: dict(value) for key, value in D084_ABLATION_SEMANTICS.items()},
         r1_severities=R1_SEVERITIES,
         r2_severities=R2_SEVERITIES,
         r2_seed=OPERATIONAL_SEED,
@@ -482,7 +487,7 @@ def build_final_manifest(
             "PAUSE_STOP": "dedicated_controlled_scenarios_only",
             "interpretation": "simulated human / offline software evaluation",
         },
-        statistical_policy_ids=("D-079", "D-080", "D-081", "D-082", "D-083"),
+        statistical_policy_ids=("D-079", "D-080", "D-081", "D-082", "D-083", "D-084"),
         experiment_families=EXPECTED_EXPERIMENT_FAMILIES,
         protected_access_status="NOT_ACCESSED_AT_FREEZE",
         protected_data_prefetch_audit={
@@ -662,6 +667,7 @@ def manifest_from_mapping(payload: Mapping[str, Any]) -> M7FinalExecutionManifes
         ),
         principal_conditions=dict(payload["principal_conditions"]),
         ablations=dict(payload["ablations"]),
+        ablation_semantics=dict(payload["ablation_semantics"]),
         r1_severities=tuple(float(value) for value in payload["r1_severities"]),
         r2_severities=tuple(float(value) for value in payload["r2_severities"]),
         r2_seed=int(payload["r2_seed"]),

@@ -23,6 +23,7 @@ from src.evaluation.final_contract import (
     write_cross_subject_manifest,
 )
 from src.evaluation.cohort import write_immutable_manifest
+from src.evaluation.ablation_semantics import D084_ABLATION_SEMANTICS
 from src.evaluation.episodes import (
     build_sequential_participation_manifest,
     construct_episode_manifest,
@@ -211,5 +212,12 @@ def test_manifest_contains_exact_execution_families_map_and_seed(tmp_path):
     assert tuple(item.scenario_id for item in SCENARIOS) == ("S1", "S2", "S3", "S4", "S5", "S6", "S7")
     assert payload["protected_access_status"] == "NOT_ACCESSED_AT_FREEZE"
     assert payload["episode_manifest_version"] == "m7-d081-fixed-intent-episodes-v1"
-    assert payload["statistical_policy_ids"] == ["D-079", "D-080", "D-081", "D-082", "D-083"]
+    assert payload["statistical_policy_ids"] == ["D-079", "D-080", "D-081", "D-082", "D-083", "D-084"]
+    assert set(payload["ablation_semantics"]) == set(D084_ABLATION_SEMANTICS)
+    assert payload["ablation_semantics"]["full_minus_bayes"]["aggregation"] == (
+        "cumulative_arithmetic_mean_of_calibrated_binary_evidence"
+    )
+    assert payload["ablation_semantics"]["full_minus_uncertainty"]["final_commitment"] == (
+        "posterior_argmax_after_observation_5"
+    )
     assert payload["protected_data_prefetch_audit"]["protected_outcomes_observed"] is False
