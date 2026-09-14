@@ -14,11 +14,14 @@ from src.cognitive.bayes import BinaryBayesianGoalEpisode, EpisodeStatus, INITIA
 from src.cognitive.uncertainty import estimate_binary_uncertainty
 from src.control.human_interaction import HumanInteractionController
 from src.control.shared_autonomy import AutonomyMode, decide_shared_autonomy
+from src.autonomy.environment import EnvironmentConfig, SearchRescueEnvironment
+from src.autonomy.execution import ExecutionStatus, PlannerSafetyEnvironmentExecutor
+from src.autonomy.planner import PlannerStatus, RiskAwareAStarPlanner
 from src.evaluation.ablation_semantics import evaluate_full_minus_bayes, evaluate_full_minus_uncertainty
 from src.evaluation.eeg_metrics import calibration_metrics, classification_metrics
 from src.evaluation.episodes import load_episode_manifest
 from src.evaluation.final_artifacts import load_frozen_cross_subject_artifacts
-from src.evaluation.final_contract import FinalAccessAuthorization, authorize_final_access, manifest_from_mapping
+from src.evaluation.final_contract import FULL_SYSTEM_MISSION_MAP, FinalAccessAuthorization, authorize_final_access, manifest_from_mapping
 from src.evaluation.final_data import load_subject_epochs
 from src.evaluation.planning_scenarios import run_frozen_scenarios, scenario_result_mapping
 from src.evaluation.robustness import contaminate_contradictory_evidence, flatten_evidence
@@ -131,9 +134,9 @@ def _systems(rows, *, systems, include_navigation=False):
         for system in systems:
             adaptation = PriorPersonalizer(adaptation_enabled=(system == "D"))
             evaluated = [_evaluate(x, system, adaptation=adaptation if system == "D" else None) for x in family_rows]
-            summary = _summarize(evaluated)
             if include_navigation:
-                summary["navigation"] = _navigation_metrics(evaluated, safety_enabled=True)
+                evaluated = [_with_mission(item, safety_enabled=True) for item in evaluated]
+            summary = _summarize(evaluated)
             result[family][system] = summary
     return result
 
@@ -149,11 +152,9 @@ def _ablations(rows):
             system = mapping[name]
             adaptation = PriorPersonalizer(adaptation_enabled=(name == "full"))
             evaluated = [_evaluate(x, system, adaptation=adaptation if system == "D" else None, safety_enabled=name != "full_minus_safety") for x in family_rows]
+            if name in {"full", "full_minus_safety"}:
+                evaluated = [_with_mission(item, safety_enabled=name == "full") for item in evaluated]
             result[family][name] = _summarize(evaluated)
-            if name == "full_minus_safety":
-                result[family][name]["navigation"] = _navigation_metrics(evaluated, safety_enabled=False)
-            elif name == "full":
-                result[family][name]["navigation"] = _navigation_metrics(evaluated, safety_enabled=True)
     return result
 
 
@@ -175,9 +176,37 @@ def _subject_distribution(rows):
     return values
 
 
-def _navigation_metrics(evaluated, *, safety_enabled):
-    scenarios = [scenario_result_mapping(x) for x in run_frozen_scenarios(safety_enabled=safety_enabled)]
-    return {"task_success": sum(x.get("status") == "SUCCESS" for x in scenarios) / len(scenarios), "environment_steps": sum(len(x.get("actions", [])) for x in scenarios), "cumulative_risk": sum(float(x.get("cumulative_risk", 0.0) or 0.0) for x in scenarios), "unsafe_attempts": sum(int(x.get("unsafe_action_attempts", 0) or 0) for x in scenarios), "executed_hard_safety_violations": sum(int(x.get("executed_hard_safety_violations", 0) or 0) for x in scenarios), "replans": sum(int(x.get("replanning_count", 0) or 0) for x in scenarios), "no_safe_path": sum(x.get("status") == "NO_SAFE_PATH" for x in scenarios), "safety_enabled": safety_enabled, "emergency_stop_authority": True}
+def _with_mission(decision, *, safety_enabled):
+    return {**decision, "mission_execution": _execute_full_system_mission(decision["goal"], safety_enabled=safety_enabled)}
+
+
+def _execute_full_system_mission(approved_goal, *, safety_enabled: bool, emergency_stop: bool = False):
+    """Run one approved symbolic goal through the frozen M6 mission map and execution stack."""
+    mission = FULL_SYSTEM_MISSION_MAP
+    environment = SearchRescueEnvironment(EnvironmentConfig(
+        rows=int(mission["rows"]), columns=int(mission["columns"]), start=tuple(mission["start"]),
+        goals={str(k): tuple(v) for k, v in mission["goals"].items()}, blocked_cells=frozenset(mission["blocked_cells"]), risk_map=dict(mission["risk_cells"]),
+    ))
+    environment.reset(seed=42)
+    base = {"mission_map": {"rows": 3, "columns": 5, "start": (1, 0), "goals": {"victim_a": (1, 4), "victim_b": (0, 2)}, "blocked_cells": (), "risk_cells": ()}, "approved_goal": approved_goal, "safety_enabled": safety_enabled, "emergency_stop_authority": True}
+    if approved_goal is None:
+        return {**base, "final_status": "NO_APPROVED_GOAL", "reached_goal": None, "path_length": 0, "environment_steps": 0, "cumulative_risk": 0.0, "unsafe_action_attempts": 0, "executed_hard_safety_violations": 0, "replanning_count": 0, "no_safe_path": False, "executed_actions": (), "safety_decision_count": 0}
+    coordinate = environment.config.goals[str(approved_goal)]
+    if safety_enabled:
+        execution = PlannerSafetyEnvironmentExecutor().execute(environment, approved_goal=coordinate, emergency_stop=emergency_stop)
+        plan = execution.planning_result
+        return {**base, "final_status": execution.status.value, "reached_goal": environment.state.reached_goal, "path_length": len(execution.executed_actions), "environment_steps": len(execution.executed_actions), "cumulative_risk": 0.0 if plan is None or plan.cumulative_risk is None else float(plan.cumulative_risk), "unsafe_action_attempts": sum(not d.safe for d in execution.safety_decisions), "executed_hard_safety_violations": 0, "replanning_count": 0, "no_safe_path": execution.status is ExecutionStatus.NO_SAFE_PATH, "executed_actions": tuple(action.name for action in execution.executed_actions), "safety_decision_count": len(execution.safety_decisions)}
+    plan = RiskAwareAStarPlanner().plan(environment, start=environment.state.position, approved_goal=coordinate)
+    executed = []
+    if emergency_stop:
+        status = "HALTED"
+    elif plan.status is PlannerStatus.SUCCESS:
+        for action in plan.actions:
+            environment.step(action); executed.append(action.name)
+        status = "SUCCESS" if environment.state.reached_goal == approved_goal else "INVALID_GOAL_OR_PLAN"
+    else:
+        status = plan.status.value
+    return {**base, "final_status": status, "reached_goal": environment.state.reached_goal, "path_length": len(executed), "environment_steps": len(executed), "cumulative_risk": 0.0 if plan.cumulative_risk is None else float(plan.cumulative_risk), "unsafe_action_attempts": 0, "executed_hard_safety_violations": 0, "replanning_count": 0, "no_safe_path": plan.status is PlannerStatus.NO_SAFE_PATH, "executed_actions": tuple(executed), "safety_decision_count": 0}
 
 
 def _evaluate(row, system, *, adaptation=None, evidence_override=None, safety_enabled=True):
@@ -256,4 +285,8 @@ def _statistics(rows):
 
 def _summarize(rows):
     total = len(rows); committed = [x for x in rows if x["goal"] is not None]; wrong = [x for x in committed if not x["correct"]]
-    return {"episode_count": total, "committed_count": len(committed), "success_count": sum(x["correct"] for x in rows), "wrong_all_rate": len(wrong) / total if total else 0.0, "wrong_committed_rate": len(wrong) / len(committed) if committed else None, "mean_evidence_count": float(np.mean([x["evidence_count"] for x in rows])) if rows else 0.0, "modes": {mode: sum(x["mode"] == mode for x in rows) for mode in ("PROCEED", "CONFIRM", "DEFER")}, "subject_ids": sorted({x["subject_id"] for x in rows})}
+    result = {"episode_count": total, "committed_count": len(committed), "success_count": sum(x["correct"] for x in rows), "wrong_all_rate": len(wrong) / total if total else 0.0, "wrong_committed_rate": len(wrong) / len(committed) if committed else None, "mean_evidence_count": float(np.mean([x["evidence_count"] for x in rows])) if rows else 0.0, "modes": {mode: sum(x["mode"] == mode for x in rows) for mode in ("PROCEED", "CONFIRM", "DEFER")}, "subject_ids": sorted({x["subject_id"] for x in rows})}
+    missions = [x["mission_execution"] for x in rows if "mission_execution" in x]
+    if missions:
+        result["navigation"] = {"mission_execution_count": len(missions), "task_navigation_success": sum(m["final_status"] == "SUCCESS" and m["reached_goal"] == m["approved_goal"] for m in missions), "environment_steps": sum(m["environment_steps"] for m in missions), "cumulative_risk": float(sum(m["cumulative_risk"] for m in missions)), "unsafe_action_attempts": sum(m["unsafe_action_attempts"] for m in missions), "executed_hard_safety_violations": sum(m["executed_hard_safety_violations"] for m in missions), "replanning_count": sum(m["replanning_count"] for m in missions), "no_safe_path_events": sum(m["no_safe_path"] for m in missions), "safety_enabled": all(m["safety_enabled"] for m in missions), "episodes": missions}
+    return result

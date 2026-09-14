@@ -1,6 +1,6 @@
 import types
 
-from src.evaluation.final_runner import _ablations, _robustness, _sequential_rows, _statistics
+from src.evaluation.final_runner import _ablations, _execute_full_system_mission, _robustness, _sequential_rows, _statistics, _systems
 
 
 def _rows(n=20):
@@ -54,3 +54,21 @@ def test_ablation_registry_contains_distinct_safety_and_adaptation_outputs():
     assert "navigation" in result["csp_lda"]["full_minus_safety"]
     assert result["csp_lda"]["full"]["navigation"]["safety_enabled"] is True
     assert result["csp_lda"]["full_minus_safety"]["navigation"]["safety_enabled"] is False
+
+
+def test_e6_mission_uses_frozen_two_goal_map_and_approved_goal():
+    execution = _execute_full_system_mission("victim_b", safety_enabled=True)
+    assert execution["mission_map"]["goals"] == {"victim_a": (1, 4), "victim_b": (0, 2)}
+    assert execution["approved_goal"] == "victim_b"
+    assert execution["reached_goal"] == "victim_b"
+    assert execution["environment_steps"] == 3
+    assert execution["final_status"] == "SUCCESS"
+
+
+def test_e6_system_navigation_is_episode_mission_execution_not_scenario_aggregate():
+    row = {**_rows(1)[0], "calibrated": [[1.0, 0.0]] * 5, "raw": [[1.0, 0.0]] * 5}
+    result = _systems([row], systems=("A",), include_navigation=True)
+    navigation = result["csp_lda"]["A"]["navigation"]
+    assert navigation["mission_execution_count"] == 1
+    assert navigation["environment_steps"] == 4
+    assert navigation["episodes"][0]["mission_map"]["rows"] == 3
