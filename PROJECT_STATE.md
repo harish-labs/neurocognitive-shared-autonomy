@@ -47,7 +47,7 @@ Current task:
 
 Task status:
 
-**ACTIVE / AUTHORIZED — PRE-FINAL EXECUTION**
+**ACTIVE / AUTHORIZED — R01 CANDIDATE REVIEW**
 
 Authorized task branch:
 
@@ -85,7 +85,7 @@ D-082 now resolves the post-QC cohort-size blocker without changing D-035. M7-T0
 
 D-083 resolves the remaining eligibility ambiguity: cross-subject eligibility requires at least one retained T1 and one retained T2 trial after QC. D-040 within-subject feasibility and D-081 balanced-sequential participation remain separate. Episode availability is assessed only after split freeze and cannot remove, replace, reshuffle, or move a frozen subject.
 
-D-084 resolves the former E7 ablation-semantics blocker. `Full - Bayes` now uses a cumulative arithmetic mean over the calibrated D-081 evidence and the approved threshold policy; `Full - uncertainty` consumes all five Bayesian updates and commits only the final posterior argmax without uncertainty gates. M7-T02 may proceed through its artifact/test/final-manifest gates, but protected outcomes remain unavailable until every gate passes.
+D-084 resolves the former E7 ablation-semantics blocker. `Full - Bayes` now uses a cumulative arithmetic mean over the calibrated D-081 evidence and the approved threshold policy; `Full - uncertainty` consumes all five Bayesian updates and commits only the final posterior argmax without uncertainty gates. M7-T02-R01 corrected the execution contract, preserved v1 as `INVALID_IMPLEMENTATION_CONTRACT`, and generated a v2 candidate for review.
 
 Pre-final audit state at the block:
 
@@ -96,7 +96,7 @@ Pre-final audit state at the block:
 - 261 D-081 episodes; 2,017 retained source trials; 1,305 sequential observations; 712 tail observations;
 - D-083 final balanced-sequential IDs: `89, 16, 34, 29, 31, 93, 21, 76` (`n=8`);
 - no-replacement exclusions: subject 84 has no valid class episode; subject 57 has a T1 episode only;
-- no protected final outcome accessed; no artifact fitting or reportable E1–E9 execution occurred.
+- protected outcomes were accessed under the frozen manifests; v1 is invalid and preserved, and v2 is the current R01 candidate-review artifact. No refitting or scientific tuning occurred.
 
 Frozen manifest file hashes:
 

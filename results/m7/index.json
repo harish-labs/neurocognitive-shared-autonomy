@@ -1,8 +1,8 @@
 {
-  "schema_version": "m7-t02-result-index-v1",
-  "status": "BLOCKED_PREFINAL",
-  "generating_software_sha": "f7260b0c3fe25c5364943857d0fc8c22a608e6a2",
-  "protected_outcomes_accessed": false,
+  "schema_version": "m7-t02-result-index-v2",
+  "status": "R01_REVIEW_REQUIRED",
+  "generating_software_sha": "07ac984",
+  "protected_outcomes_accessed": true,
   "manifests": {
     "qc_eligibility": {
       "path": "results/m7/manifest/m7-d082-qc-eligibility-v1.json",
@@ -20,7 +20,11 @@
       "path": "results/m7/manifest/m7-d083-final-sequential-participation-v1.json",
       "sha256": "8de4367ab2d274c28dff38c331c1af22e0a52815be6914f208d3c0225da11286"
     },
-    "final_execution": null
+    "final_execution": {
+      "path": "results/m7/manifest/m7-final-execution-v5-d084-r01.json",
+      "sha256": "5980ff27c2459f22210c035b776d05a16ad00855a7b498916f90f43a8888252c",
+      "software_sha": "07ac984"
+    }
   },
   "cohort_flow": "results/m7/cohort_flow.json",
   "prefinal_blocker": "results/m7/failures/prefinal-blocker.json",
@@ -30,6 +34,21 @@
     "eegnet_decoder": "NOT_FIT_PREFINAL_BLOCK",
     "eegnet_temperature_calibrator": "NOT_FIT_PREFINAL_BLOCK"
   },
+  "superseded_invalid_results": [
+    {
+      "path": "results/m7/final/m7-final-results-v1.json",
+      "sha256": "c931f58b92b676bfbb8a184446ddb39da5011f279d84d419245503d8db139c5c",
+      "status": "INVALID_IMPLEMENTATION_CONTRACT",
+      "reasons": ["D-083 sequential participation leakage", "E7 adaptation and safety ablations were not faithful", "E7/E8 family assignment was incorrect"]
+    }
+  ],
+  "result": {
+    "path": "results/m7/final/m7-final-results-v2.json",
+    "sha256": "917f48b96ae47e8d38a867c1a9adc41b08607a3fc07cd2c0c2c5528aa5ba26e2",
+    "status": "R01_CANDIDATE_REVIEW"
+  },
+  "sequential_subject_ids": [89, 16, 34, 29, 31, 93, 21, 76],
+  "protected_final_subject_ids": [89, 16, 34, 29, 84, 57, 31, 93, 21, 76],
   "experiment_status": {
     "E1": "NOT_EXECUTED_PREFINAL_BLOCK",
     "E2": "NOT_EXECUTED_PREFINAL_BLOCK",
@@ -37,11 +56,11 @@
     "E4": "NOT_EXECUTED_PREFINAL_BLOCK",
     "E5": "NOT_EXECUTED_AS_REPORTABLE_EXPERIMENT",
     "E6": "NOT_EXECUTED_PREFINAL_BLOCK",
-    "E7_ablation": "BLOCKED_UNRESOLVED_OPERATIONAL_SEMANTICS",
-    "E7_robustness": "NOT_EXECUTED_PREFINAL_BLOCK",
-    "E8": "NOT_EXECUTED_PREFINAL_BLOCK",
+    "E7_ablation": "EXECUTED_R01",
+    "E7_robustness": "EXECUTED_R01",
+    "E8": "EXECUTED_R01_HELD_OUT_CROSS_SUBJECT",
     "E9": "NOT_EXECUTED_PREFINAL_BLOCK",
-    "statistics": "NOT_RUN_NO_PROTECTED_RESULTS",
+    "statistics": "EXECUTED_R01_SUBJECT_LEVEL",
     "failures": "PREFINAL_BLOCKER_ONLY",
     "figures": "NOT_GENERATED_NO_RESULTS",
     "tables": "COHORT_FLOW_ONLY"

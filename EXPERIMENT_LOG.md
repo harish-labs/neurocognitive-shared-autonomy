@@ -518,3 +518,12 @@ Execution stopped before artifact fitting, final-execution-manifest freeze, or E
 - result SHA-256: `c931f58b92b676bfbb8a184446ddb39da5011f279d84d419245503d8db139c5c`
 - protected final subjects: `89,16,34,29,84,57,31,93,21,76`
 - validity: E1-E9 executed from frozen D-084 contract; no subsequent scientific tuning
+
+## M7-T02-R01 contract-correction rerun
+
+- prior result `results/m7/final/m7-final-results-v1.json` (`c931f58b92b676bfbb8a184446ddb39da5011f279d84d419245503d8db139c5c`) is `INVALID_IMPLEMENTATION_CONTRACT` and remains preserved.
+- invalidation reasons: D-083 sequential participation leakage; non-faithful Full adaptation and safety ablations; incorrect E7/E8 family assignment.
+- R01 is a contract-correction rerun only; no model/calibrator refit, scientific threshold change, split change, or tuning occurred.
+- execution manifest: `results/m7/manifest/m7-final-execution-v5-d084-r01.json` (`5980ff27c2459f22210c035b776d05a16ad00855a7b498916f90f43a8888252c`)
+- corrected result: `results/m7/final/m7-final-results-v2.json` (`917f48b96ae47e8d38a867c1a9adc41b08607a3fc07cd2c0c2c5528aa5ba26e2`)
+- sequential subjects: `89,16,34,29,31,93,21,76`; subjects `57,84` excluded from sequential analyses.

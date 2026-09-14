@@ -2,7 +2,7 @@
 
 ## Current Codex Implementation Authority
 
-**Current status:** ACTIVE / AUTHORIZED — PRE-FINAL EXECUTION
+**Current status:** ACTIVE / AUTHORIZED — R01 CANDIDATE REVIEW
 **Current milestone:** M7 — Experiments / Ablations / Robustness  
 **Task ID:** M7-T02  
 **Task title:** Frozen Final Experiment Execution & Scientific Audit  
@@ -33,7 +33,7 @@ On 2026-09-13 the Project Owner additionally approved D-081, resolving the fixed
 
 On 2026-09-13 the Project Owner additionally approved D-082. The accepted D-035 preprocessing/QC boundary now determines the actual eligible cohort from all 109 source subjects. The cross-subject split must be frozen from that cohort using one ascending-sort/seed-42 shuffle and the D-082 largest-remainder 70/15/15 allocation. The historical D-042 `76/16/17` counts and provisional subject membership must not be forced when post-QC `N` differs from 109.
 
-On 2026-09-13 the Project Owner additionally approved D-083. Cross-subject eligibility is exactly retained T1 `>=1` and retained T2 `>=1` after fixed D-035 QC. It does not require D-040 within-subject feasibility or a D-081 episode. After the D-082 split is frozen, balanced sequential families include only subjects with at least one valid five-observation T1 episode and at least one valid five-observation T2 episode; nonparticipation never changes frozen membership and must be reported per experiment.
+On 2026-09-13 the Project Owner additionally approved D-083. Cross-subject eligibility is exactly retained T1 `>=1` and retained T2 `>=1` after fixed D-035 QC. It does not require D-040 within-subject feasibility or a D-081 episode. After the D-082 split is frozen, balanced sequential families include only subjects with at least one valid five-observation T1 episode and at least one valid five-observation T2 episode; nonparticipation never changes frozen membership and must be reported per experiment. R01 corrected the runner contract and regenerated a superseding candidate; the prior v1 result is preserved as invalid.
 
 ---
 
