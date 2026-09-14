@@ -1,7 +1,7 @@
 {
-  "schema_version": "m7-t02-result-index-v3",
-  "status": "R02_REVIEW_REQUIRED",
-  "generating_software_sha": "968ad09",
+  "schema_version": "m7-t02-result-index-v4",
+  "status": "R03_REVIEW_REQUIRED",
+  "generating_software_sha": "d5d4aa8",
   "protected_outcomes_accessed": true,
   "manifests": {
     "qc_eligibility": {
@@ -21,9 +21,9 @@
       "sha256": "8de4367ab2d274c28dff38c331c1af22e0a52815be6914f208d3c0225da11286"
     },
     "final_execution": {
-      "path": "results/m7/manifest/m7-final-execution-v5-d084-r02.json",
-      "sha256": "cf99aac9a82c15b1cd2afb26490e976c324c90581007361e8e6bdd8fffa6ef6e",
-      "software_sha": "968ad09"
+      "path": "results/m7/manifest/m7-final-execution-v5-d084-r03.json",
+      "sha256": "0c446cf83a2b4c5a79317d9848bbec3b3725f8038cff1e8d9e78b7ffbb8c15fc",
+      "software_sha": "f3b0f1d"
     }
   },
   "cohort_flow": "results/m7/cohort_flow.json",
@@ -46,12 +46,18 @@
       "sha256": "917f48b96ae47e8d38a867c1a9adc41b08607a3fc07cd2c0c2c5528aa5ba26e2",
       "status": "INVALID_IMPLEMENTATION_CONTRACT",
       "reasons": ["E6 used the S1-S7 controlled scenario suite instead of per-episode two-goal M6 mission execution", "E7 safety ablation was not within full-system mission orchestration"]
+    },
+    {
+      "path": "results/m7/final/m7-final-results-v3.json",
+      "sha256": "be16490455e8c19e37378083db0332f91cbeb4d8aa111755fed341a43798e962",
+      "status": "INVALID_IMPLEMENTATION_CONTRACT",
+      "reasons": ["B simulated-human handling incomplete", "E7 robustness and ablation completeness incomplete", "E3/E4/E9 trace/orchestration incomplete"]
     }
   ],
   "result": {
-    "path": "results/m7/final/m7-final-results-v3.json",
-    "sha256": "be16490455e8c19e37378083db0332f91cbeb4d8aa111755fed341a43798e962",
-    "status": "R02_CANDIDATE_REVIEW"
+    "path": "results/m7/final/m7-final-results-v4.json",
+    "sha256": "0eb854db327debab5edd1da156555fc83320e94696ff84886b97a6594bed769d",
+    "status": "R03_CANDIDATE_REVIEW"
   },
   "sequential_subject_ids": [89, 16, 34, 29, 31, 93, 21, 76],
   "protected_final_subject_ids": [89, 16, 34, 29, 84, 57, 31, 93, 21, 76],

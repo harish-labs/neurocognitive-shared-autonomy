@@ -535,3 +535,11 @@ Execution stopped before artifact fitting, final-execution-manifest freeze, or E
 - execution manifest: `results/m7/manifest/m7-final-execution-v5-d084-r02.json` (`cf99aac9a82c15b1cd2afb26490e976c324c90581007361e8e6bdd8fffa6ef6e`)
 - corrected v3 result: `results/m7/final/m7-final-results-v3.json` (`be16490455e8c19e37378083db0332f91cbeb4d8aa111755fed341a43798e962`)
 - E5 remains the frozen S1-S7 controlled planning/safety suite. E6 and the Full/Full-minus-safety E7 comparisons execute each episode's actual approved goal on the frozen two-goal M6 mission map.
+
+## M7-T02-R03 completion remediation
+
+- failed protected attempt 1: descriptive-uncertainty input normalization; no v4 artifact created.
+- failed protected attempt 2: D-078 condition-evidence normalization; no v4 artifact created.
+- both failures were fail-closed mechanical boundary defects. No tuning or refitting occurred.
+- R03 v4 result: `results/m7/final/m7-final-results-v4.json` (`0eb854db327debab5edd1da156555fc83320e94696ff84886b97a6594bed769d`), using manifest `results/m7/manifest/m7-final-execution-v5-d084-r03.json` (`0c446cf83a2b4c5a79317d9848bbec3b3725f8038cff1e8d9e78b7ffbb8c15fc`).
+- v1, v2, and v3 remain preserved as `INVALID_IMPLEMENTATION_CONTRACT` artifacts.
