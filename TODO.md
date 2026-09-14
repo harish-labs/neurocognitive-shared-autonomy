@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** M1–M6 and M7-T01 accepted and merged; M7-T02 R03 final candidate is locally complete and awaiting scientific review/export authorization
+**Current stage:** M1–M7 complete; M7-T02 R03 is PASS / ACCEPTED / MERGED / CLOSED. No next implementation task is authorized.
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -54,14 +54,18 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] Reconcile M1-T10 governance close with no active task
 ```
 
-## Current authorization
+## M7 close
 
 ```text
 [x] Execute the authorized M7-T02 pre-final QC/manifest work
-[ ] Obtain Project Owner approval for exact Full - Bayes and Full - uncertainty execution rules
-[ ] Resume artifact freeze and E1-E9 only after that decision is recorded
-[ ] Do not treat synthetic or bounded smoke results as reportable efficacy evidence
+[x] Record D-084 Full - Bayes and Full - uncertainty execution rules
+[x] Freeze artifacts/manifests and execute E1–E9 under the approved contract
+[x] Complete scientific review, acceptance, fast-forward merge, and governance close
+[x] Preserve v1–v4 immutable invalid audit artifacts and v5 as the accepted reportable result
+[x] Preserve negative/mixed/non-significant findings and claim boundaries
 ```
+
+No M8 work is authorized by this close.
 
 ---
 
@@ -290,18 +294,18 @@ This must remain labeled offline EEG replay / simulated real-time BCI unless har
 # 10. MILESTONE — EXPERIMENTS
 
 ```text
-[ ] E1 EEG decoding
-[ ] E2 calibration
-[ ] E3 Bayesian inference
-[ ] E4 uncertainty/shared autonomy
-[ ] E5 planning/safety
-[ ] E6 A/B/C/D comparison
-[ ] E7 ablations / robustness
-[ ] E8 cross-subject
-[ ] E9 adaptation
-[ ] Statistical analysis
-[ ] Failure taxonomy
-[ ] Result traceability
+[x] E1 EEG decoding
+[x] E2 calibration
+[x] E3 Bayesian inference
+[x] E4 uncertainty/shared autonomy
+[x] E5 planning/safety
+[x] E6 A/B/C/D comparison
+[x] E7 ablations / robustness
+[x] E8 cross-subject
+[x] E9 adaptation
+[x] Statistical analysis
+[x] Failure taxonomy categories (v5 schema does not aggregate category counts)
+[x] Result traceability
 ```
 
 Negative or mixed results are valid. Do not tune protected test data to improve outcomes.
@@ -368,6 +372,9 @@ These are not current requirements or authorization.
 [x] D-058 through D-060 adaptation decisions recorded
 [x] M1-T10 Adaptation / Prior Personalization accepted and merged
 [x] M1-T10 governance close recorded with no active implementation task
+[x] M7-T01 Consolidated Experiment & Evaluation Harness accepted and merged
+[x] M7-T02 Frozen Final Experiment Execution & Scientific Audit accepted, fast-forward merged, and closed
+[x] M7 — Experiments / Ablations / Robustness COMPLETE / PASS / CLOSED
 ```
 
 ---

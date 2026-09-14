@@ -2,16 +2,18 @@
 
 ## Current Codex Implementation Authority
 
-**Current status:** ACTIVE — R03 FINAL CANDIDATE REVIEW
-**Current milestone:** M7 — Experiments / Ablations / Robustness  
+**Current status:** CLOSED — M7-T02 PASS / ACCEPTED / MERGED / CLOSED
+**Current milestone:** M7 — Experiments / Ablations / Robustness: COMPLETE / PASS / CLOSED
 **Task ID:** M7-T02  
 **Task title:** Frozen Final Experiment Execution & Scientific Audit  
 **Owner:** Project Owner  
 **Scientific reviewer:** ChatGPT  
 **Implementation engineer:** Codex  
 **Canonical branch:** `main`  
-**Authorized task branch:** `task/m7-t02-final-experiments-scientific-audit`  
+**Historical task branch:** `task/m7-t02-final-experiments-scientific-audit`
 **Accepted M7-T01 candidate / M7-T02 software base:** `1e60d8a0e3344e3706f9a08892b8695b7536c309`
+
+**Closure authority:** On 2026-09-14 the Project Owner accepted M7-T02-R03 candidate `61af5226e7214f5b858e6e1faec4b042d340bdd8` after ChatGPT scientific review and exact-ref GitHub Actions run `34840393388` (`511 passed, 16 warnings`; diff integrity PASS; clean tree PASS; SUCCESS). The accepted candidate was fast-forward merged to `main`. M7 has no active implementation task. Any subsequent milestone requires separate Project Owner authorization.
 
 ---
 
@@ -29,7 +31,7 @@ M7-T01 candidate `1e60d8a0e3344e3706f9a08892b8695b7536c309` was scientifically r
 
 M7-T02 is therefore AUTHORIZED subject to the mandatory governance and leakage gates in this ticket.
 
-On 2026-09-13 the Project Owner additionally approved D-081, resolving the fixed-intent real-EEG episode-construction blocker and approving the disclosed protected-data prefetch interpretation. Protected execution subsequently occurred under the frozen audit trail. The current reportable review candidate is v5, generated only to correct the v4 software-to-manifest provenance mismatch; M7-T02 remains active and is not accepted, merged, or closed.
+On 2026-09-13 the Project Owner additionally approved D-081, resolving the fixed-intent real-EEG episode-construction blocker and approving the disclosed protected-data prefetch interpretation. Protected execution subsequently occurred under the frozen audit trail. The reportable v5 artifact was generated only to correct the v4 software-to-manifest provenance mismatch and was subsequently accepted and merged under the closure authority recorded above.
 
 On 2026-09-13 the Project Owner additionally approved D-082. The accepted D-035 preprocessing/QC boundary now determines the actual eligible cohort from all 109 source subjects. The cross-subject split must be frozen from that cohort using one ascending-sort/seed-42 shuffle and the D-082 largest-remainder 70/15/15 allocation. The historical D-042 `76/16/17` counts and provisional subject membership must not be forced when post-QC `N` differs from 109.
 
@@ -55,7 +57,7 @@ Historical pre-final work completed before protected access:
 - D-082 split frozen at `48 train / 10 validation / 10 final_test` with no replacement;
 - D-081 manifest frozen with `261` episodes from `2,017` retained source trials (`1,305` sequential observations and `712` tails);
 - D-083 final sequential participation frozen at `8` included subjects; subject 84 has no valid five-trial class episode and subject 57 has a T1 episode only;
-- the frozen decoder/calibrator artifacts were fit using train/validation data only; the protected E1–E9 v5 execution is now complete and awaiting scientific review, with no final-test-driven refitting, tuning, or selection.
+- the frozen decoder/calibrator artifacts were fit using train/validation data only; the protected E1–E9 v5 execution is complete, accepted, and merged, with no final-test-driven refitting, tuning, or selection.
 
 ---
 
@@ -70,7 +72,7 @@ Required governance edits:
 - state that D-077 resolves U-034, D-078 resolves U-035, and D-079 resolves U-036;
 - preserve all unrelated Master authority unchanged;
 - add the approved M7-T02 execution decision(s) to `DECISIONS.md` without inventing additional policy;
-- update `PROJECT_STATE.md` to close M7-T01 as PASS / ACCEPTED / MERGED / CLOSED and mark M7-T02 ACTIVE / AUTHORIZED;
+- update `PROJECT_STATE.md` to close M7-T01 as PASS / ACCEPTED / MERGED / CLOSED and mark M7-T02 ACTIVE / AUTHORIZED before protected execution (historical pre-execution requirement);
 - reconcile stale M7 status text in governance/backlog files only where needed to avoid contradictions.
 
 The governance reconciliation must be committed on the authorized M7-T02 branch before any protected final-test outcome is accessed.
@@ -637,4 +639,4 @@ confirmation that no final-test-driven tuning occurred
 confirmation that no live EEG / real-human / physical-robot claim was made
 ```
 
-Do not merge the M7-T02 candidate. ChatGPT must review the actual GitHub diff, result artifacts, provenance, statistics, and exact-ref CI before M7 can be accepted/closed.
+M7-T02 was accepted, merged, and closed on 2026-09-14 under the closure authority recorded at the top of this document. This historical task contract is retained for audit. Do not begin a subsequent milestone without separate Project Owner authorization.

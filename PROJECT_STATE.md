@@ -39,19 +39,19 @@ M7-T01 exact-ref verification:
 
 Current milestone:
 
-**M7 — Experiments / Ablations / Robustness**
+**M7 — Experiments / Ablations / Robustness: COMPLETE / PASS / CLOSED**
 
 Current task:
 
-**M7-T02 — Frozen Final Experiment Execution & Scientific Audit**
+**None — M7-T02 is PASS / ACCEPTED / MERGED / CLOSED.**
 
-Task status:
+M7-T02 acceptance / merge record:
 
-**ACTIVE — R03 FINAL CANDIDATE REVIEW**
-
-Authorized task branch:
-
-`task/m7-t02-final-experiments-scientific-audit`
+- accepted candidate and fast-forward merge SHA: `61af5226e7214f5b858e6e1faec4b042d340bdd8`;
+- final executable/reporting software SHA: `a1a696204a8b06263efa8bb57abc610af3f7361e`;
+- final execution manifest SHA-256: `f837258312adf17ec1a04079c71c5461838a4aff5096541acd993bb94da24306`;
+- accepted v5 result SHA-256: `b5c7cc2efdbbbab53c65d54aa77542a2e69a71c42d5bdc670e2fd8c34af2dd9b`;
+- exact-ref GitHub Actions run: `34840393388`, requested/resolved SHA `61af5226e7214f5b858e6e1faec4b042d340bdd8`, `511 passed, 16 warnings`, diff integrity PASS, clean tree PASS, conclusion SUCCESS.
 
 ---
 
@@ -105,7 +105,7 @@ R03 final provenance state:
 - v5 result: `results/m7/final/m7-final-results-v5.json`, SHA-256 `b5c7cc2efdbbbab53c65d54aa77542a2e69a71c42d5bdc670e2fd8c34af2dd9b`;
 - v5 scientific fields are exactly equal to v4 after excluding only `first_protected_outcome_access` provenance;
 - E1-E9, the six E7 ablations, 40 R1 cells, 40 R2 cells, D-079 statistics, tables, figures, and failure-taxonomy registry are present;
-- candidate review remains outstanding; M7-T02 is not merged, accepted, or closed.
+- M7-T02-R03 v5 was accepted after ChatGPT scientific review, fast-forward merged to `main` at `61af5226e7214f5b858e6e1faec4b042d340bdd8`, and is CLOSED. The documented limitation remains: failure-taxonomy category counts were not aggregated in the v5 result schema.
 
 Frozen manifest file hashes:
 
@@ -221,10 +221,4 @@ M7-T02 does not authorize claims of:
 
 # 10. NEXT GATE
 
-Codex should execute M7-T02 on:
-
-`task/m7-t02-final-experiments-scientific-audit`
-
-under the exact `CURRENT_TASK.md` authority.
-
-Codex must not merge the final candidate. After implementation, experiment execution, result persistence, testing, and exact-ref GitHub Actions, ChatGPT must review the actual code, provenance, results, statistics, figures/tables, and CI before M7 is accepted/closed.
+M7 is CLOSED. No M7 implementation task is active. A later milestone, including M8, requires separate Project Owner authorization and must not be inferred from this close record.
