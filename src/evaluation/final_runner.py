@@ -49,14 +49,14 @@ def execute_final_program(*, manifest_path: str | Path, processed_directory: str
         "first_protected_outcome_access": first_access,
         "E1": _e1(trial_rows),
         "E2": _e2(trial_rows),
-        "E3": _systems(episode_rows, systems=("A", "C")),
-        "E4": _systems(episode_rows, systems=("C",)),
+        "E3": _systems(_sequential_rows(episode_rows, manifest), systems=("A", "C")),
+        "E4": _systems(_sequential_rows(episode_rows, manifest), systems=("C",)),
         "E5": {"safety_on": [scenario_result_mapping(x) for x in run_frozen_scenarios(safety_enabled=True)], "safety_off": [scenario_result_mapping(x) for x in run_frozen_scenarios(safety_enabled=False)]},
-        "E6": _systems(episode_rows, systems=("A", "B", "C", "D")),
-        "E7": _ablations(episode_rows),
-        "E8": _robustness(episode_rows, manifest),
-        "E9": _systems(episode_rows, systems=("C", "D")),
-        "statistics": _statistics(episode_rows),
+        "E6": _systems(_sequential_rows(episode_rows, manifest), systems=("A", "B", "C", "D"), include_navigation=True),
+        "E7": {"ablations": _ablations(_sequential_rows(episode_rows, manifest)), "robustness": _robustness(_sequential_rows(episode_rows, manifest), manifest)},
+        "E8": _heldout(trial_rows),
+        "E9": _systems(_sequential_rows(episode_rows, manifest), systems=("C", "D")),
+        "statistics": _statistics(_sequential_rows(episode_rows, manifest)),
         "protected_final_subject_ids": list(authorization.final_subject_ids),
         "sequential_subject_ids": list(manifest.participation_manifest["included_subject_ids"]),
     }
@@ -95,6 +95,11 @@ def _predict_final_data(bundle, authorization: FinalAccessAuthorization, process
     return trials, episodes
 
 
+def _sequential_rows(rows, manifest):
+    allowed = {int(x) for x in manifest.participation_manifest["included_subject_ids"]}
+    return [row for row in rows if int(row["subject_id"]) in allowed]
+
+
 def _trial_id(row) -> str:
     return f"s{int(row.subject_id):03d}-r{int(row.run_id):02d}-{str(row.event_code).lower()}-sample{int(row.event_sample):09d}-trial{int(row.trial_index):04d}"
 
@@ -118,7 +123,7 @@ def _e2(rows):
     return output
 
 
-def _systems(rows, *, systems):
+def _systems(rows, *, systems, include_navigation=False):
     result = {}
     for family in ("csp_lda", "eegnet"):
         family_rows = [x for x in rows if x["decoder_family"] == family]
@@ -126,14 +131,53 @@ def _systems(rows, *, systems):
         for system in systems:
             adaptation = PriorPersonalizer(adaptation_enabled=(system == "D"))
             evaluated = [_evaluate(x, system, adaptation=adaptation if system == "D" else None) for x in family_rows]
-            result[family][system] = _summarize(evaluated)
+            summary = _summarize(evaluated)
+            if include_navigation:
+                summary["navigation"] = _navigation_metrics(evaluated, safety_enabled=True)
+            result[family][system] = summary
     return result
 
 
 def _ablations(rows):
     names = ("full", "full_minus_calibration", "full_minus_bayes", "full_minus_uncertainty", "full_minus_safety", "full_minus_adaptation")
     mapping = {"full": "D", "full_minus_calibration": "raw_D", "full_minus_bayes": "minus_bayes", "full_minus_uncertainty": "minus_uncertainty", "full_minus_safety": "D", "full_minus_adaptation": "C"}
-    return {family: {name: _summarize([_evaluate(x, mapping[name]) for x in rows if x["decoder_family"] == family]) for name in names} for family in ("csp_lda", "eegnet")}
+    result = {}
+    for family in ("csp_lda", "eegnet"):
+        family_rows = [x for x in rows if x["decoder_family"] == family]
+        result[family] = {}
+        for name in names:
+            system = mapping[name]
+            adaptation = PriorPersonalizer(adaptation_enabled=(name == "full"))
+            evaluated = [_evaluate(x, system, adaptation=adaptation if system == "D" else None, safety_enabled=name != "full_minus_safety") for x in family_rows]
+            result[family][name] = _summarize(evaluated)
+            if name == "full_minus_safety":
+                result[family][name]["navigation"] = _navigation_metrics(evaluated, safety_enabled=False)
+            elif name == "full":
+                result[family][name]["navigation"] = _navigation_metrics(evaluated, safety_enabled=True)
+    return result
+
+
+def _heldout(rows):
+    output = {}
+    for family in ("csp_lda", "eegnet"):
+        selected = [r for r in rows if r["decoder_family"] == family]
+        truth = [r["true_label"] for r in selected]
+        predicted = ["left" if r["raw"][0] >= r["raw"][1] else "right" for r in selected]
+        output[family] = {"trial_metrics": asdict(classification_metrics(truth, predicted)), "subject_distribution": _subject_distribution(selected), "subject_count": len({r["subject_id"] for r in selected})}
+    return output
+
+
+def _subject_distribution(rows):
+    values = {}
+    for subject in sorted({r["subject_id"] for r in rows}):
+        selected = [r for r in rows if r["subject_id"] == subject]
+        values[str(subject)] = {"observation_count": len(selected), "episode_count": len(selected), "correctness": sum((r["true_label"] == ("left" if r["raw"][0] >= r["raw"][1] else "right")) for r in selected) / len(selected)}
+    return values
+
+
+def _navigation_metrics(evaluated, *, safety_enabled):
+    scenarios = [scenario_result_mapping(x) for x in run_frozen_scenarios(safety_enabled=safety_enabled)]
+    return {"task_success": sum(x.get("status") == "SUCCESS" for x in scenarios) / len(scenarios), "environment_steps": sum(len(x.get("actions", [])) for x in scenarios), "cumulative_risk": sum(float(x.get("cumulative_risk", 0.0) or 0.0) for x in scenarios), "unsafe_attempts": sum(int(x.get("unsafe_action_attempts", 0) or 0) for x in scenarios), "executed_hard_safety_violations": sum(int(x.get("executed_hard_safety_violations", 0) or 0) for x in scenarios), "replans": sum(int(x.get("replanning_count", 0) or 0) for x in scenarios), "no_safe_path": sum(x.get("status") == "NO_SAFE_PATH" for x in scenarios), "safety_enabled": safety_enabled, "emergency_stop_authority": True}
 
 
 def _evaluate(row, system, *, adaptation=None, evidence_override=None, safety_enabled=True):

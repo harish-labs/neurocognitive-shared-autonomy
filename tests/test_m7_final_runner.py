@@ -1,6 +1,6 @@
 import types
 
-from src.evaluation.final_runner import _robustness, _statistics
+from src.evaluation.final_runner import _ablations, _robustness, _sequential_rows, _statistics
 
 
 def _rows(n=20):
@@ -35,3 +35,22 @@ def test_statistics_are_subject_level_not_pseudo_replicated():
     assert comparison["subject_count"] == 4
     assert comparison["bootstrap_resamples"] == 10000
     assert "csp_lda.D_minus_A_correctness" in result["holm_adjusted_p_values"]
+
+
+def test_sequential_filter_excludes_subjects_57_and_84():
+    manifest = types.SimpleNamespace(participation_manifest={"included_subject_ids": [89, 16, 34, 29, 31, 93, 21, 76]})
+    rows = [{**_rows(1)[0], "subject_id": sid, "episode_id": f"{sid}-ep"} for sid in [89, 16, 34, 29, 31, 93, 21, 76, 57, 84]]
+    filtered = _sequential_rows(rows, manifest)
+    assert sorted({r["subject_id"] for r in filtered}) == [16, 21, 29, 31, 34, 76, 89, 93]
+    assert 57 not in {r["subject_id"] for r in filtered}
+    assert 84 not in {r["subject_id"] for r in filtered}
+
+
+def test_ablation_registry_contains_distinct_safety_and_adaptation_outputs():
+    rows = _rows()
+    rows = [{**row, "calibrated": [[0.8, 0.2]] * 5, "raw": [[0.8, 0.2]] * 5} for row in rows]
+    result = _ablations(rows)
+    assert "navigation" in result["csp_lda"]["full"]
+    assert "navigation" in result["csp_lda"]["full_minus_safety"]
+    assert result["csp_lda"]["full"]["navigation"]["safety_enabled"] is True
+    assert result["csp_lda"]["full_minus_safety"]["navigation"]["safety_enabled"] is False
