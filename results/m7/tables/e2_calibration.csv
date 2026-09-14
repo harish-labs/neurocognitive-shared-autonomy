@@ -1,0 +1,5 @@
+decoder_family,calibration_mode,ece,brier_score,bin_count,positive_class_label
+csp_lda,identity,0.049480837026912486,0.2218791120495262,10,right
+csp_lda,calibrated,0.03968071211686601,0.22528277133189542,10,right
+eegnet,identity,0.0732076077571403,0.22971219350359773,10,right
+eegnet,calibrated,0.05695709184393669,0.22529525664806432,10,right

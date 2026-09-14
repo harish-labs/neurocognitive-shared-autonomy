@@ -2,7 +2,7 @@
 
 ## Current Codex Implementation Authority
 
-**Current status:** ACTIVE / AUTHORIZED — R02 CANDIDATE REVIEW
+**Current status:** ACTIVE — R03 FINAL CANDIDATE REVIEW
 **Current milestone:** M7 — Experiments / Ablations / Robustness  
 **Task ID:** M7-T02  
 **Task title:** Frozen Final Experiment Execution & Scientific Audit  
@@ -29,7 +29,7 @@ M7-T01 candidate `1e60d8a0e3344e3706f9a08892b8695b7536c309` was scientifically r
 
 M7-T02 is therefore AUTHORIZED subject to the mandatory governance and leakage gates in this ticket.
 
-On 2026-09-13 the Project Owner additionally approved D-081, resolving the fixed-intent real-EEG episode-construction blocker and approving the disclosed protected-data prefetch interpretation. M7-T02 remains ACTIVE / AUTHORIZED. E1–E9 have not yet been executed, and no protected final outcome has yet been accessed.
+On 2026-09-13 the Project Owner additionally approved D-081, resolving the fixed-intent real-EEG episode-construction blocker and approving the disclosed protected-data prefetch interpretation. Protected execution subsequently occurred under the frozen audit trail. The current reportable review candidate is v5, generated only to correct the v4 software-to-manifest provenance mismatch; M7-T02 remains active and is not accepted, merged, or closed.
 
 On 2026-09-13 the Project Owner additionally approved D-082. The accepted D-035 preprocessing/QC boundary now determines the actual eligible cohort from all 109 source subjects. The cross-subject split must be frozen from that cohort using one ascending-sort/seed-42 shuffle and the D-082 largest-remainder 70/15/15 allocation. The historical D-042 `76/16/17` counts and provisional subject membership must not be forced when post-QC `N` differs from 109.
 
@@ -49,13 +49,13 @@ Negative, mixed, non-significant, or unexpected results are valid and must be pr
 
 D-084 resolves the prior E7 execution-semantics blocker. `Full - Bayes` uses the approved calibrated five-observation arithmetic running mean with the D-055/D-057 thresholds; `Full - uncertainty` performs all five D-053 Bayesian updates, records uncertainty descriptively, and commits the final posterior argmax without uncertainty gates. The complete D-084 text in `DECISIONS.md` is authoritative. The pre-final artifact, test, and final-manifest gates remain mandatory before protected outcomes are accessed.
 
-Valid pre-final work completed before the stop:
+Historical pre-final work completed before protected access:
 
 - all 109 source subjects audited; D-083 cross-subject eligible `N=68`, excluded `41`;
 - D-082 split frozen at `48 train / 10 validation / 10 final_test` with no replacement;
 - D-081 manifest frozen with `261` episodes from `2,017` retained source trials (`1,305` sequential observations and `712` tails);
 - D-083 final sequential participation frozen at `8` included subjects; subject 84 has no valid five-trial class episode and subject 57 has a T1 episode only;
-- protected outcome access remains `false`; no decoder/calibrator artifact was fit and E1–E9 were not executed.
+- the frozen decoder/calibrator artifacts were fit using train/validation data only; the protected E1–E9 v5 execution is now complete and awaiting scientific review, with no final-test-driven refitting, tuning, or selection.
 
 ---
 

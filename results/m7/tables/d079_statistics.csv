@@ -1,0 +1,3 @@
+decoder_family,comparison,subject_count,subject_keys,effect_mean_difference,ci_lower,ci_upper,bootstrap_resamples,bootstrap_seed,permutation_method,permutation_assignments,raw_p_value,holm_adjusted_p_value
+csp_lda,D_minus_A_correctness,8,16|21|29|31|34|76|89|93,0.15625,0.04166666666666666,0.28125,10000,42,exact_paired_sign_flip,256,0.125,0.125
+eegnet,D_minus_A_correctness,8,16|21|29|31|34|76|89|93,0.31666666666666665,0.16666666666666669,0.4625,10000,42,exact_paired_sign_flip,256,0.03125,0.0625

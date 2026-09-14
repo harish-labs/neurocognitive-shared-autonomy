@@ -4,7 +4,7 @@
 ### Reproducible Experiment Register
 
 **Purpose:** Record experiments that were actually executed  
-**Current status:** R02 candidate results executed; scientific review pending.
+**Current status:** M7-T02 R03 v5 final candidate executed locally; scientific review and export authorization pending.
 **Rule:** Hypothetical, planned, or synthetic examples must not be logged as completed reportable experiments
 
 ---
@@ -16,10 +16,11 @@ Validated experiments:
 NONE — no final scientific claim is approved pending review.
 
 Invalidated experiments:
-M7-T02 v1 and v2 (preserved; invalid implementation contracts)
+M7-T02 v1-v3 (preserved; invalid implementation contracts)
+M7-T02 v4 (preserved; invalid software-to-manifest provenance binding)
 
 Current active experiment:
-M7-T02-R02 candidate v3
+M7-T02-R03 final candidate v5
 ```
 
 ---
@@ -543,3 +544,22 @@ Execution stopped before artifact fitting, final-execution-manifest freeze, or E
 - both failures were fail-closed mechanical boundary defects. No tuning or refitting occurred.
 - R03 v4 result: `results/m7/final/m7-final-results-v4.json` (`0eb854db327debab5edd1da156555fc83320e94696ff84886b97a6594bed769d`), using manifest `results/m7/manifest/m7-final-execution-v5-d084-r03.json` (`0c446cf83a2b4c5a79317d9848bbec3b3725f8038cff1e8d9e78b7ffbb8c15fc`).
 - v1, v2, and v3 remain preserved as `INVALID_IMPLEMENTATION_CONTRACT` artifacts.
+
+## M7-T02-R03 final provenance rebind and reporting completion
+
+- v4 is preserved unchanged as `INVALID_PROVENANCE_BINDING`: its runner included the two approved mechanical probability-normalization fixes, but its immutable execution manifest identified pre-normalization software SHA `f3b0f1d`.
+- failed R03 attempt 1 stopped at descriptive-uncertainty normalization and produced no v4; failed attempt 2 stopped at D-078 evidence normalization and produced no v4. The complete machine-readable trail is `results/m7/failures/m7-r03-protected-attempt-audit.json`.
+- final executable/reporting software commit: `a1a696204a8b06263efa8bb57abc610af3f7361e`.
+- provenance-correction execution manifest: `results/m7/manifest/m7-final-execution-v6-d084-r03-final.json`, SHA-256 `f837258312adf17ec1a04079c71c5461838a4aff5096541acd993bb94da24306`.
+- current result: `results/m7/final/m7-final-results-v5.json`, SHA-256 `b5c7cc2efdbbbab53c65d54aa77542a2e69a71c42d5bdc670e2fd8c34af2dd9b`.
+- v5 and v4 scientific result fields are exactly equal after excluding only the `first_protected_outcome_access` manifest/software identity. No scientific difference paths exist.
+- v5 contains E1-E9 for both decoder families; E1/E2/E8 use the ten protected final subjects, and balanced E3/E4/E6/E7/E9/statistics use exactly subjects `89,16,34,29,31,93,21,76` (`n=8`).
+- E6 task success (successes/38): CSP+LDA A `25`, B `38`, C `32`, D `32`; EEGNet A `23`, B `38`, C `36`, D `36`.
+- E1 decoding (303 trials): CSP+LDA accuracy `0.6666666667`, balanced accuracy `0.6694139194`, macro-F1 `0.6649000821`; EEGNet accuracy `0.6006600660`, balanced accuracy `0.6092360021`, macro-F1 `0.5691014867`.
+- E2 CSP+LDA calibration changes ECE `0.0494808370 -> 0.0396807121` but Brier `0.2218791120 -> 0.2252827713`, a mixed result. EEGNet changes ECE `0.0732076078 -> 0.0569570918` and Brier `0.2297121935 -> 0.2252952566`.
+- E7 includes six ablations plus exactly 40 R1 and 40 R2 cells. The complete values are preserved in `results/m7/tables/e7_ablations.csv`, `results/m7/tables/e7_r1_robustness.csv`, and `results/m7/tables/e7_r2_robustness.csv`.
+- E9 C versus personalized D success is unchanged at `32/38` for CSP+LDA and `36/38` for EEGNet; prior trajectories and explicit-feedback updates remain available in the v5 result and adaptation table.
+- D-079 D-minus-A correctness uses one value per subject (`n=8`), 10,000 paired bootstrap resamples with seed 42, and 256 exact sign flips. CSP+LDA effect `0.15625`, 95% CI `[0.0416666667, 0.28125]`, raw p `0.125`, Holm p `0.125`. EEGNet effect `0.3166666667`, 95% CI `[0.1666666667, 0.4625]`, raw p `0.03125`, Holm p `0.0625`. Neither comparison is significant after Holm correction at 0.05.
+- tables and figures were deterministically derived only from v5; their paths and hashes are bound by `results/m7/manifest/m7-final-report-artifacts-v5.json` (`bfe753c689ad3a2cd00c3ae0c2c891ab0113e614e2b2d7165c1b92fad1a496b2`).
+- this was a provenance-correction rerun, not tuning or selection. There was no refitting, retraining, threshold change, split/subject change, metric change, perturbation/ablation change, model/calibrator change, planner/safety change, or adaptation-policy change.
+- findings remain candidate results pending scientific review. They do not establish uniform superiority of D, uniform calibration benefit, real-human efficacy, live EEG performance, physical-robot performance, real Search & Rescue efficacy, certified safety, or clinical benefit.

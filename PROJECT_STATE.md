@@ -5,7 +5,7 @@
 
 **Purpose:** Authoritative live record of what is actually true now about the project.  
 **Workflow:** ChatGPT + Project Owner + Codex + Git/GitHub  
-**Last updated:** 2026-09-13
+**Last updated:** 2026-09-14
 
 ---
 
@@ -47,7 +47,7 @@ Current task:
 
 Task status:
 
-**ACTIVE / AUTHORIZED — R02 CANDIDATE REVIEW**
+**ACTIVE — R03 FINAL CANDIDATE REVIEW**
 
 Authorized task branch:
 
@@ -79,13 +79,13 @@ On 2026-09-13 the Project Owner explicitly approved:
 
 `CURRENT_TASK.md` contains the exact M7-T02 execution contract and is the current implementation authority.
 
-D-081 now resolves the previously reported M7-T02 episode-construction blocker. It freezes same-subject/same-run/same-intended-class, event-sample-ordered, non-overlapping five-trial blocks; explicit tail exclusions; identical A/B/C/D episode pairing; deterministic E9 ordering; and the protected-data-prefetch interpretation. M7-T02 remains ACTIVE / AUTHORIZED. E1–E9 remain unexecuted and protected final outcomes remain unaccessed at this decision point.
+D-081 resolves the previously reported M7-T02 episode-construction blocker. It freezes same-subject/same-run/same-intended-class, event-sample-ordered, non-overlapping five-trial blocks; explicit tail exclusions; identical A/B/C/D episode pairing; deterministic E9 ordering; and the protected-data-prefetch interpretation. This is retained as the historical pre-access contract; protected execution has since occurred under the preserved audit trail.
 
 D-082 now resolves the post-QC cohort-size blocker without changing D-035. M7-T02 must complete the fixed 150 µV QC audit for all 109 source subjects, freeze the actual post-QC eligible cohort, then assign every eligible subject using one ascending-sort/seed-42 shuffle and deterministic largest-remainder 70/15/15 allocation. The historical 76/16/17 counts and provisional final-subject list are not forced execution inputs.
 
 D-083 resolves the remaining eligibility ambiguity: cross-subject eligibility requires at least one retained T1 and one retained T2 trial after QC. D-040 within-subject feasibility and D-081 balanced-sequential participation remain separate. Episode availability is assessed only after split freeze and cannot remove, replace, reshuffle, or move a frozen subject.
 
-D-084 resolves the former E7 ablation-semantics blocker. `Full - Bayes` now uses a cumulative arithmetic mean over the calibrated D-081 evidence and the approved threshold policy; `Full - uncertainty` consumes all five Bayesian updates and commits only the final posterior argmax without uncertainty gates. M7-T02-R02 corrected E6/E7 per-episode mission orchestration, preserves v1/v2 as invalid, and generated v3 for review.
+D-084 resolves the former E7 ablation-semantics blocker. `Full - Bayes` uses a cumulative arithmetic mean over the calibrated D-081 evidence and the approved threshold policy; `Full - uncertainty` consumes all five D-053 Bayesian updates and commits only the final posterior argmax without uncertainty gates. R03 preserves v1-v3 as invalid implementation-contract artifacts and v4 as `INVALID_PROVENANCE_BINDING`. The provenance-correct v5 artifact is the current scientific-review candidate.
 
 Pre-final audit state at the block:
 
@@ -96,7 +96,16 @@ Pre-final audit state at the block:
 - 261 D-081 episodes; 2,017 retained source trials; 1,305 sequential observations; 712 tail observations;
 - D-083 final balanced-sequential IDs: `89, 16, 34, 29, 31, 93, 21, 76` (`n=8`);
 - no-replacement exclusions: subject 84 has no valid class episode; subject 57 has a T1 episode only;
-- protected outcomes were accessed under the frozen manifests; v1 is invalid and preserved, and v2 is the current R01 candidate-review artifact. No refitting or scientific tuning occurred.
+- protected outcomes were accessed under the frozen manifests; v1-v3 are preserved as `INVALID_IMPLEMENTATION_CONTRACT`, v4 is preserved as `INVALID_PROVENANCE_BINDING`, and v5 is the current R03 final candidate. No refitting, scientific tuning, or outcome-driven selection occurred.
+
+R03 final provenance state:
+
+- final executable/reporting software SHA: `a1a696204a8b06263efa8bb57abc610af3f7361e`;
+- final execution manifest: `results/m7/manifest/m7-final-execution-v6-d084-r03-final.json`, SHA-256 `f837258312adf17ec1a04079c71c5461838a4aff5096541acd993bb94da24306`;
+- v5 result: `results/m7/final/m7-final-results-v5.json`, SHA-256 `b5c7cc2efdbbbab53c65d54aa77542a2e69a71c42d5bdc670e2fd8c34af2dd9b`;
+- v5 scientific fields are exactly equal to v4 after excluding only `first_protected_outcome_access` provenance;
+- E1-E9, the six E7 ablations, 40 R1 cells, 40 R2 cells, D-079 statistics, tables, figures, and failure-taxonomy registry are present;
+- candidate review remains outstanding; M7-T02 is not merged, accepted, or closed.
 
 Frozen manifest file hashes:
 
@@ -111,7 +120,7 @@ Frozen manifest file hashes:
 
 The M7-T02 Phase 0 governance reconciliation is complete on the authorized task branch: `MASTER_PROJECT_SPEC.md` is reconciled through D-079, D-080 records the already-approved frozen M7-T02 execution contract, and directly stale M7 planning/status wording is corrected.
 
-This reconciliation must be committed before any protected final-test outcome is accessed. Its exact commit SHA is preserved in Git history and the M7-T02 completion report. Protected final-test access remains forbidden until that commit exists.
+This reconciliation was committed before protected final-test outcome access. Its exact commit SHA and the first-access audit are preserved in Git history and `EXPERIMENT_LOG.md`.
 
 ---
 

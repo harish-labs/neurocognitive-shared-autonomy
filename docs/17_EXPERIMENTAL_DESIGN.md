@@ -6,7 +6,7 @@
 **Document ID:** I-01  
 **Document class:** Experiments & Evaluation / Experimental Design Specification  
 **Authority level:** Subordinate to all Master Authority, Scenario, Architecture, Data, Neuroscience, ML, Bayesian, Shared-Autonomy, Planning, Safety, Implementation, and Repository Architecture documents  
-**Status:** Authoritative experiment-design baseline reconciled through D-079; no reportable final results exist
+**Status:** Authoritative experiment-design baseline reconciled through D-084; M7-T02 R03 v5 is an unaccepted scientific-review candidate
 **Project title:** **NeuroCognitive Shared Autonomy for Search & Rescue — EEG-Based Intent Decoding with Bayesian Goal Inference and Uncertainty-Aware Adaptive Control**
 
 ---

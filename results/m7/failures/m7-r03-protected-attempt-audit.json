@@ -1,0 +1,39 @@
+{
+  "schema_version": "m7-r03-protected-attempt-audit-v1",
+  "scientific_policy_changed": false,
+  "final_test_driven_tuning_or_selection": false,
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "FAILED_CLOSED_NO_V4_ARTIFACT",
+      "failure": "descriptive_uncertainty_probability_normalization_boundary",
+      "remediation_commit": "ce4e8f9dc5a763683275aea46e6a15a6914f25aa"
+    },
+    {
+      "attempt": 2,
+      "status": "FAILED_CLOSED_NO_V4_ARTIFACT",
+      "failure": "d078_robustness_evidence_probability_normalization_boundary",
+      "remediation_commit": "d5d4aa83b666276f8c581f161c26294a0afeca6b"
+    },
+    {
+      "attempt": 3,
+      "status": "INVALID_PROVENANCE_BINDING",
+      "result_path": "results/m7/final/m7-final-results-v4.json",
+      "result_sha256": "0eb854db327debab5edd1da156555fc83320e94696ff84886b97a6594bed769d",
+      "manifest_path": "results/m7/manifest/m7-final-execution-v5-d084-r03.json",
+      "manifest_sha256": "0c446cf83a2b4c5a79317d9848bbec3b3725f8038cff1e8d9e78b7ffbb8c15fc",
+      "reason": "The result was generated after the approved mechanical normalization fixes, while its manifest identified the pre-normalization runner SHA f3b0f1d. Scientific values were not used for tuning or selection."
+    },
+    {
+      "attempt": 4,
+      "status": "R03_FINAL_CANDIDATE_REVIEW",
+      "result_path": "results/m7/final/m7-final-results-v5.json",
+      "result_sha256": "b5c7cc2efdbbbab53c65d54aa77542a2e69a71c42d5bdc670e2fd8c34af2dd9b",
+      "manifest_path": "results/m7/manifest/m7-final-execution-v6-d084-r03-final.json",
+      "manifest_sha256": "f837258312adf17ec1a04079c71c5461838a4aff5096541acd993bb94da24306",
+      "software_sha": "a1a696204a8b06263efa8bb57abc610af3f7361e",
+      "v4_scientific_fields_equal": true,
+      "scientific_difference_paths": []
+    }
+  ]
+}

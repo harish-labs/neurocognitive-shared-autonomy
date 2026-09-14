@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 
+from src.evaluation.final_contract import manifest_from_mapping, sha256_file
 from src.evaluation.final_reporting import (
     FinalReportingError,
     compare_scientific_results,
@@ -14,6 +15,7 @@ from src.evaluation.final_reporting import (
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 V4_RESULT = REPOSITORY_ROOT / "results" / "m7" / "final" / "m7-final-results-v4.json"
+V5_RESULT = REPOSITORY_ROOT / "results" / "m7" / "final" / "m7-final-results-v5.json"
 
 
 def _v4():
@@ -94,3 +96,37 @@ def test_failure_table_does_not_fabricate_unavailable_counts(tmp_path):
     table = (root / "tables" / "failure_taxonomy.csv").read_text(encoding="utf-8")
     assert "NOT_AGGREGATED_IN_RESULT_SCHEMA" in table
     assert "provenance_manifest_artifact_failure" in table
+
+
+def test_final_v5_candidate_is_complete_provenance_bound_and_preserves_history():
+    v4 = _v4()
+    v5 = json.loads(V5_RESULT.read_text(encoding="utf-8"))
+    validate_final_result_contract(v5)
+    assert compare_scientific_results(v4, v5)["scientific_fields_equal"] is True
+    assert sha256_file(V5_RESULT) == "b5c7cc2efdbbbab53c65d54aa77542a2e69a71c42d5bdc670e2fd8c34af2dd9b"
+
+    execution_path = REPOSITORY_ROOT / "results" / "m7" / "manifest" / "m7-final-execution-v6-d084-r03-final.json"
+    execution = manifest_from_mapping(json.loads(execution_path.read_text(encoding="utf-8")))
+    execution.validate()
+    assert execution.software_sha == "a1a696204a8b06263efa8bb57abc610af3f7361e"
+    assert v5["first_protected_outcome_access"]["software_sha"] == execution.software_sha
+    assert v5["first_protected_outcome_access"]["authorization_manifest_sha256"] == sha256_file(execution_path)
+
+    expected_history = {
+        "m7-final-results-v1.json": "c931f58b92b676bfbb8a184446ddb39da5011f279d84d419245503d8db139c5c",
+        "m7-final-results-v2.json": "917f48b96ae47e8d38a867c1a9adc41b08607a3fc07cd2c0c2c5528aa5ba26e2",
+        "m7-final-results-v3.json": "be16490455e8c19e37378083db0332f91cbeb4d8aa111755fed341a43798e962",
+        "m7-final-results-v4.json": "0eb854db327debab5edd1da156555fc83320e94696ff84886b97a6594bed769d",
+    }
+    for name, digest in expected_history.items():
+        assert sha256_file(V5_RESULT.parent / name) == digest
+
+    report_path = REPOSITORY_ROOT / "results" / "m7" / "manifest" / "m7-final-report-artifacts-v5.json"
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["source_result_sha256"] == sha256_file(V5_RESULT)
+    assert len([item for item in report["artifacts"] if item["artifact_type"] == "table"]) == 11
+    assert len([item for item in report["artifacts"] if item["artifact_type"] == "figure"]) == 4
+    for item in report["artifacts"]:
+        if item["status"] == "GENERATED":
+            path = REPOSITORY_ROOT / "results" / item["path"]
+            assert sha256_file(path) == item["sha256"]

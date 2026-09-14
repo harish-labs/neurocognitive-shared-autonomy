@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** M1–M6 and M7-T01 accepted and merged; M7-T02 is authorized but blocked before final-manifest freeze on unresolved E7 ablation execution semantics
+**Current stage:** M1–M6 and M7-T01 accepted and merged; M7-T02 R03 final candidate is locally complete and awaiting scientific review/export authorization
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -131,7 +131,7 @@ Potential next work must be scientifically narrowed and explicitly approved befo
 [ ] Build the 2D Search & Rescue environment only under an approved narrow ticket
 [ ] Build A* / risk-aware planning only under approved planning decisions and task scope
 [ ] Build explicit safety-controller behavior only under approved safety decisions and task scope
-[ ] Run reportable decoder/calibration/Bayesian/shared-autonomy/adaptation evaluation only under approved experiment tasks/protocols
+[x] Run reportable decoder/calibration/Bayesian/shared-autonomy/adaptation evaluation only under approved experiment tasks/protocols
 ```
 
 Do not infer authorization from this list.
@@ -217,12 +217,12 @@ Do not infer authorization from this list.
 [x] Verify default [0.5,0.5] Bayes prior remains unchanged when no custom prior supplied
 [x] Verify custom prior does not alter Bayesian evidence-update mathematics
 [ ] Run reportable within-subject decoder evaluation
-[ ] Run reportable cross-subject decoder evaluation
-[ ] Run reportable calibration evaluation
-[ ] Run reportable Bayesian inference evaluation
-[ ] Run reportable shared-autonomy evaluation
-[ ] Run reportable adaptation evaluation
-[ ] Conduct failure analysis after reportable evaluation
+[x] Run reportable cross-subject decoder evaluation
+[x] Run reportable calibration evaluation
+[x] Run reportable Bayesian inference evaluation
+[x] Run reportable shared-autonomy evaluation
+[x] Run reportable adaptation evaluation
+[x] Conduct failure-taxonomy audit after reportable evaluation
 ```
 
 ---

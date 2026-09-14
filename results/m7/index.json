@@ -1,8 +1,9 @@
 {
-  "schema_version": "m7-t02-result-index-v4",
-  "status": "R03_REVIEW_REQUIRED",
-  "generating_software_sha": "d5d4aa8",
+  "schema_version": "m7-t02-result-index-v5",
+  "status": "M7_T02_ACTIVE_R03_FINAL_CANDIDATE_REVIEW",
+  "generating_software_sha": "a1a696204a8b06263efa8bb57abc610af3f7361e",
   "protected_outcomes_accessed": true,
+  "no_refitting_retuning_or_selection": true,
   "manifests": {
     "qc_eligibility": {
       "path": "results/m7/manifest/m7-d082-qc-eligibility-v1.json",
@@ -21,60 +22,71 @@
       "sha256": "8de4367ab2d274c28dff38c331c1af22e0a52815be6914f208d3c0225da11286"
     },
     "final_execution": {
-      "path": "results/m7/manifest/m7-final-execution-v5-d084-r03.json",
-      "sha256": "0c446cf83a2b4c5a79317d9848bbec3b3725f8038cff1e8d9e78b7ffbb8c15fc",
-      "software_sha": "f3b0f1d"
+      "path": "results/m7/manifest/m7-final-execution-v6-d084-r03-final.json",
+      "sha256": "f837258312adf17ec1a04079c71c5461838a4aff5096541acd993bb94da24306",
+      "software_sha": "a1a696204a8b06263efa8bb57abc610af3f7361e"
+    },
+    "final_reports": {
+      "path": "results/m7/manifest/m7-final-report-artifacts-v5.json",
+      "sha256": "bfe753c689ad3a2cd00c3ae0c2c891ab0113e614e2b2d7165c1b92fad1a496b2",
+      "source_result_sha256": "b5c7cc2efdbbbab53c65d54aa77542a2e69a71c42d5bdc670e2fd8c34af2dd9b"
     }
   },
-  "cohort_flow": "results/m7/cohort_flow.json",
-  "prefinal_blocker": "results/m7/failures/prefinal-blocker.json",
   "artifacts": {
-    "csp_lda_decoder": "NOT_FIT_PREFINAL_BLOCK",
-    "csp_platt_calibrator": "NOT_FIT_PREFINAL_BLOCK",
-    "eegnet_decoder": "NOT_FIT_PREFINAL_BLOCK",
-    "eegnet_temperature_calibrator": "NOT_FIT_PREFINAL_BLOCK"
+    "csp_lda_decoder": "92ece3af6102ee171476ede3639ded4beaa39ae8b09d90146499e2015f75baad",
+    "csp_platt_calibrator": "9cbc826cf662211eba59a351c2e6531d87e63c11b9314dfebd826cba267cedaa",
+    "eegnet_decoder": "a523c332d9acde422beb680d4ef2ed3200bf7457df3e866bc030cd5a37bd78a5",
+    "eegnet_temperature_calibrator": "8d30a7b8f7cfae4c8d4f3496d25bacc83c4db540001236e577d693ffcdff0876"
   },
   "superseded_invalid_results": [
     {
       "path": "results/m7/final/m7-final-results-v1.json",
       "sha256": "c931f58b92b676bfbb8a184446ddb39da5011f279d84d419245503d8db139c5c",
-      "status": "INVALID_IMPLEMENTATION_CONTRACT",
-      "reasons": ["D-083 sequential participation leakage", "E7 adaptation and safety ablations were not faithful", "E7/E8 family assignment was incorrect"]
+      "status": "INVALID_IMPLEMENTATION_CONTRACT"
     },
     {
       "path": "results/m7/final/m7-final-results-v2.json",
       "sha256": "917f48b96ae47e8d38a867c1a9adc41b08607a3fc07cd2c0c2c5528aa5ba26e2",
-      "status": "INVALID_IMPLEMENTATION_CONTRACT",
-      "reasons": ["E6 used the S1-S7 controlled scenario suite instead of per-episode two-goal M6 mission execution", "E7 safety ablation was not within full-system mission orchestration"]
+      "status": "INVALID_IMPLEMENTATION_CONTRACT"
     },
     {
       "path": "results/m7/final/m7-final-results-v3.json",
       "sha256": "be16490455e8c19e37378083db0332f91cbeb4d8aa111755fed341a43798e962",
-      "status": "INVALID_IMPLEMENTATION_CONTRACT",
-      "reasons": ["B simulated-human handling incomplete", "E7 robustness and ablation completeness incomplete", "E3/E4/E9 trace/orchestration incomplete"]
+      "status": "INVALID_IMPLEMENTATION_CONTRACT"
+    },
+    {
+      "path": "results/m7/final/m7-final-results-v4.json",
+      "sha256": "0eb854db327debab5edd1da156555fc83320e94696ff84886b97a6594bed769d",
+      "status": "INVALID_PROVENANCE_BINDING",
+      "reason": "Manifest identified pre-normalization software SHA f3b0f1d although the generated result used the approved normalization fixes."
     }
   ],
   "result": {
-    "path": "results/m7/final/m7-final-results-v4.json",
-    "sha256": "0eb854db327debab5edd1da156555fc83320e94696ff84886b97a6594bed769d",
-    "status": "R03_CANDIDATE_REVIEW"
+    "path": "results/m7/final/m7-final-results-v5.json",
+    "sha256": "b5c7cc2efdbbbab53c65d54aa77542a2e69a71c42d5bdc670e2fd8c34af2dd9b",
+    "status": "R03_FINAL_CANDIDATE_REVIEW",
+    "scientifically_equal_to_v4_except_execution_provenance": true
   },
-  "sequential_subject_ids": [89, 16, 34, 29, 31, 93, 21, 76],
   "protected_final_subject_ids": [89, 16, 34, 29, 84, 57, 31, 93, 21, 76],
+  "sequential_subject_ids": [89, 16, 34, 29, 31, 93, 21, 76],
   "experiment_status": {
-    "E1": "EXECUTED_R02",
-    "E2": "EXECUTED_R02",
-    "E3": "EXECUTED_R02",
-    "E4": "EXECUTED_R02",
-    "E5": "EXECUTED_R02_S1_S7",
-    "E6": "EXECUTED_R02_PER_EPISODE_M6_MISSION",
-    "E7_ablation": "EXECUTED_R02_MISSION_ABLATION",
-    "E7_robustness": "EXECUTED_R02",
-    "E8": "EXECUTED_R02_HELD_OUT_CROSS_SUBJECT",
-    "E9": "EXECUTED_R02",
-    "statistics": "EXECUTED_R02_SUBJECT_LEVEL",
-    "failures": "PREFINAL_BLOCKER_ONLY",
-    "figures": "NOT_GENERATED_NO_RESULTS",
-    "tables": "COHORT_FLOW_ONLY"
-  }
+    "E1": "EXECUTED_V5_ALL_10_FINAL_SUBJECTS",
+    "E2": "EXECUTED_V5_ALL_10_FINAL_SUBJECTS",
+    "E3": "EXECUTED_V5_SEQUENTIAL_N8",
+    "E4": "EXECUTED_V5_SEQUENTIAL_N8",
+    "E5": "EXECUTED_V5_EXACT_S1_S7",
+    "E6": "EXECUTED_V5_ABCD_PER_EPISODE_M6_MISSION_N8",
+    "E7_ablation": "EXECUTED_V5_SIX_MISSION_ABLATIONS_N8",
+    "E7_R1": "EXECUTED_V5_40_CELLS",
+    "E7_R2": "EXECUTED_V5_40_CELLS_POPULATION_LEVEL",
+    "E8": "EXECUTED_V5_HELD_OUT_CROSS_SUBJECT_N10",
+    "E9": "EXECUTED_V5_ORDERED_STATEFUL_ADAPTATION_N8",
+    "statistics": "EXECUTED_V5_SUBJECT_LEVEL_N8_10000_BOOTSTRAP_256_EXACT_SIGN_FLIPS_HOLM",
+    "failure_taxonomy": "CATEGORIES_REPORTED_COUNTS_NOT_AGGREGATED_IN_RESULT_SCHEMA",
+    "figures": "GENERATED_FROM_V5",
+    "tables": "GENERATED_FROM_V5"
+  },
+  "attempt_audit": "results/m7/failures/m7-r03-protected-attempt-audit.json",
+  "cohort_flow": "results/m7/cohort_flow.json",
+  "prefinal_blocker": "results/m7/failures/prefinal-blocker.json"
 }
