@@ -4,7 +4,7 @@
 ### Reproducible Experiment Register
 
 **Purpose:** Record experiments that were actually executed  
-**Current status:** R02 candidate results executed; scientific review pending.  
+**Current status:** R02 candidate results executed; scientific review pending.
 **Rule:** Hypothetical, planned, or synthetic examples must not be logged as completed reportable experiments
 
 ---
