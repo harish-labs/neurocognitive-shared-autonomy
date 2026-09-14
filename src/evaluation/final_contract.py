@@ -37,12 +37,47 @@ from src.evaluation.episodes import (
 from src.evaluation.robustness import R1_SEVERITIES, R2_SEVERITIES
 
 
-M7_EXECUTION_MANIFEST_VERSION = "m7-t02-final-execution-v5-d084"
+M7_EXECUTION_MANIFEST_VERSION = "m7-t02-final-execution-v6-d084-r03-final"
 M7_RESULT_SCHEMA_VERSION = "m7-final-results-v1"
 M7_SCENARIO_VERSION = "m7-t02-s1-s7-v1"
 SIMULATED_HUMAN_POLICY_ID = "m7-t02-deterministic-simulated-human-v1"
 OPERATIONAL_SEED = 42
 EXPECTED_EXPERIMENT_FAMILIES = tuple(f"E{index}" for index in range(1, 10))
+EXPECTED_POLICY_IDS = tuple(f"D-{index:03d}" for index in range(77, 85))
+FORMAL_COMPARISON_SET = (
+    "csp_lda.D_minus_A_correctness",
+    "eegnet.D_minus_A_correctness",
+)
+FINAL_REPORTING_CONTRACT: Mapping[str, Any] = {
+    "source": "single_frozen_machine_readable_result_artifact",
+    "tables": (
+        "E1_decoder_performance",
+        "E2_raw_vs_calibrated",
+        "E2_calibration_reliability",
+        "E6_ABCD",
+        "E7_ablations",
+        "E7_R1_robustness",
+        "E7_R2_robustness",
+        "E8_subject_wise_cross_subject",
+        "E9_adaptation_trajectory",
+        "D079_statistics",
+        "failure_taxonomy",
+    ),
+    "figures": (
+        "E2_calibration_reliability",
+        "E7_R1_robustness",
+        "E7_R2_robustness",
+        "E9_adaptation_trajectory",
+    ),
+    "degenerate_figure_policy": "NOT_INFORMATIVE_with_machine_readable_table",
+    "new_metrics_or_tests": False,
+    "smoothing": False,
+    "selective_plotting": False,
+}
+PROVENANCE_CORRECTION_PURPOSE = (
+    "R03 final software-to-manifest provenance correction rerun; no tuning, model selection, "
+    "metric selection, policy selection, refitting, or retraining"
+)
 FINAL_SPLIT_NAMES = frozenset({"final_test", "protected_final_test"})
 FIT_SPLIT_NAMES = frozenset({"train", "training", "validation"})
 
@@ -240,6 +275,10 @@ class M7FinalExecutionManifest:
     experiment_families: tuple[str, ...]
     protected_access_status: str
     protected_data_prefetch_audit: Mapping[str, Any]
+    policy_ids: tuple[str, ...]
+    formal_comparison_set: tuple[str, ...]
+    reporting_contract: Mapping[str, Any]
+    execution_purpose: str
 
     def validate(self) -> D082CrossSubjectSplitManifest:
         if self.manifest_version != M7_EXECUTION_MANIFEST_VERSION:
@@ -301,6 +340,14 @@ class M7FinalExecutionManifest:
             raise FinalContractError("Final manifest must list E1 through E9 exactly.")
         if self.statistical_policy_ids != ("D-079", "D-080", "D-081", "D-082", "D-083", "D-084"):
             raise FinalContractError("Final manifest must preserve D-079 through D-084 execution policy IDs.")
+        if self.policy_ids != EXPECTED_POLICY_IDS:
+            raise FinalContractError("Final manifest must bind D-077 through D-084 exactly.")
+        if self.formal_comparison_set != FORMAL_COMPARISON_SET:
+            raise FinalContractError("Final manifest formal comparison set changed.")
+        if _plain(self.reporting_contract) != _plain(FINAL_REPORTING_CONTRACT):
+            raise FinalContractError("Final manifest reporting contract changed.")
+        if self.execution_purpose != PROVENANCE_CORRECTION_PURPOSE:
+            raise FinalContractError("Final manifest must identify the provenance-correction rerun purpose.")
         if self.protected_access_status != "NOT_ACCESSED_AT_FREEZE":
             raise FinalContractError("The manifest must be frozen before protected outcomes are accessed.")
         if self.protected_data_prefetch_audit.get("classification") != "protected_data_prefetch_not_outcome_access":
@@ -501,6 +548,10 @@ def build_final_manifest(
             "protected_outcomes_observed": False,
             "selection_or_tuning_from_prefetch": False,
         },
+        policy_ids=EXPECTED_POLICY_IDS,
+        formal_comparison_set=FORMAL_COMPARISON_SET,
+        reporting_contract=FINAL_REPORTING_CONTRACT,
+        execution_purpose=PROVENANCE_CORRECTION_PURPOSE,
     )
 
 
@@ -681,6 +732,10 @@ def manifest_from_mapping(payload: Mapping[str, Any]) -> M7FinalExecutionManifes
         experiment_families=tuple(str(value) for value in payload["experiment_families"]),
         protected_access_status=str(payload["protected_access_status"]),
         protected_data_prefetch_audit=dict(payload["protected_data_prefetch_audit"]),
+        policy_ids=tuple(str(value) for value in payload.get("policy_ids", ())),
+        formal_comparison_set=tuple(str(value) for value in payload.get("formal_comparison_set", ())),
+        reporting_contract=dict(payload.get("reporting_contract", {})),
+        execution_purpose=str(payload.get("execution_purpose", "")),
     )
 
 

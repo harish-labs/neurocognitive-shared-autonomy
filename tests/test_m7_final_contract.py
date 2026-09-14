@@ -6,6 +6,9 @@ import pytest
 
 from src.evaluation.final_contract import (
     EXPECTED_EXPERIMENT_FAMILIES,
+    EXPECTED_POLICY_IDS,
+    FINAL_REPORTING_CONTRACT,
+    FORMAL_COMPARISON_SET,
     FULL_SYSTEM_MISSION_MAP,
     OPERATIONAL_SEED,
     SCENARIOS,
@@ -207,6 +210,10 @@ def test_manifest_contains_exact_execution_families_map_and_seed(tmp_path):
     )
     payload = json.loads(json.dumps(manifest, default=lambda value: value.__dict__))
     assert manifest.experiment_families == EXPECTED_EXPERIMENT_FAMILIES
+    assert manifest.policy_ids == EXPECTED_POLICY_IDS
+    assert manifest.formal_comparison_set == FORMAL_COMPARISON_SET
+    assert manifest.reporting_contract == FINAL_REPORTING_CONTRACT
+    assert "provenance correction rerun" in manifest.execution_purpose
     assert manifest.r2_seed == manifest.bootstrap_seed == OPERATIONAL_SEED
     assert manifest.full_system_mission_map == FULL_SYSTEM_MISSION_MAP
     assert tuple(item.scenario_id for item in SCENARIOS) == ("S1", "S2", "S3", "S4", "S5", "S6", "S7")
