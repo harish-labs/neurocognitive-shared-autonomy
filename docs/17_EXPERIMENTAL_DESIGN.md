@@ -672,6 +672,8 @@ Full - safety
 Full - adaptation
 ```
 
+D-084 defines the otherwise non-equivalent execution semantics for the two sequential ablations: `Full - Bayes` uses the calibrated cumulative arithmetic mean after each of the same five D-081 observations and retains the approved `>=0.90` PROCEED, final `[0.75,0.90)` CONFIRM, and final `<0.75` DEFER policy. `Full - uncertainty` retains Bayesian updates but always consumes exactly five observations, records posterior entropy descriptively, then commits the final posterior argmax without PROCEED/CONFIRM/DEFER gating; exact ties select candidate A and are logged.
+
 The architecture has already been designed to support this.
 
 ---

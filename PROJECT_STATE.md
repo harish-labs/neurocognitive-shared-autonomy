@@ -47,7 +47,7 @@ Current task:
 
 Task status:
 
-**BLOCKED / AUTHORIZED — OWNER DECISION REQUIRED BEFORE FINAL-MANIFEST FREEZE**
+**ACTIVE / AUTHORIZED — PRE-FINAL EXECUTION**
 
 Authorized task branch:
 
@@ -85,7 +85,7 @@ D-082 now resolves the post-QC cohort-size blocker without changing D-035. M7-T0
 
 D-083 resolves the remaining eligibility ambiguity: cross-subject eligibility requires at least one retained T1 and one retained T2 trial after QC. D-040 within-subject feasibility and D-081 balanced-sequential participation remain separate. Episode availability is assessed only after split freeze and cannot remove, replace, reshuffle, or move a frozen subject.
 
-The resumed implementation review identified a new pre-final scientific blocker in the required E7 ablations. D-077 freezes the component flags for `Full - Bayes` and `Full - uncertainty`, but no approved authority freezes the replacement decision rule when Bayes or uncertainty gating is removed. Because different aggregation/commitment rules would materially change reportable outcomes, M7-T02 must not freeze its final execution manifest or access protected outcomes until the Project Owner approves those exact operational semantics.
+D-084 resolves the former E7 ablation-semantics blocker. `Full - Bayes` now uses a cumulative arithmetic mean over the calibrated D-081 evidence and the approved threshold policy; `Full - uncertainty` consumes all five Bayesian updates and commits only the final posterior argmax without uncertainty gates. M7-T02 may proceed through its artifact/test/final-manifest gates, but protected outcomes remain unavailable until every gate passes.
 
 Pre-final audit state at the block:
 

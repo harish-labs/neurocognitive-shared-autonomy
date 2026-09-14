@@ -2579,6 +2579,34 @@ Every sequential experiment records its actual complete-pair subject count, incl
 
 ---
 
+## D-084 — E7 Bayes and Uncertainty Ablation Execution Semantics
+
+**Status:** APPROVED
+
+**Date:** 2026-09-13
+
+**Supplements:** D-055 through D-057, D-077 through D-083
+
+**Decision:**
+
+`Full - Bayes` retains calibrated D-081 five-observation evidence, uncertainty gating, deterministic simulated-human behavior, adaptation, planning, risk, safety, and emergency authority, while removing only recursive Bayesian accumulation. For observations `p_1 ... p_t`, use the normalized cumulative arithmetic mean `mean_p_t = (p_1 + ... + p_t) / t`. At observations 1--5, PROCEED immediately only when the leading running-mean probability is at least `0.90`. At observation 5, a leading mean in `[0.75, 0.90)` enters CONFIRM; a leading mean below `0.75` enters DEFER. Entropy is descriptive only. This ablation must not multiply probabilities or odds, sum logits, use a recursive prior/posterior state, use only a first/final observation, or force an argmax below threshold.
+
+`Full - uncertainty` retains calibrated D-052 likelihood construction, D-053 sequential Bayesian updating, adaptation, planner/risk/safety, and human STOP/PAUSE/emergency authority, while removing uncertainty-dependent autonomous gates and intervention. It consumes exactly five D-081 observations, records posterior and entropy after every update descriptively, and does not PROCEED, CONFIRM, or DEFER before observation five. At observation five it commits the posterior argmax directly; an exact tie uses stable candidate order A before B and logs that tie-break. No simulated-human correction is generated from uncertainty in this ablation.
+
+The controlled E7 comparison is: Full = Bayesian/up-to-five/uncertainty ON; Full - Bayes = arithmetic running mean/up-to-five/uncertainty ON; Full - uncertainty = Bayesian/exactly-five/uncertainty OFF. No additional thresholds or aggregation methods are authorized.
+
+**Context:** D-077 froze the one-component ablation registry but did not state executable replacement semantics when Bayes or uncertainty gating was removed.
+
+**Rationale:** These rules preserve the same calibrated evidence basis and all unrelated Full-system components while making the required E7 comparisons deterministic and auditable.
+
+**Affected documents/modules:** `DECISIONS.md`, `CURRENT_TASK.md`, `PROJECT_STATE.md`, `RESEARCH_LOG.md`, `docs/17_EXPERIMENTAL_DESIGN.md`, `docs/18_METRICS_AND_EVALUATION.md`, and authorized `src/evaluation/**` tests/runner/manifest code only.
+
+**Implementation consequence:** M7-T02 may implement these exact evaluation-layer ablations, freeze them in the final execution manifest, and proceed through the existing pre-final artifact/test gates. D-084 does not authorize production-module changes, final-outcome-driven tuning, M8, or merging M7-T02.
+
+**Approved by:** Project Owner
+
+---
+
 # 3. UNRESOLVED DECISIONS
 
 The following remain explicitly unresolved.

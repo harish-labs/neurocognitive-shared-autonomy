@@ -1820,7 +1820,7 @@ M7-T01 now fixes per-class precision/recall/F1 plus macro F1, D-050 calibration 
 
 # 104. DECISIONS REQUIRED BEFORE FINAL METRIC REPORTING
 
-The required metric and inferential rules are governed by D-050, D-062, and D-077 through D-083. D-080 authorizes M7-T02 execution; D-081 freezes the sequential episode unit; D-082 freezes actual cohort derivation and allocation; D-083 freezes one-per-class eligibility and experiment-specific sequential participation. The QC, split, episode, inclusion, and execution manifests must freeze exact source and artifact identities/hashes before protected outcome access. Path efficiency must remain unavailable unless its reference formula is separately approved.
+The required metric and inferential rules are governed by D-050, D-062, and D-077 through D-084. D-080 authorizes M7-T02 execution; D-081 freezes the sequential episode unit; D-082 freezes actual cohort derivation and allocation; D-083 freezes one-per-class eligibility and experiment-specific sequential participation; D-084 freezes E7 Bayes/uncertainty ablation decision semantics. The QC, split, episode, inclusion, artifact, and execution manifests must freeze exact identities/hashes before protected outcome access. Path efficiency must remain unavailable unless its reference formula is separately approved.
 
 ---
 

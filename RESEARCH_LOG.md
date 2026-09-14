@@ -526,7 +526,9 @@ During resumed M7-T02 implementation, Codex verified that D-077 and the approved
 
 For `Full - Bayes`, the approved matrix retains a five-observation horizon while disabling sequential Bayes; no authority selects first evidence, last evidence, averaging, another accumulator, or a commitment time. For `Full - uncertainty`, Bayes remains active while uncertainty gating is disabled; no authority fixes the commitment time/criterion or the status of CONFIRM/DEFER. These alternatives are outcome-affecting scientific choices rather than implementation details.
 
-The issue was identified before artifact freeze, final-execution-manifest freeze, decoder evaluation, or protected outcome access. D-077 through D-083 were not changed, and no substitute rule was implemented. Project Owner approval is required before reportable E7 ablation execution can proceed.
+The issue was identified before artifact freeze, final-execution-manifest freeze, decoder evaluation, or protected outcome access. D-077 through D-083 were not changed, and no substitute rule was implemented at that time.
+
+On 2026-09-13 the Project Owner approved D-084, resolving this execution blocker without changing D-077's component matrix: Full - Bayes uses a calibrated running arithmetic mean with the approved thresholds, and Full - uncertainty consumes exactly five Bayesian updates before an argmax commitment with deterministic A-before-B tie-breaking. These rules are evaluation-layer semantics; pre-final artifact, test, and final-manifest gates remain in force.
 
 The complete pre-final cohort audit was nevertheless finalized without protected outcome access: 68 of 109 source subjects met D-083, the D-082 split is 48/10/10, and the frozen final partition contains subjects 89, 16, 34, 29, 84, 57, 31, 93, 21, and 76. D-081 produced 261 episodes. The D-083 balanced-sequential final sample contains eight subjects; subject 84 has no valid class episode and subject 57 has only a T1 episode. This attrition changes no frozen partition membership.
 

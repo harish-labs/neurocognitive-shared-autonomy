@@ -2,7 +2,7 @@
 
 ## Current Codex Implementation Authority
 
-**Current status:** BLOCKED / AUTHORIZED — OWNER DECISION REQUIRED BEFORE FINAL-MANIFEST FREEZE
+**Current status:** ACTIVE / AUTHORIZED — PRE-FINAL EXECUTION
 **Current milestone:** M7 — Experiments / Ablations / Robustness  
 **Task ID:** M7-T02  
 **Task title:** Frozen Final Experiment Execution & Scientific Audit  
@@ -45,14 +45,9 @@ This is the reportable experiment phase. It may access the protected final-test 
 
 Negative, mixed, non-significant, or unexpected results are valid and must be preserved.
 
-## 2.1 Newly discovered pre-final scientific blocker
+## 2.1 D-084 pre-final ablation semantics
 
-Implementation review found that the approved ablation registry freezes which component is removed but does not freeze the replacement decision semantics for two required E7 conditions:
-
-- `Full - Bayes`: the five-observation horizon remains enabled while sequential Bayesian accumulation is disabled, but no approved rule states how those observations produce a decision probability or when commitment occurs;
-- `Full - uncertainty`: sequential Bayesian accumulation remains enabled while uncertainty gating is disabled, but no approved rule states when the system commits, which posterior it uses, or whether CONFIRM/DEFER remains reachable.
-
-The plausible alternatives are scientifically non-equivalent and would change E7 outcomes. Codex must not select one during implementation. M7-T02 therefore remains authorized but is blocked before artifact/final-execution-manifest freeze and before protected outcome access until the Project Owner approves exact operational rules for these two ablations. D-077 through D-083 otherwise remain unchanged.
+D-084 resolves the prior E7 execution-semantics blocker. `Full - Bayes` uses the approved calibrated five-observation arithmetic running mean with the D-055/D-057 thresholds; `Full - uncertainty` performs all five D-053 Bayesian updates, records uncertainty descriptively, and commits the final posterior argmax without uncertainty gates. The complete D-084 text in `DECISIONS.md` is authoritative. The pre-final artifact, test, and final-manifest gates remain mandatory before protected outcomes are accessed.
 
 Valid pre-final work completed before the stop:
 
