@@ -509,6 +509,8 @@ Manifest file hashes:
 Execution stopped before artifact fitting, final-execution-manifest freeze, or E1–E9 because the approved authorities do not define executable replacement decision semantics for `Full - Bayes` and `Full - uncertainty`. No result, probability, logit, prediction, calibration outcome, or downstream intent outcome from the protected final cohort was computed. This is a pre-final audit checkpoint, not a reportable efficacy experiment.
 # M7-T02 protected execution (first outcome access)
 
+- first protected outcome access occurred during the initial frozen-run attempt bound to manifest `57ccfa3e14db82954e3a14cceac429c10d701267ccbd55e207872bcf182239db` / software SHA `8d9ca7d`; execution failed closed at the Bayesian probability normalization boundary before producing reportable results.
+
 - execution manifest: `results/m7/manifest/m7-final-execution-v5-d084-runner2.json`
 - manifest SHA-256: `a5a552fc09055f812ab6bee10ba8622c419d19bf291c5707991fa368ef1429fa`
 - runner/software SHA: `f1724f3`
