@@ -338,7 +338,7 @@ def _robustness(rows, manifest):
 def _condition_evidence_rows(rows, condition):
     raw = condition == "A"
     horizon = 1 if condition in {"A", "B"} else 5
-    return [{"row": r, "episode_id": r["episode_id"], "evidence": (r["raw"] if raw else r["calibrated"])[:horizon]} for r in rows]
+    return [{"row": r, "episode_id": r["episode_id"], "evidence": tuple(tuple(float(x) for x in _normalized_binary_probability(item)) for item in (r["raw"] if raw else r["calibrated"])[:horizon])} for r in rows]
 
 
 def _evaluate_override_rows(rows, condition):

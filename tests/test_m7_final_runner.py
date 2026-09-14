@@ -3,7 +3,7 @@ import types
 import numpy as np
 import pytest
 
-from src.evaluation.final_runner import _ablations, _evaluate, _execute_full_system_mission, _normalized_binary_probability, _robustness, _sequential_rows, _statistics, _systems
+from src.evaluation.final_runner import _ablations, _condition_evidence_rows, _evaluate, _execute_full_system_mission, _normalized_binary_probability, _robustness, _sequential_rows, _statistics, _systems
 
 
 def _rows(n=20):
@@ -118,3 +118,19 @@ def test_entropy_boundary_preserves_normalized_binary_probability():
 def test_entropy_boundary_rejects_invalid_binary_probability(value):
     with pytest.raises(ValueError):
         _normalized_binary_probability(value)
+
+
+def test_robustness_boundary_normalizes_condition_specific_rows_and_preserves_source():
+    row = {**_rows(1)[0], "raw": [[0.8, 0.2]], "calibrated": [[0.8000001, 0.2000001]]}
+    raw = _condition_evidence_rows([row], "A")[0]["evidence"][0]
+    calibrated = _condition_evidence_rows([row], "B")[0]["evidence"][0]
+    assert np.allclose(raw, [0.8, 0.2])
+    assert np.isclose(sum(calibrated), 1.0)
+    assert calibrated[0] > calibrated[1]
+
+
+@pytest.mark.parametrize("value", ([np.inf, 0.0], [0.0, 0.0], [-0.1, 1.1]))
+def test_robustness_boundary_rejects_invalid_probability_rows(value):
+    row = {**_rows(1)[0], "calibrated": [value]}
+    with pytest.raises(ValueError):
+        _condition_evidence_rows([row], "B")
