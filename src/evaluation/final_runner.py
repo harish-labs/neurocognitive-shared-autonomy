@@ -169,6 +169,8 @@ def _robustness(rows, manifest):
     output = {"R1_evidence_flattening": {}, "R2_contradictory_evidence": {}}
     for family in ("csp_lda", "eegnet"):
         family_rows = [r for r in rows if r["decoder_family"] == family]
+        if not family_rows:
+            continue
         for epsilon in manifest.r1_severities:
             perturbed = []
             provenance = []
@@ -194,6 +196,8 @@ def _statistics(rows):
     metrics = {}
     for family in ("csp_lda", "eegnet"):
         selected = [r for r in rows if r["decoder_family"] == family]
+        if not selected:
+            continue
         subjects = sorted({str(r["subject_id"]) for r in selected})
         observations_a = [ObservationMetric(str(r["subject_id"]), f"A::{r['episode_id']}", float(_evaluate(r, "A")["correct"])) for r in selected]
         observations_d = [ObservationMetric(str(r["subject_id"]), f"D::{r['episode_id']}", float(_evaluate(r, "D")["correct"])) for r in selected]
