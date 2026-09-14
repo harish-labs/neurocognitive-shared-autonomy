@@ -29,7 +29,10 @@ def main() -> int:
     split_path = Path(arguments.split_manifest).resolve()
     split_hash = sha256_file(split_path)
     split = split_manifest_from_mapping(json.loads(split_path.read_text(encoding="utf-8")))
-    epochs = build_cross_train_validation_epochs(arguments.processed_directory, split)
+    epochs = build_cross_train_validation_epochs(
+        processed_directory=arguments.processed_directory,
+        split_manifest=split,
+    )
     bundle = fit_and_freeze_cross_subject_artifacts(
         epochs,
         split_manifest=split,
