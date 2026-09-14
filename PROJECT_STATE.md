@@ -226,3 +226,15 @@ M7-T02 does not authorize claims of:
 M7 remains CLOSED. M8-T01 was explicitly authorized by the Project Owner on 2026-09-14 from canonical `main` at `0b279403ed8f5af8cb33b4e7916e512680ecc32e` on branch `task/m8-t01-final-presentation-release`.
 
 M8 must produce the final read-only result presentation layer, Streamlit dashboard, M8 figures, final results/discussion/reporting documents, release README, demo package, and portfolio/resume wording without changing accepted scientific/runtime modules or any byte under `results/m7/**`. M8 remains active until its candidate is reviewed and accepted; Codex must not merge or close it.
+
+## M8-T01 candidate implementation state
+
+The review candidate now includes:
+
+- an immutable, hash-validating loader for the exact accepted M7 v5 result and final manifest;
+- a 14-section Streamlit dashboard that presents accepted evidence and a clearly labeled deterministic, non-empirical interactive demo;
+- five traceable M8 presentation figures under `results/m8/figures/`;
+- final results, discussion, technical-report, demo, and portfolio/resume documentation;
+- focused loader, demo, dashboard, figure-inventory, and claim/sample-size tests.
+
+This records implementation readiness only. It does not constitute scientific acceptance, merge approval, or milestone closure. Exact verification results and the candidate commit are reported to the Project Owner for review.

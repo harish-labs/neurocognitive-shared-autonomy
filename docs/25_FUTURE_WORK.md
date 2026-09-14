@@ -11,7 +11,7 @@
 
 ---
 
-> **R07B current decision state:** D-043 through D-073 supersede legacy lists of future methodology decisions. Only U-034, U-035, and U-036 remain unresolved; M6 and end-to-end EEG mission integration are future work, not completed capability.
+> **Current decision state:** D-031 through D-084 resolve the core methodology and M7 execution contract. M1–M7, including end-to-end offline EEG mission integration and accepted E1–E9 evaluation, are complete. M8-T01 is the active presentation/release task; items below remain future unless explicitly marked as release work.
 
 # 0. PURPOSE
 
@@ -95,9 +95,9 @@ Future work should not override current milestone priorities.
 
 ---
 
-# 4. P0 — RESOLVE CURRENT SCIENTIFIC OPEN DECISIONS
+# 4. HISTORICAL P0 — CORE SCIENTIFIC DECISIONS RESOLVED
 
-Before treating the current project as scientifically complete, the following unresolved methodological decisions must be finalized.
+The following items were the original pre-experiment decision gate. They are now resolved by D-031 through D-084 and are retained only as a historical checklist, not as future work.
 
 ## EEG preprocessing
 
@@ -160,9 +160,7 @@ Before treating the current project as scientifically complete, the following un
 - no-safe-path semantics
 ```
 
-These are not optional future features.
-
-They are methodological items that must be resolved before final experiments if the relevant component is included.
+These were not optional features; they were frozen before accepted final execution. Any future change requires a new prospective decision and experiment rather than reinterpretation of M7.
 
 ---
 
@@ -1172,9 +1170,9 @@ This is not part of the core research architecture.
 
 ---
 
-# 57. P1 — REPRODUCIBILITY PACKAGE
+# 57. RELEASE WORK — REPRODUCIBILITY PACKAGE
 
-After final results, a strong future/release step is to prepare:
+M8-T01 packages the accepted results with:
 
 ```text
 clean GitHub repository
@@ -1187,13 +1185,13 @@ model checkpoints where appropriate
 demo
 ```
 
-This substantially improves portfolio and scientific value.
+This is current release work. Larger portable model/data bundles remain future only where licensing and repository size permit.
 
 ---
 
-# 58. P1 — PUBLIC TECHNICAL REPORT
+# 58. RELEASE WORK — PUBLIC TECHNICAL REPORT
 
-The completed project can be packaged as a rigorous technical report containing:
+M8-T01 provides a rigorous technical report containing:
 
 ```text
 problem
@@ -1246,9 +1244,9 @@ The technical project remains valuable without publication.
 
 ---
 
-# 61. P1 — GITHUB PORTFOLIO
+# 61. RELEASE WORK — GITHUB PORTFOLIO
 
-A portfolio version should emphasize:
+The M8-T01 portfolio version emphasizes:
 
 ```text
 system architecture
@@ -1267,9 +1265,9 @@ The technical pipeline is the primary evidence.
 
 ---
 
-# 62. P1 — DEMONSTRATION VIDEO
+# 62. RELEASE WORK / FUTURE RECORDING — DEMONSTRATION
 
-A concise demo may show:
+M8-T01 provides the runnable dashboard, deterministic fixture, script, and storyboard to show:
 
 ```text
 offline EEG replay
@@ -1282,7 +1280,7 @@ safety intervention
 mission completion
 ```
 
-The video must clearly label the system as an offline/simulated research prototype.
+Recording a human-narrated video remains a manual future action. No video artifact is fabricated. Any recording must clearly label the system as an offline/simulated research prototype.
 
 ---
 
@@ -1655,4 +1653,4 @@ This document is successful if:
 
 # 80. CURRENT FUTURE-WORK SUMMARY
 
-The strongest future evolution of the project is not to add as many technologies as possible, but to progressively remove the current system's most important limitations. The highest-value next directions are stronger cross-subject generalization, robust calibration and uncertainty estimation, a defensible multi-goal BCI interaction protocol, bounded personalization, and more dynamic Search & Rescue evaluation. A major second stage would introduce live EEG and real human interaction, enabling genuine online shared-autonomy research. Robotics depth could then be added through ROS2/Gazebo before any physical robot is considered. Formal safety, advanced probabilistic inference, reinforcement learning, neuromorphic models, multi-agent rescue, and hardware deployment remain valuable later research directions, but only when they answer clear scientific questions. The current project should first remain focused on producing a complete, reproducible, scientifically valid EEG-to-shared-autonomy system with honest results and failure analysis.
+The strongest future evolution is not to add as many technologies as possible, but to address the accepted system's demonstrated limitations. Highest-value directions include stronger cross-subject generalization, robust calibration and uncertainty estimation, richer prospectively approved multi-goal interaction, longitudinal personalization, aggregate failure analysis, and more dynamic SAR evaluation. A later stage could introduce live EEG and real human interaction, enabling genuine online shared-autonomy research. Robotics depth could follow through ROS2/Gazebo before any physical robot is considered. Formal safety, advanced probabilistic inference, reinforcement learning, neuromorphic models, multi-agent rescue, and deployment remain later research directions that require explicit authorization and new evidence. The completed M1–M7 system and M8 release should remain the immutable baseline for those comparisons.

@@ -7,3 +7,4 @@ PyYAML
 pandas
 scikit-learn
 matplotlib
+streamlit

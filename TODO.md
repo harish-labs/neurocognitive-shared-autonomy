@@ -315,18 +315,20 @@ Negative or mixed results are valid. Do not tune protected test data to improve 
 # 11. PRESENTATION / DOCUMENTATION — M8-T01 ACTIVE
 
 ```text
-[ ] Streamlit dashboard
-[ ] Technical architecture figure
-[ ] EEG figure
-[ ] Calibration figure
-[ ] Posterior / entropy figure
-[ ] SAR route figure
-[ ] A/B/C/D table
-[ ] Failure-case visualization
-[ ] Final README update
-[ ] Final technical report update
-[ ] Portfolio / resume updates only with validated claims
-[ ] Runnable demo, recording script, and storyboard (no fabricated video file)
+[x] Streamlit dashboard candidate implemented
+[x] Technical architecture figure generated under `results/m8/figures/`
+[x] EEG evidence presented from accepted E1 tables
+[x] Calibration figure/data presentation sourced from accepted E2 tables
+[x] Posterior / entropy deterministic demo visualization (explicitly non-empirical)
+[x] SAR route figure generated from deterministic production-code demo
+[x] A/B/C/D table sourced from accepted E6 tables
+[x] Failure/limitation visualization and narrative sourced from accepted evidence
+[x] Final README candidate updated
+[x] Final technical report candidate created
+[x] Portfolio / resume candidate wording limited to validated claims
+[x] Runnable demo, recording script, and storyboard (no fabricated video file)
+
+Candidate implementation is complete but remains subject to ChatGPT scientific/repository review. M8 is not accepted, merged, or closed.
 ```
 
 ---
