@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** M1–M7 complete; M7-T02 R03 is PASS / ACCEPTED / MERGED / CLOSED. No next implementation task is authorized.
+**Current stage:** M1–M7 complete; M7-T02 R03 remains PASS / ACCEPTED / MERGED / CLOSED. M8-T01 is ACTIVE / AUTHORIZED.
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -65,7 +65,7 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] Preserve negative/mixed/non-significant findings and claim boundaries
 ```
 
-No M8 work is authorized by this close.
+M8-T01 is now the only active task. M8 may consume accepted results but may not rerun protected experiments or modify `results/m7/**` or accepted M1–M7 scientific/runtime code.
 
 ---
 
@@ -125,16 +125,16 @@ Synthetic smoke evidence is integration-only and supports no efficacy claim.
 
 ---
 
-# 4. NEXT — NOT AUTHORIZED YET
+# 4. HISTORICAL NEXT ITEMS — IMPLEMENTED / NOT ACTIVE AUTHORITY
 
 Potential next work must be scientifically narrowed and explicitly approved before implementation.
 
 ```text
-[ ] Decide the next single implementation task
+[x] Project Owner authorized consolidated M8-T01
 [x] U-029 through U-033 resolved by D-061 through D-065
-[ ] Build the 2D Search & Rescue environment only under an approved narrow ticket
-[ ] Build A* / risk-aware planning only under approved planning decisions and task scope
-[ ] Build explicit safety-controller behavior only under approved safety decisions and task scope
+[x] 2D Search & Rescue environment implemented and accepted in M4
+[x] A* / risk-aware planning implemented and accepted in M4
+[x] Explicit safety-controller behavior implemented and accepted in M4
 [x] Run reportable decoder/calibration/Bayesian/shared-autonomy/adaptation evaluation only under approved experiment tasks/protocols
 ```
 
@@ -185,7 +185,7 @@ Do not infer authorization from this list.
 [x] U-034 — Exact A/B/C/D component matrix resolved by D-077
 [x] U-035 — Robustness perturbation levels resolved by D-078
 [x] U-036 — Inferential-statistics policy resolved by D-079
-[ ] If eligible cross-subject cohort != 109, obtain reviewer decision before freezing a different final manifest
+[x] Post-QC cohort/allocation resolved by D-082 and frozen for accepted M7 execution
 ```
 
 ---
@@ -244,47 +244,47 @@ Core M1-T10 prior-personalization implementation is accepted.
 [x] traceable update records
 [x] fresh-Bayesian-episode prior handoff
 [x] analytical / integration tests
-[ ] adaptation experiment if later authorized
+[x] Adaptation OFF/ON experiment completed in accepted M7 E9
 ```
 
 D-058 through D-060 are operationalized by M1-T10. This does not establish that adaptation improves performance.
 
 ---
 
-# 8. MILESTONE — SAR / A* / SAFETY
+# 8. MILESTONE — SAR / A* / SAFETY (COMPLETED)
 
 ```text
-[ ] 2D Gymnasium environment
-[ ] Map configuration
-[ ] UP / DOWN / LEFT / RIGHT / WAIT
-[ ] A* with Manhattan heuristic
-[ ] Blocked cells
-[ ] Basic hard safety
-[ ] Pause / stop blocking
-[ ] Replanning
-[ ] No-path handling
-[ ] Safety logs
+[x] 2D Gymnasium environment
+[x] Map configuration
+[x] UP / DOWN / LEFT / RIGHT / WAIT
+[x] A* with Manhattan heuristic
+[x] Blocked cells
+[x] Basic hard safety
+[x] Pause / stop blocking
+[x] Replanning
+[x] No-path handling
+[x] Safety logs
 ```
 
 Risk-aware planning and prohibited-hazard behavior are governed by D-061 through D-065 and implemented only under separately authorized task scope.
 
 ---
 
-# 9. MILESTONE — END-TO-END OFFLINE EEG REPLAY
+# 9. MILESTONE — END-TO-END OFFLINE EEG REPLAY (COMPLETED)
 
 ```text
-[ ] Offline EEG replay
-[ ] Decoder integration
-[ ] Calibration integration
-[ ] Goal-evidence adapter integration
-[ ] Bayes integration
+[x] Offline EEG replay
+[x] Decoder integration
+[x] Calibration integration
+[x] Goal-evidence adapter integration
+[x] Bayes integration
 [x] Entropy/shared-autonomy core policy modules available
 [x] Adaptation prior-personalization module available
-[ ] Planner integration
-[ ] Safety integration
-[ ] Full mission replay
-[ ] End-to-end logs
-[ ] Manual review
+[x] Planner integration
+[x] Safety integration
+[x] Full mission replay
+[x] End-to-end logs
+[x] Manual review
 ```
 
 This must remain labeled offline EEG replay / simulated real-time BCI unless hardware is explicitly approved later.
@@ -312,7 +312,7 @@ Negative or mixed results are valid. Do not tune protected test data to improve 
 
 ---
 
-# 11. PRESENTATION / DOCUMENTATION
+# 11. PRESENTATION / DOCUMENTATION — M8-T01 ACTIVE
 
 ```text
 [ ] Streamlit dashboard
@@ -326,7 +326,7 @@ Negative or mixed results are valid. Do not tune protected test data to improve 
 [ ] Final README update
 [ ] Final technical report update
 [ ] Portfolio / resume updates only with validated claims
-[ ] Demo video
+[ ] Runnable demo, recording script, and storyboard (no fabricated video file)
 ```
 
 ---

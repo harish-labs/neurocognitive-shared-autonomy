@@ -5,7 +5,7 @@
 
 **Purpose:** Authoritative live record of what is actually true now about the project.  
 **Workflow:** ChatGPT + Project Owner + Codex + Git/GitHub  
-**Last updated:** 2026-09-14
+**Last updated:** 2026-09-14 (M8-T01 authorization)
 
 ---
 
@@ -39,11 +39,13 @@ M7-T01 exact-ref verification:
 
 Current milestone:
 
-**M7 — Experiments / Ablations / Robustness: COMPLETE / PASS / CLOSED**
+**M8 — Final Dashboard, Scientific Reporting, Demo & Portfolio Release: ACTIVE / AUTHORIZED**
 
 Current task:
 
-**None — M7-T02 is PASS / ACCEPTED / MERGED / CLOSED.**
+**M8-T01 — Final Dashboard, Scientific Reporting, Demo & Portfolio Release.**
+
+M8-T01 is the only active task. It is presentation/reporting/demo/portfolio work: it may consume but may not alter accepted M1–M7 science. `results/m7/**` is immutable/read-only, and protected E1–E9 experiments must not be rerun.
 
 M7-T02 acceptance / merge record:
 
@@ -219,6 +221,8 @@ M7-T02 does not authorize claims of:
 
 ---
 
-# 10. NEXT GATE
+# 10. M8-T01 GATE
 
-M7 is CLOSED. No M7 implementation task is active. A later milestone, including M8, requires separate Project Owner authorization and must not be inferred from this close record.
+M7 remains CLOSED. M8-T01 was explicitly authorized by the Project Owner on 2026-09-14 from canonical `main` at `0b279403ed8f5af8cb33b4e7916e512680ecc32e` on branch `task/m8-t01-final-presentation-release`.
+
+M8 must produce the final read-only result presentation layer, Streamlit dashboard, M8 figures, final results/discussion/reporting documents, release README, demo package, and portfolio/resume wording without changing accepted scientific/runtime modules or any byte under `results/m7/**`. M8 remains active until its candidate is reviewed and accepted; Codex must not merge or close it.
