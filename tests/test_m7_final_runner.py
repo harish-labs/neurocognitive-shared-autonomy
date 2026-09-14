@@ -1,6 +1,6 @@
 import types
 
-from src.evaluation.final_runner import _ablations, _execute_full_system_mission, _robustness, _sequential_rows, _statistics, _systems
+from src.evaluation.final_runner import _ablations, _evaluate, _execute_full_system_mission, _robustness, _sequential_rows, _statistics, _systems
 
 
 def _rows(n=20):
@@ -20,7 +20,7 @@ def _rows(n=20):
 def test_r2_population_selection_is_global_and_levels_distinguishable():
     manifest = types.SimpleNamespace(r1_severities=(0.0,), r2_severities=(0.1, 0.2, 0.3, 0.4), r2_seed=42)
     result = _robustness(_rows(), manifest)
-    entries = result["R2_contradictory_evidence"]["csp_lda"]
+    entries = result["R2_contradictory_evidence"]["csp_lda"]["A"]
     counts = [entries[str(q)]["provenance"]["realized_count"] for q in manifest.r2_severities]
     assert counts == [2, 4, 6, 8]
     assert entries["0.4"]["provenance"]["population_size"] == 20
@@ -81,3 +81,20 @@ def test_safety_off_mission_ablation_preserves_emergency_stop_authority():
     assert without_safety["final_status"] == "HALTED"
     assert full["safety_decision_count"] == 1
     assert without_safety["safety_decision_count"] == 0
+
+
+def test_b_confirm_and_defer_apply_simulated_human_policy():
+    row = _rows(1)[0]
+    confirm = _evaluate({**row, "calibrated": [[0.8, 0.2]]}, "B")
+    defer = _evaluate({**row, "calibrated": [[0.5, 0.5]]}, "B")
+    assert confirm["human_action"] == "CONFIRM"
+    assert confirm["goal"] == row["intended_goal"]
+    assert defer["human_action"] == "OVERRIDE"
+    assert defer["goal"] == row["intended_goal"]
+
+
+def test_robustness_has_all_conditions_per_family():
+    manifest = types.SimpleNamespace(r1_severities=(0.0,), r2_severities=(0.0,), r2_seed=42)
+    result = _robustness(_rows(5), manifest)
+    assert set(result["R1_evidence_flattening"]["csp_lda"]) == {"A", "B", "C", "D"}
+    assert set(result["R2_contradictory_evidence"]["csp_lda"]) == {"A", "B", "C", "D"}
