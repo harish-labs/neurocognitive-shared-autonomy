@@ -1,11 +1,11 @@
 # CURRENT_TASK.md
 
-## Current Codex Implementation Authority
+## Archived Codex Implementation Authority
 
-**Current status:** ACTIVE / AUTHORIZED
-**Current milestone:** M8 — Dashboard & Portfolio Release
-**Task ID:** M8-T01
-**Task title:** Final Dashboard, Scientific Reporting, Demo & Portfolio Release
+**Current status:** NO ACTIVE IMPLEMENTATION TASK
+**Current milestone:** M1–M8 core project milestones COMPLETE
+**Task ID:** None
+**Last closed task:** M8-T01 — Final Dashboard, Scientific Reporting, Demo & Portfolio Release
 **Owner:** Project Owner
 **Scientific reviewer:** ChatGPT
 **Implementation engineer:** Codex
@@ -14,7 +14,22 @@
 
 ---
 
-# 1. AUTHORIZATION
+# Closure supersession
+
+M8-T01 is PASS / ACCEPTED / MERGED / CLOSED. M8 is COMPLETE / PASS / CLOSED. This archived authorization is retained as historical scope only; it does not authorize additional work. No active implementation task is authorized.
+
+- M8 authorization SHA: `8eb5f440d160203e3c0df5c0e9b20352d98eb11e`
+- Accepted candidate and software fast-forward SHA: `191783884478d071e13111ee546cfd125d59559b`
+- Exact-ref CI: GitHub Actions run `34932033248`; requested/resolved SHA `191783884478d071e13111ee546cfd125d59559b`; `529 passed, 16 warnings`; diff integrity PASS; working-tree check PASS; conclusion SUCCESS.
+- Accepted M7 result SHA-256: `b5c7cc2efdbbbab53c65d54aa77542a2e69a71c42d5bdc670e2fd8c34af2dd9b`
+- Accepted M7 execution-manifest SHA-256: `f837258312adf17ec1a04079c71c5461838a4aff5096541acd993bb94da24306`
+- Accepted M7 report-artifact manifest SHA-256: `bfe753c689ad3a2cd00c3ae0c2c891ab0113e614e2b2d7165c1b92fad1a496b2`
+
+The accepted project remains a public-prerecorded-EEG, Offline EEG Replay / Simulated Real-Time BCI, deterministic simulated-human, simulated-2D-Search-&-Rescue software prototype. It makes no live-EEG, human-subject-efficacy, physical-robot, clinical, or certified-safety claim.
+
+---
+
+# 1. ARCHIVED AUTHORIZATION
 
 On 2026-09-14 the Project Owner explicitly authorized M8-T01 as one consolidated presentation, reporting, demo, and portfolio task. M7 remains PASS / ACCEPTED / MERGED / CLOSED, and no M7 task is active.
 

@@ -4,7 +4,7 @@
 ### Controlled Project Backlog
 
 **Purpose:** Track future work without confusing backlog items with approved active scope  
-**Current stage:** M1–M7 complete; M7-T02 R03 remains PASS / ACCEPTED / MERGED / CLOSED. M8-T01 is ACTIVE / AUTHORIZED.
+**Current stage:** M1–M8 core project milestones COMPLETE. M8-T01 is PASS / ACCEPTED / MERGED / CLOSED.
 **Active task authority:** `CURRENT_TASK.md`  
 **Current project truth:** `PROJECT_STATE.md`
 
@@ -65,7 +65,7 @@ Only `CURRENT_TASK.md` authorizes active Codex implementation.
 [x] Preserve negative/mixed/non-significant findings and claim boundaries
 ```
 
-M8-T01 is now the only active task. M8 may consume accepted results but may not rerun protected experiments or modify `results/m7/**` or accepted M1–M7 scientific/runtime code.
+No active implementation task. M8 is closed; `results/m7/**` and accepted M1–M7 scientific/runtime code remain immutable.
 
 ---
 
@@ -312,7 +312,7 @@ Negative or mixed results are valid. Do not tune protected test data to improve 
 
 ---
 
-# 11. PRESENTATION / DOCUMENTATION — M8-T01 ACTIVE
+# 11. PRESENTATION / DOCUMENTATION — M8-T01 CLOSED
 
 ```text
 [x] Streamlit dashboard candidate implemented
@@ -328,7 +328,7 @@ Negative or mixed results are valid. Do not tune protected test data to improve 
 [x] Portfolio / resume candidate wording limited to validated claims
 [x] Runnable demo, recording script, and storyboard (no fabricated video file)
 
-Candidate implementation is complete but remains subject to ChatGPT scientific/repository review. M8 is not accepted, merged, or closed.
+[x] M8-T01 accepted, fast-forward merged, and governance closed
 ```
 
 ---

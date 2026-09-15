@@ -5,7 +5,7 @@
 
 **Purpose:** Authoritative live record of what is actually true now about the project.  
 **Workflow:** ChatGPT + Project Owner + Codex + Git/GitHub  
-**Last updated:** 2026-09-14 (M8-T01 authorization)
+**Last updated:** 2026-09-15 (M8 governance close)
 
 ---
 
@@ -39,13 +39,13 @@ M7-T01 exact-ref verification:
 
 Current milestone:
 
-**M8 — Final Dashboard, Scientific Reporting, Demo & Portfolio Release: ACTIVE / AUTHORIZED**
+**M8 — Final Dashboard, Scientific Reporting, Demo & Portfolio Release: COMPLETE / PASS / CLOSED**
 
 Current task:
 
-**M8-T01 — Final Dashboard, Scientific Reporting, Demo & Portfolio Release.**
+**None.**
 
-M8-T01 is the only active task. It is presentation/reporting/demo/portfolio work: it may consume but may not alter accepted M1–M7 science. `results/m7/**` is immutable/read-only, and protected E1–E9 experiments must not be rerun.
+M8-T01 is PASS / ACCEPTED / MERGED / CLOSED. M1–M8 core project milestones are COMPLETE. There is no active implementation task. `results/m7/**` remains immutable/read-only, and protected E1–E9 experiments must not be rerun.
 
 M7-T02 acceptance / merge record:
 
@@ -225,7 +225,7 @@ M7-T02 does not authorize claims of:
 
 M7 remains CLOSED. M8-T01 was explicitly authorized by the Project Owner on 2026-09-14 from canonical `main` at `0b279403ed8f5af8cb33b4e7916e512680ecc32e` on branch `task/m8-t01-final-presentation-release`.
 
-M8 must produce the final read-only result presentation layer, Streamlit dashboard, M8 figures, final results/discussion/reporting documents, release README, demo package, and portfolio/resume wording without changing accepted scientific/runtime modules or any byte under `results/m7/**`. M8 remains active until its candidate is reviewed and accepted; Codex must not merge or close it.
+M8 produced the final read-only result presentation layer, Streamlit dashboard, M8 figures, final results/discussion/reporting documents, release README, demo package, and portfolio/resume wording without changing accepted scientific/runtime modules or any byte under `results/m7/**`.
 
 ## M8-T01 candidate implementation state
 
@@ -237,4 +237,13 @@ The review candidate now includes:
 - final results, discussion, technical-report, demo, and portfolio/resume documentation;
 - focused loader, demo, dashboard, figure-inventory, and claim/sample-size tests.
 
-This records implementation readiness only. It does not constitute scientific acceptance, merge approval, or milestone closure. Exact verification results and the candidate commit are reported to the Project Owner for review.
+## M8-T01 acceptance, merge, and governance close
+
+- M8 authorization SHA: `8eb5f440d160203e3c0df5c0e9b20352d98eb11e`.
+- Accepted candidate and software fast-forward SHA: `191783884478d071e13111ee546cfd125d59559b`.
+- Exact-ref CI: GitHub Actions run `34932033248`; requested/resolved SHA `191783884478d071e13111ee546cfd125d59559b`; `529 passed, 16 warnings`; diff integrity PASS; working-tree check PASS; conclusion SUCCESS.
+- Accepted M7 result SHA-256: `b5c7cc2efdbbbab53c65d54aa77542a2e69a71c42d5bdc670e2fd8c34af2dd9b`.
+- Accepted M7 execution-manifest SHA-256: `f837258312adf17ec1a04079c71c5461838a4aff5096541acd993bb94da24306`.
+- Accepted M7 report-artifact manifest SHA-256: `bfe753c689ad3a2cd00c3ae0c2c891ab0113e614e2b2d7165c1b92fad1a496b2`.
+
+M8-T01 = PASS / ACCEPTED / MERGED / CLOSED. M8 = COMPLETE / PASS / CLOSED. M1–M8 core project milestones = COMPLETE. No active implementation task.
